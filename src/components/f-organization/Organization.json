@@ -1,0 +1,20 @@
+[
+{
+   "name" : "IFIC Bank Limited",
+   "s_name": "IFIC",
+   "address": "adsfsadfsadfds",
+   "status": "Active"
+},
+{
+    "name" : "Brack Bank Limited",
+    "s_name": "BBL",
+    "address": "adsfsadfsadfds",
+    "status": "Active"
+},
+{
+    "name" : "South East Bank Limited",
+    "s_name": "SEBL",
+    "address": "adsfsadfsadfds",
+    "status": "Active"
+}
+]
