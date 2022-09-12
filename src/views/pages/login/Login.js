@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import { Link } from 'react-router-dom'
+import React, {useEffect, useState} from 'react'
+import { Link,useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -18,6 +18,7 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 import axios from 'axios'
 
 const Login = () => {
+  const navigate = useNavigate();
 const [username, setuername]=useState('');
 const [password, setpassword]=useState('');
 
@@ -34,13 +35,15 @@ const submitUser = (e)=>{
   // const data = {username : username, password : password};
   var data = new FormData();
   data.append('username',username);
-  data.append('password',password);
-  console.log(data);
-                   
+  data.append('password',password);                  
  axios.post('http://172.30.18.25:8080/api/v1/auth/token', data)
-      .then(response => {console.log(response)})
+      .then(response => { localStorage.setItem('token', response.data.access_token);
+        alert("Login Successfull");
+        return navigate('/dashboard')
+      })
       .catch(error => {
           console.error('There was an error!', error);
+          alert("Failed Login!!");
       });
 }
 
