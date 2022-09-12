@@ -31,8 +31,12 @@ const handlePassword = (e) => {
 }
 const submitUser = (e)=>{
   e.preventDefault()
-  const data = {username : username, password : password};
-                   console.log(data);
+  // const data = {username : username, password : password};
+  var data = new FormData();
+  data.append('username',username);
+  data.append('password',password);
+  console.log(data);
+                   
  axios.post('http://172.30.18.25:8080/api/v1/auth/token', data)
       .then(response => {console.log(response)})
       .catch(error => {
