@@ -18,25 +18,26 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 import axios from 'axios'
 
 const Login = () => {
-const [authdata, setdata]=useState({ username: '',password:''});
+const [username, setuername]=useState('');
+const [password, setpassword]=useState('');
 
 const handleUser = (e) => {
-  setdata ({username: e.target.value});
+  const username = e.target.value;
+  setuername (username);
 }
 const handlePassword = (e) => {
-  setdata ({ password: e.target.value});
+  const password = e.target.value;
+  setpassword (password);
 }
-const submitHandler = (e)=>{
+const submitUser = (e)=>{
   e.preventDefault()
-  const data = {username : authdata.username,
-                   password : authdata.password};
-                   console.log(authdata.username);
-                   console.log(data.password);
-//  axios.post('http://172.30.18.25:8080/api/v1/auth/token', data)
-//       .then(response => {console.log(response)})
-//       .catch(error => {
-//           console.error('There was an error!', error);
-//       });
+  const data = {username : username, password : password};
+                   console.log(data);
+ axios.post('http://172.30.18.25:8080/api/v1/auth/token', data)
+      .then(response => {console.log(response)})
+      .catch(error => {
+          console.error('There was an error!', error);
+      });
 }
 
   return (
@@ -47,7 +48,7 @@ const submitHandler = (e)=>{
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm method='post' onSubmit={submitHandler}>
+                  <CForm >
                     <h1>Login</h1>
                     <p className="text-medium-emphasis">Sign In to your account</p>
                     <CInputGroup className="mb-3">
@@ -57,7 +58,7 @@ const submitHandler = (e)=>{
                       <CFormInput placeholder="Username" 
                       autoComplete="username" 
                       name="username" 
-                      onChange={(e)=>handleUser(e)}/>
+                      onChange={handleUser}/>
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -67,12 +68,12 @@ const submitHandler = (e)=>{
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
-                        name="password" onChange={(e)=>handlePassword(e)}
+                        name="password" onChange={handlePassword}
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton type='submit' color="primary" className="px-4">
+                        <CButton type='submit' color="primary" className="px-4" onClick={submitUser}>
                           Login
                         </CButton>
                       </CCol>
