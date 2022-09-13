@@ -82,7 +82,7 @@ const Dashboard = () => {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .get("http://172.30.18.25:8080/api/v1/auth/login", { headers })
+      .get(`${process.env.REACT_APP_API_URL}v1/auth/login`, { headers })
       .then((responce) => {
         localStorage.setItem("username", responce.data.user_name);
       })
