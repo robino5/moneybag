@@ -19,15 +19,11 @@ import {
 
 const OrganizationAdd = () => {
     const [validated, setValidated] = useState(false)
-    const saveOrganization = (event) => {
-        const form = event.currentTarget
-        if (form.checkValidity() === false) {
-        }
+
+   const saveOrganization = (event) => {
         setValidated(true)
         console.log(validated)
-        if (validated) {
             toast.warn("Wow so easy!")
-        }
 
     }
 
@@ -46,6 +42,7 @@ const OrganizationAdd = () => {
                                             <CFormInput type="text"
                                                 placeholder="Organization Name"
                                                 feedbackInvalid="Please provide a valid zip."
+
                                                 required />
                                         </CCol>
                                     </CRow>
@@ -74,7 +71,7 @@ const OrganizationAdd = () => {
                                         <Link to="/orgnization">
                                             <CButton color="danger" className="mx-3" >Cancle</CButton>
                                         </Link>
-                                        <CButton type="submit" color="success" onClick={saveOrganization} >Save</CButton>
+                                        <CButton  color="success" onClick={saveOrganization} >Save</CButton>
                                     </div>
                                 </CForm>
                             </CCardBody>
