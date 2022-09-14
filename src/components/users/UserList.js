@@ -3,39 +3,15 @@ import { Link } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { CCol, CContainer, CRow, CButton } from "@coreui/react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import UserAdd from "./UserAdd";
 
 const UserList = () => {
   const [data, setdata] = useState();
-  const [userlist, setUserList] = useState();
 
-  const obj = Object.assign({}, data);
-  const comumn = [
-    {
-      name: "Name",
-      selector: (row) => row.user_name,
-    },
-    {
-      name: "User Id",
-      selector: (row) => row.user_id,
-    },
-    {
-      name: "Active",
-      selector: (row) => <div></div>,
-    },
-    {
-      name: "User Id",
-      selector: (row) => (
-        <div>
-          <a>Edit</a>
-          <button color="danger">Delete</button>
-        </div>
-      ),
-    },
-  ];
-
-  console.log(obj.is_active);
-
-  useEffect(() => {
+  // Get userList
+  const getUser = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
@@ -47,6 +23,65 @@ const UserList = () => {
       .catch((error) => {
         console.error("There was an error!", error);
       });
+  };
+
+  // delete user
+  const deleteUser = (id, e) => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .delete(`${process.env.REACT_APP_API_URL}v1/users/delete-user/${id}`, {
+        headers,
+      })
+      .then((response) => {
+        console.log(response), toast.success("Delete Successfull"), getUser();
+      })
+      .catch((error) => {
+        console.log(error), toast.error("Delete faild");
+      });
+  };
+
+  const comumn = [
+    {
+      name: "Name",
+      selector: (row) => row.user_name,
+    },
+    {
+      name: "User Id",
+      selector: (row) => row.user_id,
+    },
+    {
+      name: "Status",
+      selector: (row) => (row.is_active == 1 ? "Active" : "Inactive"),
+    },
+    {
+      name: "Action",
+      cell: (row) => (
+        <div>
+          <CButton
+            color="danger"
+            onClick={() => deleteUser(row.user_id)}
+            className="mx-3"
+          >
+            delete
+          </CButton>
+          <CButton
+            color="danger"
+            onClick={() => {
+              render(<UserAdd></UserAdd>);
+            }}
+            className="mx-3"
+          >
+            Update
+          </CButton>
+        </div>
+      ),
+    },
+  ];
+
+  useEffect(() => {
+    getUser();
   }, []);
 
   return (
@@ -65,6 +100,7 @@ const UserList = () => {
           </CCol>
         </CRow>
       </CContainer>
+      <ToastContainer autoClose={1000} theme="colored" />
     </div>
   );
 };
