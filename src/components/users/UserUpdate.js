@@ -15,13 +15,13 @@ import {
   CButton,
 } from "@coreui/react";
 
-const UserEdit = () => {
-  console.log(user);
+const UserUpdate = () => {
   const navigate = useNavigate();
-  const [username, setuername] = useState("");
-  const [userid, setuerid] = useState("");
+  const location = useLocation();
+  const [username, setuername] = useState(location.state.user_name);
+  const [userid, setuerid] = useState(location.state.user_id);
   const [password, setpassword] = useState("");
-  const [status, setstatus] = useState(0);
+  const [status, setstatus] = useState(location.state.is_active);
 
   const handleUserName = (e) => {
     const username = e.target.value;
@@ -50,21 +50,21 @@ const UserEdit = () => {
       user_pwd: password,
     };
     console.log(userData);
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .post(`${process.env.REACT_APP_API_URL}v1/users/create-user`, userData, {
-        headers,
-      })
-      .then((response) => {
-        console.log(response), alert("Created");
-        return navigate("/users");
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        alert("fail");
-      });
+    // const headers = {
+    //   Authorization: `Bearer ${localStorage.getItem("token")}`,
+    // };
+    // axios
+    //   .post(`${process.env.REACT_APP_API_URL}v1/users/list-users`, userData, {
+    //     headers,
+    //   })
+    //   .then((response) => {
+    //     console.log(response), alert("Created");
+    //     return navigate("/users");
+    //   })
+    //   .catch((error) => {
+    //     console.error("There was an error!", error);
+    //     alert("fail");
+    //   });
   };
 
   return (
@@ -84,6 +84,7 @@ const UserEdit = () => {
                         type="text"
                         name="username"
                         placeholder="Name"
+                        value={username}
                         onChange={handleUserName}
                       />
                     </CCol>
@@ -96,6 +97,7 @@ const UserEdit = () => {
                       <CFormInput
                         type="text"
                         name="userid"
+                        value={userid}
                         placeholder="User Name"
                         onChange={handleUserId}
                       />
@@ -123,6 +125,7 @@ const UserEdit = () => {
                         name="status"
                         label="Active"
                         onChange={handleStatus}
+                        defaultChecked={status == 1 ? true : false}
                       />
                     </CCol>
                   </CRow>
@@ -146,4 +149,4 @@ const UserEdit = () => {
   );
 };
 
-export default UserEdit;
+export default UserUpdate;

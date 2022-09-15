@@ -100,7 +100,7 @@ const PartnerList = React.lazy(() =>
 );
 const Userist = React.lazy(() => import("./components/users/UserList"));
 const UserAdd = React.lazy(() => import("./components/users/UserAdd"));
-const UserEdit = React.lazy(() => import("./components/users/UserEdit"));
+const UserUpdate = React.lazy(() => import("./components/users/UserUpdate"));
 
 const routes = [
   { path: "/", exact: true, name: "Home" },
@@ -200,9 +200,9 @@ const routes = [
     element: UserAdd,
   },
   {
-    path: "/users/edit-user",
-    name: "edit-user",
-    element: UserEdit,
+    path: "/users/update-user",
+    name: "update-user",
+    element: UserUpdate,
   },
 ];
 

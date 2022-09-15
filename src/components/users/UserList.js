@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { CCol, CContainer, CRow, CButton } from "@coreui/react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import UserAdd from "./UserAdd";
 
 const UserList = () => {
+  const navigate = useNavigate();
   const [data, setdata] = useState();
 
   // Get userList
@@ -45,6 +45,7 @@ const UserList = () => {
   const comumn = [
     {
       name: "Name",
+      sortable: true,
       selector: (row) => row.user_name,
     },
     {
@@ -58,20 +59,21 @@ const UserList = () => {
     {
       name: "Action",
       cell: (row) => (
-        <div>
+        <div className="d-flex justify-content-center">
           <CButton
+            className="btn btn-sm d-inline mr-1"
             color="danger"
             onClick={() => deleteUser(row.user_id)}
-            className="mx-3"
           >
-            delete
+            Delete
           </CButton>
           <CButton
-            color="danger"
+            className="btn btn-sm d-inline mx-1"
+            color="info"
             onClick={() => {
-              render(<UserAdd></UserAdd>);
+              navigate("/users/update-user", { state: row });
+              console.log(row);
             }}
-            className="mx-3"
           >
             Update
           </CButton>
@@ -96,7 +98,12 @@ const UserList = () => {
         </CRow>
         <CRow className="justify-content-center">
           <CCol md={8}>
-            <DataTable columns={comumn} data={data} />
+            <DataTable
+              title="User List"
+              columns={comumn}
+              data={data}
+              pagination
+            />
           </CCol>
         </CRow>
       </CContainer>
