@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import {
   CCard,
   CCardBody,
@@ -16,14 +17,16 @@ import {
   CButton,
 } from "@coreui/react";
 
-const OrganizationAdd = () => {
-  const [validated, setValidated] = useState(false);
 
-  const saveOrganization = (event) => {
-    setValidated(true);
-    console.log(validated);
-    toast.warn("Wow so easy!");
-  };
+const OrganizationAdd = () => {
+  const { register, formState: { errors,isDirty }, handleSubmit,setValue } = useForm({ mode: "all", })
+  const [val, setVal] = useState(0);
+
+  const saveOrganization = (data) => {
+    console.log(data)
+    alert("done")
+  }
+
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row">
@@ -32,7 +35,7 @@ const OrganizationAdd = () => {
           <CCol md={8}>
             <CCard className="p-4">
               <CCardBody>
-                <CForm noValidate validated={validated}>
+                <CForm onSubmit={handleSubmit(saveOrganization)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Name
@@ -40,10 +43,10 @@ const OrganizationAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
+                        {...register("orgname", { required: "Please provide Organization Name" })}
                         placeholder="Organization Name"
-                        feedbackInvalid="Please provide a valid zip."
-                        required
                       />
+                      <span className="text-danger">{errors.orgname?.message}</span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -53,10 +56,10 @@ const OrganizationAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        feedbackInvalid="Please provide Organization Name"
+                        {...register("orgshortgame", { required: "Please provide Organization short Name" })}
                         placeholder="Organization Short Name"
-                        required
                       />
+                      <span className="text-danger">{errors.orgshortgame?.message}</span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -64,15 +67,23 @@ const OrganizationAdd = () => {
                       Address
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormTextarea placeholder="Address"></CFormTextarea>
+                      <CFormTextarea placeholder="Address"
+                        {...register("orgaddress")}
+                      ></CFormTextarea>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
+                    <CFormLabel className="col-sm-3 col-form-label"
+                    >
                       Status
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormCheck label="Active" />
+                      <CFormCheck label="Active" 
+                        onChange={e => {
+                          setValue("status", e.target.checked ? 1 : 0);
+                          setVal(!val);
+                        }} checked={val} />
+                        
                     </CCol>
                   </CRow>
                   <div className="text-center ">
@@ -81,7 +92,7 @@ const OrganizationAdd = () => {
                         Cancle
                       </CButton>
                     </Link>
-                    <CButton color="success" onClick={saveOrganization}>
+                    <CButton disabled={!isDirty} type="submit" color="success">
                       Save
                     </CButton>
                   </div>
