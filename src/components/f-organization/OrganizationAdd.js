@@ -17,16 +17,19 @@ import {
   CButton,
 } from "@coreui/react";
 
-
 const OrganizationAdd = () => {
-  const { register, formState: { errors,isDirty }, handleSubmit,setValue } = useForm({ mode: "all", })
+  const {
+    register,
+    formState: { errors, isDirty },
+    handleSubmit,
+    setValue,
+  } = useForm({ mode: "all" });
   const [val, setVal] = useState(0);
 
   const saveOrganization = (data) => {
-    console.log(data)
-    alert("done")
-  }
-
+    console.log(data);
+    alert("done");
+  };
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row">
@@ -43,10 +46,15 @@ const OrganizationAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("orgname", { required: "Please provide Organization Name" })}
+                        {...register("orgname", {
+                          required: "Please provide Organization Name",
+                        })}
                         placeholder="Organization Name"
+                        defaultValue={"asdfdsafdsaf"}
                       />
-                      <span className="text-danger">{errors.orgname?.message}</span>
+                      <span className="text-danger">
+                        {errors.orgname?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -56,10 +64,14 @@ const OrganizationAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("orgshortgame", { required: "Please provide Organization short Name" })}
+                        {...register("orgshortgame", {
+                          required: "Please provide Organization short Name",
+                        })}
                         placeholder="Organization Short Name"
                       />
-                      <span className="text-danger">{errors.orgshortgame?.message}</span>
+                      <span className="text-danger">
+                        {errors.orgshortgame?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -67,23 +79,25 @@ const OrganizationAdd = () => {
                       Address
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormTextarea placeholder="Address"
+                      <CFormTextarea
+                        placeholder="Address"
                         {...register("orgaddress")}
                       ></CFormTextarea>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label"
-                    >
+                    <CFormLabel className="col-sm-3 col-form-label">
                       Status
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormCheck label="Active" 
-                        onChange={e => {
+                      <CFormCheck
+                        label="Active"
+                        onChange={(e) => {
                           setValue("status", e.target.checked ? 1 : 0);
                           setVal(!val);
-                        }} checked={val} />
-                        
+                        }}
+                        checked={val}
+                      />
                     </CCol>
                   </CRow>
                   <div className="text-center ">

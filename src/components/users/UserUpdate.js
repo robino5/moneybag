@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -18,40 +19,22 @@ import {
 } from "@coreui/react";
 
 const UserUpdate = () => {
+  const {
+    register,
+    formState: { errors, isDirty },
+    handleSubmit,
+    setValue,
+  } = useForm({ mode: "all" });
   const navigate = useNavigate();
   const location = useLocation();
-  const [username, setuername] = useState(location.state.user_name);
-  const [userid, setuerid] = useState(location.state.user_id);
-  const [password, setpassword] = useState("");
-  const [status, setstatus] = useState(location.state.is_active);
-
-  console.log();
-  const handleUserName = (e) => {
-    const username = e.target.value;
-    setuername(username);
-  };
-
-  const handleUserId = (e) => {
-    const userid = e.target.value;
-    setuerid(userid);
-  };
-
-  const handlPassword = (e) => {
-    const password = e.target.value;
-    setpassword(password);
-  };
-
-  const handleStatus = (e) => {
-    e.target.checked ? setstatus(1) : setstatus(0);
-  };
 
   const saveUser = (e) => {
     const userData = {
       id: location.state.id,
-      user_id: userid,
-      user_name: username,
-      is_active: status,
-      user_pwd: password,
+      user_id: e.userid,
+      user_name: e.username,
+      is_active: e.status ? 1 : 0,
+      user_pwd: e.password,
     };
     console.log(userData);
     const headers = {
@@ -78,7 +61,7 @@ const UserUpdate = () => {
           <CCol md={8}>
             <CCard className="p-4">
               <CCardBody>
-                <CForm>
+                <CForm onSubmit={handleSubmit(saveUser)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Name
@@ -88,9 +71,14 @@ const UserUpdate = () => {
                         type="text"
                         name="username"
                         placeholder="Name"
-                        value={username}
-                        onChange={handleUserName}
+                        defaultValue={location.state.user_name}
+                        {...register("username", {
+                          required: "Please provide Name",
+                        })}
                       />
+                      <span className="text-danger">
+                        {errors.username?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -101,10 +89,15 @@ const UserUpdate = () => {
                       <CFormInput
                         type="text"
                         name="userid"
-                        value={userid}
-                        placeholder="User Name"
-                        onChange={handleUserId}
+                        readOnly
+                        defaultValue={location.state.user_id}
+                        {...register("userid", {
+                          required: "Please provide User Name",
+                        })}
                       />
+                      <span className="text-danger">
+                        {errors.userid?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -115,8 +108,8 @@ const UserUpdate = () => {
                       <CFormInput
                         type="password"
                         name="password"
+                        {...register("password")}
                         placeholder="Password"
-                        onChange={handlPassword}
                       />
                     </CCol>
                   </CRow>
@@ -128,8 +121,10 @@ const UserUpdate = () => {
                       <CFormCheck
                         name="status"
                         label="Active"
-                        onChange={handleStatus}
-                        defaultChecked={status == 1 ? true : false}
+                        {...register("status")}
+                        defaultChecked={
+                          location.state.is_active == 1 ? true : false
+                        }
                       />
                     </CCol>
                   </CRow>
@@ -139,8 +134,8 @@ const UserUpdate = () => {
                         Cancle
                       </CButton>
                     </Link>
-                    <CButton color="success" onClick={saveUser}>
-                      Save
+                    <CButton color="info" type="submit">
+                      Update
                     </CButton>
                   </div>
                 </CForm>
