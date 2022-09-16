@@ -49,7 +49,7 @@ const UserAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        toast.success("User Created Faild");
+        toast.error("User Created Faild");
       });
   };
 

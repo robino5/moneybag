@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   CCard,
   CCardBody,
@@ -23,6 +25,7 @@ const UserUpdate = () => {
   const [password, setpassword] = useState("");
   const [status, setstatus] = useState(location.state.is_active);
 
+  console.log();
   const handleUserName = (e) => {
     const username = e.target.value;
     setuername(username);
@@ -44,27 +47,28 @@ const UserUpdate = () => {
 
   const saveUser = (e) => {
     const userData = {
+      id: location.state.id,
       user_id: userid,
       user_name: username,
       is_active: status,
       user_pwd: password,
     };
     console.log(userData);
-    // const headers = {
-    //   Authorization: `Bearer ${localStorage.getItem("token")}`,
-    // };
-    // axios
-    //   .post(`${process.env.REACT_APP_API_URL}v1/users/list-users`, userData, {
-    //     headers,
-    //   })
-    //   .then((response) => {
-    //     console.log(response), alert("Created");
-    //     return navigate("/users");
-    //   })
-    //   .catch((error) => {
-    //     console.error("There was an error!", error);
-    //     alert("fail");
-    //   });
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .post(`${process.env.REACT_APP_API_URL}v1/users/update-user`, userData, {
+        headers,
+      })
+      .then((response) => {
+        console.log(response), toast.success("User Updated Successfull");
+        return navigate("/users");
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        toast.error("User Updated Faild");
+      });
   };
 
   return (
@@ -145,6 +149,7 @@ const UserUpdate = () => {
           </CCol>
         </CRow>
       </CContainer>
+      <ToastContainer autoClose={1000} theme="colored" />
     </div>
   );
 };
