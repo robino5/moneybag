@@ -99,7 +99,10 @@ const AppHeaderDropdown = () => {
         </CDropdownItem>
         <CDropdownDivider />
 
-        <CButton color="success justify-content-center" onClick={Logout}>
+        <CButton
+          color="secondary justify-content-center w-100"
+          onClick={Logout}
+        >
           Log Out
         </CButton>
       </CDropdownMenu>
