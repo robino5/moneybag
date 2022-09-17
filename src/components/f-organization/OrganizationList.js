@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { CCol, CContainer, CRow, CButton } from "@coreui/react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const OrganizationList = () => {
   const [data, setdata] = useState();
+  const navigate = useNavigate();
 
   const getOrganization = () => {
     const headers = {
@@ -23,14 +26,38 @@ const OrganizationList = () => {
       });
   };
 
+  const deleteOrganization = (id, e) => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .delete(
+        `${process.env.REACT_APP_API_URL}v1/financial-organizations/delete/${id}`,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        console.log(response),
+          toast.success("Delete Successfull"),
+          getOrganization();
+      })
+      .catch((error) => {
+        console.log(error), toast.error("Delete faild");
+      });
+  };
+
   const comumn = [
     {
       name: "Name",
+      sortable: true,
       selector: (row) => row.name,
+      maxWidth: "250px",
     },
     {
       name: "Short Name",
-      selector: (row) => row.s_name,
+      selector: (row) => row.short_name,
+      maxWidth: "50px",
     },
     {
       name: "Address",
@@ -38,31 +65,32 @@ const OrganizationList = () => {
     },
     {
       name: "Status",
-      selector: (row) => (row.is_active == 1 ? "Active" : "Inactive"),
+      selector: (row) => (row.status == 1 ? "Active" : "Inactive"),
+      maxWidth: "50px",
     },
     {
       name: "Action",
-      //   selector: (row) => (
-      //     <div className="d-flex justify-content-center">
-      //       <CButton
-      //         className="btn btn-sm d-inline mr-1"
-      //         color="danger"
-      //         onClick={() => deleteUser(row.user_id)}
-      //       >
-      //         Delete
-      //       </CButton>
-      //       <CButton
-      //         className="btn btn-sm d-inline mx-1"
-      //         color="info"
-      //         onClick={() => {
-      //           navigate("/users/update-user", { state: row });
-      //           console.log(row);
-      //         }}
-      //       >
-      //         Update
-      //       </CButton>
-      //     </div>
-      //   ),
+      selector: (row) => (
+        <div className="d-flex justify-content-center">
+          <CButton
+            className="btn btn-sm d-inline mr-1"
+            color="danger"
+            onClick={() => deleteOrganization(row.id)}
+          >
+            Delete
+          </CButton>
+          <CButton
+            className="btn btn-sm d-inline mx-1"
+            color="info"
+            onClick={() => {
+              navigate("/orgnization/update-orgnization", { state: row });
+            }}
+          >
+            Update
+          </CButton>
+        </div>
+      ),
+      maxWidth: "170px",
     },
   ];
 
@@ -80,10 +108,17 @@ const OrganizationList = () => {
         </div>
         <CRow className="justify-content-center">
           <CCol md={12}>
-            <DataTable title="User List" columns={comumn} pagination />
+            <DataTable
+              title="Financial Organization List"
+              columns={comumn}
+              data={data}
+              pagination
+              expandableCol
+            />
           </CCol>
         </CRow>
       </CContainer>
+      <ToastContainer autoClose={1000} theme="colored" />
     </div>
   );
 };

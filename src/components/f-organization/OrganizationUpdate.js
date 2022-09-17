@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import {
@@ -18,7 +18,7 @@ import {
   CButton,
 } from "@coreui/react";
 
-const OrganizationAdd = () => {
+const OrganizationUpdate = () => {
   const {
     register,
     formState: { errors, isDirty },
@@ -26,8 +26,9 @@ const OrganizationAdd = () => {
     setValue,
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const saveOrganization = (e) => {
+  const updateOrganization = (e) => {
     const organizationData = {
       name: e.orgname,
       short_name: e.orgshortgame,
@@ -35,19 +36,20 @@ const OrganizationAdd = () => {
       address: e.orgaddress,
     };
     console.log(organizationData);
+
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .post(
-        `${process.env.REACT_APP_API_URL}v1/financial-organizations/`,
+      .put(
+        `${process.env.REACT_APP_API_URL}v1/financial-organizations/update/${location.state.id}`,
         organizationData,
         {
           headers,
         }
       )
       .then((response) => {
-        toast.success("Organization Created Successfull");
+        toast.success("Updated Successfull");
         console.log(response);
         navigate("/orgnization");
       })
@@ -64,7 +66,7 @@ const OrganizationAdd = () => {
           <CCol md={8}>
             <CCard className="p-4">
               <CCardBody>
-                <CForm onSubmit={handleSubmit(saveOrganization)}>
+                <CForm onSubmit={handleSubmit(updateOrganization)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Name
@@ -76,6 +78,7 @@ const OrganizationAdd = () => {
                           required: "Please provide Organization Name",
                         })}
                         placeholder="Organization Name"
+                        defaultValue={location.state.name}
                       />
                       <span className="text-danger">
                         {errors.orgname?.message}
@@ -93,6 +96,7 @@ const OrganizationAdd = () => {
                           required: "Please provide Organization short Name",
                         })}
                         placeholder="Organization Short Name"
+                        defaultValue={location.state.short_name}
                       />
                       <span className="text-danger">
                         {errors.orgshortgame?.message}
@@ -107,6 +111,7 @@ const OrganizationAdd = () => {
                       <CFormTextarea
                         placeholder="Address"
                         {...register("orgaddress")}
+                        defaultValue={location.state.address}
                       ></CFormTextarea>
                     </CCol>
                   </CRow>
@@ -115,7 +120,13 @@ const OrganizationAdd = () => {
                       Status
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormCheck label="Active" {...register("status")} />
+                      <CFormCheck
+                        label="Active"
+                        {...register("status")}
+                        defaultChecked={
+                          location.state.status == 1 ? true : false
+                        }
+                      />
                     </CCol>
                   </CRow>
                   <div className="text-center ">
@@ -124,8 +135,8 @@ const OrganizationAdd = () => {
                         Cancle
                       </CButton>
                     </Link>
-                    <CButton disabled={!isDirty} type="submit" color="success">
-                      Save
+                    <CButton type="submit" color="info">
+                      Update
                     </CButton>
                   </div>
                 </CForm>
@@ -139,4 +150,4 @@ const OrganizationAdd = () => {
   );
 };
 
-export default OrganizationAdd;
+export default OrganizationUpdate;

@@ -28,7 +28,7 @@ const UserUpdate = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const saveUser = (e) => {
+  const updateUser = (e) => {
     const userData = {
       id: location.state.id,
       user_id: e.userid,
@@ -61,7 +61,7 @@ const UserUpdate = () => {
           <CCol md={8}>
             <CCard className="p-4">
               <CCardBody>
-                <CForm onSubmit={handleSubmit(saveUser)}>
+                <CForm onSubmit={handleSubmit(updateUser)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Name

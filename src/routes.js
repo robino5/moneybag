@@ -79,6 +79,9 @@ const Widgets = React.lazy(() => import("./views/widgets/Widgets"));
 const OrganizationAdd = React.lazy(() =>
   import("./components/f-organization/OrganizationAdd")
 );
+const OrganizationUpdate = React.lazy(() =>
+  import("./components/f-organization/OrganizationUpdate")
+);
 const OrganizationList = React.lazy(() =>
   import("./components/f-organization/OrganizationList")
 );
@@ -170,6 +173,11 @@ const routes = [
     path: "/orgnization/add-orgnization",
     name: "add-orgnization",
     element: OrganizationAdd,
+  },
+  {
+    path: "/orgnization/update-orgnization",
+    name: "update-orgnization",
+    element: OrganizationUpdate,
   },
   { path: "/category", name: "orgnization", element: CategoryList },
   {
