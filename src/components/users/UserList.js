@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { CCol, CContainer, CRow, CButton } from "@coreui/react";
+import swal from "sweetalert";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const UserList = () => {
   const navigate = useNavigate();
-  const [data, setdata] = useState();
+  const [userList, setUserList] = useState();
 
   // Get userList
   const getUser = () => {
@@ -18,7 +17,7 @@ const UserList = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}v1/users/list-users`, { headers })
       .then((responce) => {
-        console.log(responce.data), setdata(responce.data);
+        console.log(responce.data), setUserList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -30,16 +29,43 @@ const UserList = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
-      .delete(`${process.env.REACT_APP_API_URL}v1/users/delete-user/${id}`, {
-        headers,
-      })
-      .then((response) => {
-        console.log(response), toast.success("Delete Successfull"), getUser();
-      })
-      .catch((error) => {
-        console.log(error), toast.error("Delete faild");
-      });
+    swal({
+      title: "Are you sure?",
+      text: "Do you want to delete the user?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        axios
+          .delete(
+            `${process.env.REACT_APP_API_URL}v1/users/delete-user/${id}`,
+            {
+              headers,
+            }
+          )
+          .then((response) => {
+            console.log(response),
+              swal({
+                position: "top",
+                text: "User Deleted Successfull",
+                icon: "success",
+                button: false,
+                timer: 1500,
+              });
+            getUser();
+          })
+          .catch((error) => {
+            console.log(error);
+            swal({
+              text: "User Delete Failed",
+              icon: "error",
+              button: false,
+              timer: 1500,
+            });
+          });
+      }
+    });
   };
 
   const comumn = [
@@ -101,13 +127,12 @@ const UserList = () => {
             <DataTable
               title="User List"
               columns={comumn}
-              data={data}
+              data={userList}
               pagination
             />
           </CCol>
         </CRow>
       </CContainer>
-      <ToastContainer autoClose={1000} theme="colored" />
     </div>
   );
 };

@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -47,13 +45,11 @@ const OrganizationAdd = () => {
         }
       )
       .then((response) => {
-        toast.success("Organization Created Successfull");
         console.log(response);
         navigate("/orgnization");
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        toast.error("Organization Created Faild");
       });
   };
 
@@ -134,7 +130,6 @@ const OrganizationAdd = () => {
           </CCol>
         </CRow>
       </CContainer>
-      <ToastContainer autoClose={1000} theme="colored" />
     </div>
   );
 };

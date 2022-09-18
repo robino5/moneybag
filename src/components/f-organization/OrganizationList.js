@@ -3,11 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { CCol, CContainer, CRow, CButton } from "@coreui/react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const OrganizationList = () => {
-  const [data, setdata] = useState();
+  const [organizationList, setOrganizationList] = useState();
   const navigate = useNavigate();
 
   const getOrganization = () => {
@@ -19,7 +17,7 @@ const OrganizationList = () => {
         headers,
       })
       .then((responce) => {
-        console.log(responce.data), setdata(responce.data);
+        console.log(responce.data), setOrganizationList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -38,9 +36,7 @@ const OrganizationList = () => {
         }
       )
       .then((response) => {
-        console.log(response),
-          toast.success("Delete Successfull"),
-          getOrganization();
+        console.log(response), getOrganization();
       })
       .catch((error) => {
         console.log(error), toast.error("Delete faild");
@@ -111,14 +107,13 @@ const OrganizationList = () => {
             <DataTable
               title="Financial Organization List"
               columns={comumn}
-              data={data}
+              data={organizationList}
               pagination
               expandableCol
             />
           </CCol>
         </CRow>
       </CContainer>
-      <ToastContainer autoClose={1000} theme="colored" />
     </div>
   );
 };

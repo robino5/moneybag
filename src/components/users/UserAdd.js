@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import swal from "sweetalert";
 import { useForm } from "react-hook-form";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import {
   CCard,
   CCardBody,
@@ -43,13 +42,25 @@ const UserAdd = () => {
         headers,
       })
       .then((response) => {
-        toast.success("User Created Successfull");
         console.log(response);
+        swal({
+          position: "top-end",
+          text: "User Created Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
         navigate("/users");
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        toast.error("User Created Faild");
+        swal({
+          position: "top-end",
+          text: "User Create Faild",
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
       });
   };
 
@@ -143,7 +154,6 @@ const UserAdd = () => {
           </CCol>
         </CRow>
       </CContainer>
-      <ToastContainer autoClose={1000} theme="colored" />
     </div>
   );
 };
