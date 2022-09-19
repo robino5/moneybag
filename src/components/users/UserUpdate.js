@@ -58,7 +58,7 @@ const UserUpdate = () => {
       .catch((error) => {
         console.error("There was an error!", error);
         swal({
-          text: "User Update Faild",
+          text: error.response.data.detail,
           icon: "error",
           position: "top-end",
           button: false,

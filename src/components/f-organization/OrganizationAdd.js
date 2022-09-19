@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import swal from "sweetalert";
 import axios from "axios";
 import {
   CCard,
@@ -46,10 +47,24 @@ const OrganizationAdd = () => {
       )
       .then((response) => {
         console.log(response);
+        swal({
+          position: "top-end",
+          text: "Organization Created Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
         navigate("/orgnization");
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: error.response.data.detail,
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
       });
   };
 

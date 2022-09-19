@@ -58,7 +58,7 @@ const UserList = () => {
           .catch((error) => {
             console.log(error);
             swal({
-              text: "User Delete Failed",
+              text: error.response.data.detail,
               icon: "error",
               button: false,
               timer: 1500,

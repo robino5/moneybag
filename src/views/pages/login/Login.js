@@ -16,6 +16,7 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
 import axios from "axios";
+import swal from "sweetalert";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -40,12 +41,24 @@ const Login = () => {
       .post(`${process.env.REACT_APP_API_URL}v1/auth/token`, data)
       .then((response) => {
         localStorage.setItem("token", response.data.access_token);
-        alert("Login Successfull");
+        swal({
+          position: "top-end",
+          text: "Login Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
         return navigate("/dashboard");
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        alert("Failed Login!!");
+        swal({
+          position: "top-end",
+          text: "Login Failed",
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
       });
   };
 

@@ -56,7 +56,7 @@ const UserAdd = () => {
         console.error("There was an error!", error);
         swal({
           position: "top-end",
-          text: "User Create Faild",
+          text: error.response.data.detail,
           icon: "error",
           button: false,
           timer: 1500,

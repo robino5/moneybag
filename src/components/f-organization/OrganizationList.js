@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { CCol, CContainer, CRow, CButton } from "@coreui/react";
+import swal from "sweetalert";
 import axios from "axios";
 
 const OrganizationList = () => {
@@ -28,19 +29,43 @@ const OrganizationList = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
-      .delete(
-        `${process.env.REACT_APP_API_URL}v1/financial-organizations/delete/${id}`,
-        {
-          headers,
-        }
-      )
-      .then((response) => {
-        console.log(response), getOrganization();
-      })
-      .catch((error) => {
-        console.log(error), toast.error("Delete faild");
-      });
+    swal({
+      title: "Are you sure?",
+      text: "Do you want to delete the Organization?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        axios
+          .delete(
+            `${process.env.REACT_APP_API_URL}v1/financial-organizations/delete/${id}`,
+            {
+              headers,
+            }
+          )
+          .then((response) => {
+            console.log(response),
+              swal({
+                position: "top",
+                text: "Ofganization Deleted Successfull",
+                icon: "success",
+                button: false,
+                timer: 1500,
+              });
+            getOrganization();
+          })
+          .catch((error) => {
+            console.log(error),
+              swal({
+                text: error.response.data.detail,
+                icon: "error",
+                button: false,
+                timer: 1500,
+              });
+          });
+      }
+    });
   };
 
   const comumn = [
