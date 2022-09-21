@@ -14,7 +14,7 @@ const OrganizationList = () => {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .get(`${process.env.REACT_APP_API_URL}v1/financial-organizations/`, {
+      .get(`${process.env.REACT_APP_API_URL}financial-organizations/`, {
         headers,
       })
       .then((responce) => {
@@ -39,7 +39,7 @@ const OrganizationList = () => {
       if (willDelete) {
         axios
           .delete(
-            `${process.env.REACT_APP_API_URL}v1/financial-organizations/delete/${id}`,
+            `${process.env.REACT_APP_API_URL}financial-organizations/delete/${id}`,
             {
               headers,
             }

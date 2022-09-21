@@ -38,7 +38,7 @@ const Login = () => {
     data.append("username", username);
     data.append("password", password);
     axios
-      .post(`${process.env.REACT_APP_API_URL}v1/auth/token`, data)
+      .post(`${process.env.REACT_APP_API_URL}auth/token`, data)
       .then((response) => {
         localStorage.setItem("token", response.data.access_token);
         swal({

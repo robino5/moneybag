@@ -41,7 +41,7 @@ const OrganizationUpdate = () => {
     };
     axios
       .put(
-        `${process.env.REACT_APP_API_URL}v1/financial-organizations/update/${location.state.id}`,
+        `${process.env.REACT_APP_API_URL}financial-organizations/update/${location.state.id}`,
         organizationData,
         {
           headers,

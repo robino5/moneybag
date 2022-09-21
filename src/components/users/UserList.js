@@ -15,7 +15,7 @@ const UserList = () => {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .get(`${process.env.REACT_APP_API_URL}v1/users/list-users`, { headers })
+      .get(`${process.env.REACT_APP_API_URL}users/list-users`, { headers })
       .then((responce) => {
         console.log(responce.data), setUserList(responce.data);
       })
@@ -38,12 +38,9 @@ const UserList = () => {
     }).then((willDelete) => {
       if (willDelete) {
         axios
-          .delete(
-            `${process.env.REACT_APP_API_URL}v1/users/delete-user/${id}`,
-            {
-              headers,
-            }
-          )
+          .delete(`${process.env.REACT_APP_API_URL}users/delete-user/${id}`, {
+            headers,
+          })
           .then((response) => {
             console.log(response),
               swal({

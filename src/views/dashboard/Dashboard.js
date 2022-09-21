@@ -7,7 +7,7 @@ const Dashboard = () => {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .get(`${process.env.REACT_APP_API_URL}v1/auth/login`, { headers })
+      .get(`${process.env.REACT_APP_API_URL}auth/login`, { headers })
       .then((responce) => {
         localStorage.setItem("username", responce.data.user_name);
       })

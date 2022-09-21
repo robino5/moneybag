@@ -41,7 +41,7 @@ const UserUpdate = () => {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .post(`${process.env.REACT_APP_API_URL}v1/users/update-user`, userData, {
+      .post(`${process.env.REACT_APP_API_URL}users/update-user`, userData, {
         headers,
       })
       .then((response) => {

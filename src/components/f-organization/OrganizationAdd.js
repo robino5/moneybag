@@ -39,7 +39,7 @@ const OrganizationAdd = () => {
     };
     axios
       .post(
-        `${process.env.REACT_APP_API_URL}v1/financial-organizations/`,
+        `${process.env.REACT_APP_API_URL}financial-organizations/`,
         organizationData,
         {
           headers,
