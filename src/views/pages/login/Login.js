@@ -110,9 +110,9 @@ const Login = () => {
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
+                        {/* <CButton color="link" className="px-0">
                           Forgot password?
-                        </CButton>
+                        </CButton> */}
                       </CCol>
                     </CRow>
                   </CForm>
@@ -131,14 +131,14 @@ const Login = () => {
                       aliqua.
                     </p>
                     <Link to="/register">
-                      <CButton
+                      {/* <CButton
                         color="primary"
                         className="mt-3"
                         active
                         tabIndex={-1}
                       >
                         Register Now!
-                      </CButton>
+                      </CButton> */}
                     </Link>
                   </div>
                 </CCardBody>
