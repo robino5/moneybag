@@ -26,13 +26,17 @@ const OrganizationUpdate = () => {
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
   const location = useLocation();
-
   const updateOrganization = (e) => {
     const organizationData = {
+      org_id: e.orgId,
       name: e.orgname,
       short_name: e.orgshortgame,
+      address_1: e.orgaddress1,
+      address_2: e.orgaddress2,
+      phone: e.phone,
+      email: e.email,
+      website: e.website,
       status: e.status ? 1 : 0,
-      address: e.orgaddress,
     };
     console.log(organizationData);
 
@@ -80,6 +84,19 @@ const OrganizationUpdate = () => {
                 <CForm onSubmit={handleSubmit(updateOrganization)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
+                      Organization ID
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        defaultValue={location.state.org_id}
+                        {...register("orgId")}
+                        placeholder="Organization Id"
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
                       Name
                     </CFormLabel>
                     <CCol sm={9}>
@@ -121,9 +138,60 @@ const OrganizationUpdate = () => {
                     <CCol sm={9}>
                       <CFormTextarea
                         placeholder="Address"
-                        {...register("orgaddress")}
-                        defaultValue={location.state.address}
+                        defaultValue={location.state.address_1}
+                        {...register("orgaddress1")}
                       ></CFormTextarea>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Address 2
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormTextarea
+                        placeholder="Address 2"
+                        defaultValue={location.state.address_2}
+                        {...register("orgaddress2")}
+                      ></CFormTextarea>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Phone Number
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        defaultValue={location.state.phone}
+                        {...register("phone")}
+                        placeholder="Phone Number"
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      E-mail
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        defaultValue={location.state.email}
+                        {...register("email")}
+                        placeholder="E-mail"
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Website
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        defaultValue={location.state.website}
+                        {...register("website")}
+                        placeholder="Website"
+                      />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">

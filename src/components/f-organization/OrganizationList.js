@@ -82,7 +82,7 @@ const OrganizationList = () => {
     },
     {
       name: "Address",
-      selector: (row) => row.address,
+      selector: (row) => row.address_1,
     },
     {
       name: "Status",

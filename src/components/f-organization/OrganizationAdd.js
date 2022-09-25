@@ -28,10 +28,15 @@ const OrganizationAdd = () => {
 
   const saveOrganization = (e) => {
     const organizationData = {
+      org_id: e.orgId,
       name: e.orgname,
       short_name: e.orgshortgame,
+      address_1: e.orgaddress1,
+      address_2: e.orgaddress2,
+      phone: e.phone,
+      email: e.email,
+      website: e.website,
       status: e.status ? 1 : 0,
-      address: e.orgaddress,
     };
     console.log(organizationData);
     const headers = {
@@ -78,6 +83,18 @@ const OrganizationAdd = () => {
                 <CForm onSubmit={handleSubmit(saveOrganization)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
+                      Organization ID
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        {...register("orgId")}
+                        placeholder="Organization Id"
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
                       Name
                     </CFormLabel>
                     <CCol sm={9}>
@@ -112,13 +129,60 @@ const OrganizationAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Address
+                      Address 1
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormTextarea
-                        placeholder="Address"
-                        {...register("orgaddress")}
+                        placeholder="Address 1"
+                        {...register("orgaddress1")}
                       ></CFormTextarea>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Address 2
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormTextarea
+                        placeholder="Address 2"
+                        {...register("orgaddress2")}
+                      ></CFormTextarea>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Phone Number
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        {...register("phone")}
+                        placeholder="Phone Number"
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      E-mail
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        {...register("email")}
+                        placeholder="E-mail"
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Website
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        {...register("website")}
+                        placeholder="Website"
+                      />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
