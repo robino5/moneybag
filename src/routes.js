@@ -105,6 +105,22 @@ const Userist = React.lazy(() => import("./components/users/UserList"));
 const UserAdd = React.lazy(() => import("./components/users/UserAdd"));
 const UserUpdate = React.lazy(() => import("./components/users/UserUpdate"));
 
+const FintechList = React.lazy(() => import("./components/fintech/FintechList"));
+const FintechAdd = React.lazy(() => import("./components/fintech/FintechAdd"));
+const FintechUpdate = React.lazy(() => import("./components/fintech/FintechUpdate"));
+
+const BranchList = React.lazy(() => import("./components/branch/BranchList"));
+const BranchAdd = React.lazy(() => import("./components/branch/BranchAdd"));
+const BranchUpdate = React.lazy(() => import("./components/branch/BranchUpdate"));
+
+const ServiceList = React.lazy(() => import("./components/service/ServiceList"));
+const ServiceAdd = React.lazy(() => import("./components/service/ServiceAdd"));
+const ServiceUpdate = React.lazy(() => import("./components/service/ServiceUpdate"));
+
+const SettelmentList = React.lazy(() => import("./components/settelment-account/SettelmentList"));
+const SettelmentAdd = React.lazy(() => import("./components/settelment-account/SettelmentAdd"));
+const SettelmentUpdate = React.lazy(() => import("./components/settelment-account/SettelmentUpdate"));
+
 const routes = [
   // { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", element: Dashboard },
@@ -214,6 +230,22 @@ const routes = [
     name: "update-user",
     element: UserUpdate,
   },
+
+  { path: "/fintech", name: "fintech", element: FintechList },
+  { path: "/fintech/add-fintech", name: "add-fintech", element: FintechAdd },
+  { path: "/fintech/update-fintech", name: "update-fintech", element: FintechUpdate },
+
+  { path: "/branch", name: "branch", element: BranchList },
+  { path: "/branch/add-branch", name: "add-branch", element: BranchAdd },
+  { path: "/branch/update-branch", name: "update-branch", element: BranchUpdate },
+
+  { path: "/service", name: "service", element: ServiceList },
+  { path: "/service/add-service", name: "add-service", element: ServiceAdd },
+  { path: "/service/update-service", name: "update-service", element: ServiceUpdate },
+
+  { path: "/settelment", name: "settelment", element: SettelmentList },
+  { path: "/settelment/add-settelment", name: "add-settelment", element: SettelmentAdd },
+  { path: "/settelment/update-settelment", name: "update-settelment", element: SettelmentUpdate },
 ];
 
 export default routes;

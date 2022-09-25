@@ -51,6 +51,34 @@ const _nav = [
 
   {
     component: CNavGroup,
+    name: "Fintech Management",
+    to: "",
+    items: [
+      {
+        component: CNavItem,
+        name: "Fintech List",
+        to: "/fintech",
+      },
+      {
+        component: CNavItem,
+        name: "Branch List",
+        to: "/branch",
+      },
+      {
+        component: CNavItem,
+        name: "Survice List",
+        to: "/service",
+      },
+      {
+        component: CNavItem,
+        name: "Settelment Account",
+        to: "/settelment",
+      },
+    ],
+  },
+
+  {
+    component: CNavGroup,
     name: "Category",
     to: "",
     items: [
