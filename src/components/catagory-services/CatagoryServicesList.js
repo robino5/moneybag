@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { CCol, CContainer, CRow, CButton } from "@coreui/react";
-import { useForm } from "react-hook-form";
 import axios from "axios";
 
 const CatagoryServicesList = () => {
-  const {
-    register,
-    formState: { errors, isDirty },
-    handleSubmit,
-    setValue,
-  } = useForm({ mode: "all" });
   const navigate = useNavigate();
   const [catserviceList, setCatServiceList] = useState();
 
@@ -70,9 +63,11 @@ const CatagoryServicesList = () => {
           <CButton
             className="btn btn-sm d-inline mx-1"
             color="info"
-              onClick={() => {
-                navigate("/category-services/update-category-services", { state: row });
-              }}
+            onClick={() => {
+              navigate("/category-services/update-category-services", {
+                state: row,
+              });
+            }}
           >
             Update
           </CButton>

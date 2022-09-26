@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate,useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import swal from "sweetalert";
 import {
   CCard,
   CCardBody,
@@ -32,7 +33,7 @@ const CatagoryServicesUpdate = () => {
     getCatService();
   }, []);
 
-  console.log(location.state)
+  console.log(location.state);
 
   const getCatService = () => {
     const headers = {
@@ -57,11 +58,10 @@ const CatagoryServicesUpdate = () => {
       short_name: e.cat_short_name,
       remarks: e.cat_remarks,
       is_group: e.cat_group ? 1 : 0,
-      is_parent: e.cat_parent ? 1 : 0,
+      is_parent: parseInt(e.parent_category),
       status: e.status ? 1 : 0,
-      parent_no: parseInt(e.parent_category),
     };
-    console.log("test",catServiceData);
+    console.log("test", catServiceData);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
@@ -169,7 +169,7 @@ const CatagoryServicesUpdate = () => {
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormTextarea
-                       defaultValue={location.state.remarks}
+                        defaultValue={location.state.remarks}
                         {...register("cat_remarks")}
                         placeholder="Remarks"
                       ></CFormTextarea>
@@ -187,7 +187,15 @@ const CatagoryServicesUpdate = () => {
                       >
                         {catserviceList &&
                           getOption(catserviceList).map((catService, index) => (
-                            <option value={catService.id} key={index}>
+                            <option
+                              value={catService.id}
+                              selected={
+                                catService.id === location.state.is_parent
+                                  ? "selected"
+                                  : ""
+                              }
+                              key={index}
+                            >
                               {catService.name}
                             </option>
                           ))}
@@ -202,8 +210,7 @@ const CatagoryServicesUpdate = () => {
                       <CFormCheck
                         label="Is Group?"
                         defaultChecked={
-                          location.state.is_group
-                          == 1 ? true : false
+                          location.state.is_group == 1 ? true : false
                         }
                         {...register("cat_group")}
                       />
@@ -214,9 +221,13 @@ const CatagoryServicesUpdate = () => {
                       Status
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormCheck label="Active"  defaultChecked={
+                      <CFormCheck
+                        label="Active"
+                        defaultChecked={
                           location.state.status == 1 ? true : false
-                        } {...register("status")} />
+                        }
+                        {...register("status")}
+                      />
                     </CCol>
                   </CRow>
                   <div className="text-center ">

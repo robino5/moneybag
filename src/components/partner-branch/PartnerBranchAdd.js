@@ -5,19 +5,18 @@ import axios from "axios";
 import {
   CCard,
   CCardBody,
-  CFormTextarea,
+  CFormSelect,
   CCol,
   CContainer,
   CForm,
   CFormInput,
   CFormLabel,
   CRow,
-  CFormSelect,
-  CButton,
   CFormCheck,
+  CButton,
 } from "@coreui/react";
 
-const CatagoryServicesAdd = () => {
+const BranchAdd = () => {
   const {
     register,
     formState: { errors, isDirty },
@@ -25,78 +24,49 @@ const CatagoryServicesAdd = () => {
     setValue,
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
-  const [catserviceList, setCatServiceList] = useState();
+  const [partnerList, setPartnerList] = useState();
 
-  useEffect(() => {
-    getCatService();
-  }, []);
+  const savePartnerBranch = (e) => {
+    const partnerBranchData = {
+      branch_id: e.branch_id,
+      branch_name: e.branch_name,
+      branch_code: e.branch_code,
+      shift_code: e.shift_code,
+      addr1: e.address1,
+      addr2: e.address2,
+      is_active: e.status ? 1 : 0,
+    };
+    console.log(partnerBranchData);
+  };
 
-  const getCatService = () => {
+  const getPartnerList = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .get(`${process.env.REACT_APP_API_URL}category-services/`, {
+      .get(`${process.env.REACT_APP_API_URL}partners/`, {
         headers,
       })
       .then((responce) => {
-        console.log(responce.data), setCatServiceList(responce.data);
+        console.log(responce.data), setPartnerList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
       });
   };
 
-  const saveCatService = (e) => {
-    const catServiceData = {
-      service_no: e.cat_service_id,
-      name: e.cat_service_name,
-      short_name: e.cat_short_name,
-      remarks: e.cat_remarks,
-      is_group: e.cat_group ? 1 : 0,
-      is_parent: parseInt(e.parent_category),
-      status: e.status ? 1 : 0,
-    };
-    console.log(catServiceData);
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}category-services/`,
-        catServiceData,
-        {
-          headers,
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        swal({
-          position: "top-end",
-          text: "Category Service Created Successfull",
-          icon: "success",
-          button: false,
-          timer: 1500,
-        });
-        navigate("/category-services");
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        swal({
-          position: "top-end",
-          text: error.response.data.detail,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
-      });
-  };
+  useEffect(() => {
+    getPartnerList();
+  }, []);
 
   const getOption = (e) => {
     let options = [];
     e.forEach((element) => {
-      if (element.is_group === 1) {
-        options.push({ id: element.id, name: element.name });
+      if (element.is_active === 1) {
+        options.push({
+          id: element.id,
+          organization_id: element.organization_id,
+        });
       }
     });
     return options;
@@ -109,91 +79,101 @@ const CatagoryServicesAdd = () => {
           <CCol md={8}>
             <CCard className="p-4">
               <CCardBody>
-                <CForm onSubmit={handleSubmit(saveCatService)}>
+                <CForm onSubmit={handleSubmit(savePartnerBranch)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Category Service ID
+                      Branch ID
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("cat_service_id")}
-                        placeholder="Category Service ID"
+                        {...register("branch_id")}
+                        placeholder="Branch ID"
                       />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Category Service Name
+                      Branch Name
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("cat_service_name", {
-                          required: "Please provide Category Service Name",
+                        {...register("branch_name", {
+                          required: "Please provide Branch Name",
                         })}
-                        placeholder="Category Service Name"
+                        placeholder="Branch Name"
                       />
                       <span className="text-danger">
-                        {errors.cat_service_name?.message}
+                        {errors.branch_name?.message}
                       </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Category Short name
+                      Organization Name
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("cat_short_name", {
-                          required: "Please provide Category Short Name",
-                        })}
-                        placeholder=" Category Short name"
-                      />
-                      <span className="text-danger">
-                        {errors.cat_short_name?.message}
-                      </span>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Remarks
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormTextarea
-                        {...register("cat_remarks")}
-                        placeholder="Remarks"
-                      ></CFormTextarea>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Category
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormSelect
-                        aria-label="Default select example"
-                        type="number"
-                        {...register("parent_category")}
-                      >
-                        {catserviceList &&
-                          getOption(catserviceList).map((catService, index) => (
-                            <option value={catService.id} key={index}>
-                              {catService.name}
+                      <CFormSelect aria-label="Default select example">
+                        {partnerList &&
+                          getOption(partnerList).map((partner, index) => (
+                            <option value={partner.id} key={index}>
+                              {partner.organization_id}
                             </option>
                           ))}
                       </CFormSelect>
                     </CCol>
                   </CRow>
-                  <CRow className="">
+                  <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Group Status
+                      Branch Code
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormCheck
-                        label="Is Group?"
-                        {...register("cat_group")}
+                      <CFormInput
+                        type="text"
+                        {...register("branch_code", {
+                          required: "Please provide Branch code",
+                        })}
+                        placeholder="Branch Code"
+                      />
+                      <span className="text-danger">
+                        {errors.branch_code?.message}
+                      </span>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Shift Code
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        {...register("shift_code")}
+                        placeholder="Shift Code"
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Address 1
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        {...register("address1")}
+                        placeholder="Address Line 1"
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Address 2
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        {...register("address2")}
+                        placeholder="Address Line 2"
                       />
                     </CCol>
                   </CRow>
@@ -206,7 +186,7 @@ const CatagoryServicesAdd = () => {
                     </CCol>
                   </CRow>
                   <div className="text-center ">
-                    <Link to="/category-services">
+                    <Link to="/partner-branch">
                       <CButton color="danger" className="mx-3">
                         Cancle
                       </CButton>
@@ -225,4 +205,4 @@ const CatagoryServicesAdd = () => {
   );
 };
 
-export default CatagoryServicesAdd;
+export default BranchAdd;

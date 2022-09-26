@@ -46,6 +46,11 @@ const _nav = [
         name: "Partner",
         to: "/partner",
       },
+      {
+        component: CNavItem,
+        name: "Partner-Branch",
+        to: "/partner-branch",
+      },
     ],
   },
 

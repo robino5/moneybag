@@ -1,22 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import DataTable from "react-data-table-component";
+import React, { useState, useEffect } from "react";
 import { CCol, CContainer, CRow, CButton } from "@coreui/react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const PartnerList = () => {
-  const [partnerList, setPartnerList] = useState();
+const PartnerBranchList = () => {
+  const navigate = useNavigate();
 
-  const getPartnerList = () => {
+  const [partnerbranchList, setPartnerBranchList] = useState();
+
+  const getPartnerBranchList = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .get(`${process.env.REACT_APP_API_URL}partners/`, {
+      .get(`${process.env.REACT_APP_API_URL}partner-branches/`, {
         headers,
       })
       .then((responce) => {
-        console.log(responce.data), setPartnerList(responce.data);
+        console.log(responce.data), setPartnerBranchList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -24,21 +26,21 @@ const PartnerList = () => {
   };
 
   useEffect(() => {
-    getPartnerList();
+    getPartnerBranchList();
   }, []);
 
-  const comumn = [
+  const columns = [
     {
-      name: "Name",
-      selector: (row) => row.partner_name,
+      name: "Branch Name",
+      selector: (row) => row.branch_name,
     },
     {
-      name: "email",
-      selector: (row) => row.email,
+      name: "Shift Code",
+      selector: (row) => row.shift_code,
     },
     {
-      name: "phone",
-      selector: (row) => row.phone,
+      name: "Address",
+      selector: (row) => row.addr1,
     },
     {
       name: "Status",
@@ -70,24 +72,27 @@ const PartnerList = () => {
       ),
     },
   ];
-
   return (
     <div className="bg-light min-vh-100 d-flex flex-row">
       <CContainer>
-        <CRow className="mb-2">
-          <CCol md={12}>
-            <Link to="/partner/add-partner">
-              <CButton color="primary">Add New</CButton>
-            </Link>
-          </CCol>
-        </CRow>
+        <div className="justify-content-centert mb-2">
+          <Link to="/partner-branch/add-partner-branch">
+            <CButton color="primary">Add New</CButton>
+          </Link>
+        </div>
         <CRow className="justify-content-center">
           <CCol md={12}>
-            <DataTable columns={comumn} data={partnerList} />
+            <DataTable
+              title="Partner Branch List"
+              columns={columns}
+              data={partnerbranchList}
+              pagination
+            />
           </CCol>
         </CRow>
       </CContainer>
     </div>
   );
 };
-export default PartnerList;
+
+export default PartnerBranchList;
