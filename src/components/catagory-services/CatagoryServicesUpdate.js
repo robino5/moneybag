@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate,useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import {
@@ -17,7 +17,7 @@ import {
   CFormCheck,
 } from "@coreui/react";
 
-const CatagoryServicesAdd = () => {
+const CatagoryServicesUpdate = () => {
   const {
     register,
     formState: { errors, isDirty },
@@ -25,11 +25,14 @@ const CatagoryServicesAdd = () => {
     setValue,
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
+  const location = useLocation();
   const [catserviceList, setCatServiceList] = useState();
 
   useEffect(() => {
     getCatService();
   }, []);
+
+  console.log(location.state)
 
   const getCatService = () => {
     const headers = {
@@ -47,7 +50,7 @@ const CatagoryServicesAdd = () => {
       });
   };
 
-  const saveCatService = (e) => {
+  const updateCatService = (e) => {
     const catServiceData = {
       service_no: e.cat_service_id,
       name: e.cat_service_name,
@@ -58,13 +61,13 @@ const CatagoryServicesAdd = () => {
       status: e.status ? 1 : 0,
       parent_no: parseInt(e.parent_category),
     };
-    console.log(catServiceData);
+    console.log("test",catServiceData);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
       .post(
-        `${process.env.REACT_APP_API_URL}category-services/`,
+        `${process.env.REACT_APP_API_URL}category-services/service/${location.state.id}`,
         catServiceData,
         {
           headers,
@@ -74,7 +77,7 @@ const CatagoryServicesAdd = () => {
         console.log(response);
         swal({
           position: "top-end",
-          text: "Category Service Created Successfull",
+          text: "Category Service Updated Successfull",
           icon: "success",
           button: false,
           timer: 1500,
@@ -110,7 +113,7 @@ const CatagoryServicesAdd = () => {
           <CCol md={8}>
             <CCard className="p-4">
               <CCardBody>
-                <CForm onSubmit={handleSubmit(saveCatService)}>
+                <CForm onSubmit={handleSubmit(updateCatService)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Category Service ID
@@ -118,6 +121,7 @@ const CatagoryServicesAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
+                        defaultValue={location.state.service_no}
                         {...register("cat_service_id")}
                         placeholder="Category Service ID"
                       />
@@ -130,6 +134,7 @@ const CatagoryServicesAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
+                        defaultValue={location.state.name}
                         {...register("cat_service_name", {
                           required: "Please provide Category Service Name",
                         })}
@@ -147,6 +152,7 @@ const CatagoryServicesAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
+                        defaultValue={location.state.short_name}
                         {...register("cat_short_name", {
                           required: "Please provide Category Short Name",
                         })}
@@ -163,6 +169,7 @@ const CatagoryServicesAdd = () => {
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormTextarea
+                       defaultValue={location.state.remarks}
                         {...register("cat_remarks")}
                         placeholder="Remarks"
                       ></CFormTextarea>
@@ -194,6 +201,10 @@ const CatagoryServicesAdd = () => {
                     <CCol sm={9}>
                       <CFormCheck
                         label="Is Group?"
+                        defaultChecked={
+                          location.state.is_group
+                          == 1 ? true : false
+                        }
                         {...register("cat_group")}
                       />
                     </CCol>
@@ -203,7 +214,9 @@ const CatagoryServicesAdd = () => {
                       Status
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormCheck label="Active" {...register("status")} />
+                      <CFormCheck label="Active"  defaultChecked={
+                          location.state.status == 1 ? true : false
+                        } {...register("status")} />
                     </CCol>
                   </CRow>
                   <div className="text-center ">
@@ -212,8 +225,8 @@ const CatagoryServicesAdd = () => {
                         Cancle
                       </CButton>
                     </Link>
-                    <CButton type="submit" color="success">
-                      Save
+                    <CButton type="submit" color="info">
+                      update
                     </CButton>
                   </div>
                 </CForm>
@@ -226,4 +239,4 @@ const CatagoryServicesAdd = () => {
   );
 };
 
-export default CatagoryServicesAdd;
+export default CatagoryServicesUpdate;

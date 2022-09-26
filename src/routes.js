@@ -94,6 +94,9 @@ const CategoryList = React.lazy(() =>
 const CatagoryServicesAdd = React.lazy(() =>
   import("./components/catagory-services/CatagoryServicesAdd")
 );
+const CatagoryServicesUpdate = React.lazy(() =>
+  import("./components/catagory-services/CatagoryServicesUpdate")
+);
 const CatagoryServicesList = React.lazy(() =>
   import("./components/catagory-services/CatagoryServicesList")
 );
@@ -212,6 +215,11 @@ const routes = [
     path: "/category-services/add-category-services",
     name: "add-orgnization",
     element: CatagoryServicesAdd,
+  },
+  {
+    path: "/category-services/update-category-services",
+    name: "update-orgnization",
+    element: CatagoryServicesUpdate,
   },
   { path: "/partner", name: "orgnization", element: PartnerList },
   {
