@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import swal from "sweetalert";
@@ -18,7 +18,7 @@ import {
   CFormCheck,
 } from "@coreui/react";
 
-const PartnerAdd = () => {
+const PartnerUpdate = () => {
   const {
     register,
     formState: { errors, isDirty },
@@ -26,9 +26,8 @@ const PartnerAdd = () => {
     setValue,
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
+  const location = useLocation();
   const [organizationList, setOrganizationList] = useState();
-  console.log("org", organizationList);
-
   const savePartner = (e) => {
     const partnerdata = {
       partner_id: e.partner_id,
@@ -36,41 +35,41 @@ const PartnerAdd = () => {
       organization_id: parseInt(e.org_name),
       email: e.email,
       phone: e.phone,
-      parent_no: 1,
       fax: e.fax,
       contact_person: e.contace_person,
       contact_person_mobile: e.contace_person_mobile,
       is_active: e.status ? 1 : 0,
+
     };
-    console.log(partnerdata);
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .post(`${process.env.REACT_APP_API_URL}partners/`, partnerdata, {
-        headers,
-      })
-      .then((response) => {
-        console.log(response);
-        swal({
-          position: "top-end",
-          text: "Category Service Created Successfull",
-          icon: "success",
-          button: false,
-          timer: 1500,
-        });
-        navigate("/partner");
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        swal({
-          position: "top-end",
-          text: error.response.data.detail,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
-      });
+    console.log("kk",partnerdata);
+    // const headers = {
+    //   Authorization: `Bearer ${localStorage.getItem("token")}`,
+    // };
+    // axios
+    //   .post(`${process.env.REACT_APP_API_URL}partners/update/${location.state.id}`, partnerdata, {
+    //     headers,
+    //   })
+    //   .then((response) => {
+    //     console.log(response);
+    //     swal({
+    //       position: "top-end",
+    //       text: "Category Service Created Successfull",
+    //       icon: "success",
+    //       button: false,
+    //       timer: 1500,
+    //     });
+    //     navigate("/partner");
+    //   })
+    //   .catch((error) => {
+    //     console.error("There was an error!", error);
+    //     swal({
+    //       position: "top-end",
+    //       text: error.response.data.detail,
+    //       icon: "error",
+    //       button: false,
+    //       timer: 1500,
+    //     });
+    //   });
   };
 
   const getOrganization = () => {
@@ -81,8 +80,7 @@ const PartnerAdd = () => {
       .get(`${process.env.REACT_APP_API_URL}financial-organizations/`, {
         headers,
       })
-      .then((responce) => {
-        console.log(responce.data), setOrganizationList(responce.data);
+      .then((responce) => { setOrganizationList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -102,7 +100,18 @@ const PartnerAdd = () => {
   }
 
 
-  console.log("Option", getOption(organizationList))
+
+  const selectOption = (options) => {
+    let val
+      options&&options.forEach((option) => {
+        if (option.id === location.state.organization_id){
+          val= option.id;
+        }
+      })
+      return val;
+  }
+
+  console.log(selectOption(organizationList));
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row">
@@ -120,6 +129,7 @@ const PartnerAdd = () => {
                       <CFormInput
                         type="text"
                         {...register("partner_id")}
+                        defaultValue={location.state.partner_id}
                         placeholder=" Partner Id"
                       />
                     </CCol>
@@ -134,6 +144,7 @@ const PartnerAdd = () => {
                         {...register("partner_name", {
                           required: "Please provide Partner Name",
                         })}
+                        defaultValue={location.state.partner_name}
                         placeholder="Partner Name"
                       />
                       <span className="text-danger">
@@ -150,9 +161,8 @@ const PartnerAdd = () => {
                         aria-label="Default select example"
                         value={getOption(organizationList).value}
                         options={getOption(organizationList)}
-                        {...register("org_name", {
-                          required: "Please provide Organization Name",
-                        })}
+                        defaultValue={selectOption(organizationList) }
+                        {...register("org_name")}
                       >
                       </CFormSelect>
                       <span className="text-danger">
@@ -168,6 +178,7 @@ const PartnerAdd = () => {
                       <CFormInput
                         type="text"
                         {...register("email")}
+                        defaultValue={location.state.email}
                         placeholder="Email"
                       />
                     </CCol>
@@ -180,6 +191,7 @@ const PartnerAdd = () => {
                       <CFormInput
                         type="text"
                         {...register("phone")}
+                        defaultValue={location.state.phone}
                         placeholder="Phone"
                       />
                     </CCol>
@@ -192,6 +204,7 @@ const PartnerAdd = () => {
                       <CFormInput
                         type="text"
                         {...register("fax")}
+                        defaultValue={location.state.fax}
                         placeholder="Fax"
                       />
                     </CCol>
@@ -205,6 +218,7 @@ const PartnerAdd = () => {
                         type="text"
                         {...register("contace_person")}
                         placeholder="Contact Person"
+                        defaultValue={location.state.contact_person}
                       />
                     </CCol>
                   </CRow>
@@ -216,6 +230,7 @@ const PartnerAdd = () => {
                       <CFormInput
                         type="text"
                         {...register("contace_person_mobile")}
+                        defaultValue={location.state.contact_person_mobile}
                         placeholder="Contact Person mobile"
                       />
                     </CCol>
@@ -225,7 +240,11 @@ const PartnerAdd = () => {
                       Status
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormCheck label="Active" {...register("status")} />
+                      <CFormCheck label="Active"
+                        defaultChecked={
+                          location.state.is_active == 1 ? true : false
+                        }
+                        {...register("status")} />
                     </CCol>
                   </CRow>
                   <div className="text-center ">
@@ -234,8 +253,8 @@ const PartnerAdd = () => {
                         Cancle
                       </CButton>
                     </Link>
-                    <CButton disabled={!isDirty}  type="submit" color="success">
-                      Save
+                    <CButton type="submit" color="info">
+                      Update
                     </CButton>
                   </div>
                 </CForm>
@@ -248,4 +267,4 @@ const PartnerAdd = () => {
   );
 };
 
-export default PartnerAdd;
+export default PartnerUpdate;

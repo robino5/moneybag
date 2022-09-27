@@ -25,6 +25,7 @@ const BranchAdd = () => {
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
   const [partnerList, setPartnerList] = useState();
+  const [organizationList, setOrganizationList] = useState();
 
   const savePartnerBranch = (e) => {
     const partnerBranchData = {
@@ -55,8 +56,25 @@ const BranchAdd = () => {
       });
   };
 
+  const getOrganization = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}financial-organizations/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setOrganizationList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
   useEffect(() => {
     getPartnerList();
+    getOrganization();
   }, []);
 
   const getOption = (e) => {
@@ -117,9 +135,11 @@ const BranchAdd = () => {
                       <CFormSelect aria-label="Default select example">
                         {partnerList &&
                           getOption(partnerList).map((partner, index) => (
-                            <option value={partner.id} key={index}>
-                              {partner.organization_id}
-                            </option>
+                            organizationList&&organizationList.map((organization) => (
+                              <option value={partner.id} key={index}>
+                                {organization.id}
+                              </option>
+                          ))
                           ))}
                       </CFormSelect>
                     </CCol>

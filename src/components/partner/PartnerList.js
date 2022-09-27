@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { CCol, CContainer, CRow, CButton } from "@coreui/react";
 import axios from "axios";
 
 const PartnerList = () => {
   const [partnerList, setPartnerList] = useState();
+  const navigate = useNavigate();
 
   const getPartnerList = () => {
     const headers = {
@@ -58,11 +59,9 @@ const PartnerList = () => {
           <CButton
             className="btn btn-sm d-inline mx-1"
             color="info"
-            // onClick={() => {
-            //   navigate("/category-services/update-category-services", {
-            //     state: row,
-            //   });
-            // }}
+            onClick={() => {
+              navigate("/partner/update-partner", { state: row });
+            }}
           >
             Update
           </CButton>
@@ -83,7 +82,7 @@ const PartnerList = () => {
         </CRow>
         <CRow className="justify-content-center">
           <CCol md={12}>
-            <DataTable columns={comumn} data={partnerList} />
+            <DataTable columns={comumn} data={partnerList} pagination />
           </CCol>
         </CRow>
       </CContainer>

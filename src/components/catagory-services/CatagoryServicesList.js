@@ -88,7 +88,7 @@ const CatagoryServicesList = () => {
         </CRow>
         <CRow className="justify-content-center">
           <CCol md={12}>
-            <DataTable columns={comumn} data={catserviceList} />
+            <DataTable columns={comumn} data={catserviceList} pagination/>
           </CCol>
         </CRow>
       </CContainer>

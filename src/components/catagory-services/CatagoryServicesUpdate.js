@@ -180,7 +180,7 @@ const CatagoryServicesUpdate = () => {
                       Category
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormSelect
+                      <CFormSelect se
                         aria-label="Default select example"
                         type="number"
                         {...register("parent_category")}

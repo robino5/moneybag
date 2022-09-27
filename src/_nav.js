@@ -87,11 +87,11 @@ const _nav = [
     name: "Category",
     to: "",
     items: [
-      {
-        component: CNavItem,
-        name: "Category List",
-        to: "/category",
-      },
+      // {
+      //   component: CNavItem,
+      //   name: "Category List",
+      //   to: "/category",
+      // },
       {
         component: CNavItem,
         name: "Category Services List",
