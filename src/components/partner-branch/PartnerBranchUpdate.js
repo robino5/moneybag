@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import swal from "sweetalert";
 import {
   CCard,
   CCardBody,
@@ -24,20 +25,57 @@ const PartnerBranchUpdate = () => {
     setValue,
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location.state);
   const [partnerList, setPartnerList] = useState();
   const [organizationList, setOrganizationList] = useState();
 
   const savePartnerBranch = (e) => {
+    console.log(e.partner_brunch_organization);
+
     const partnerBranchData = {
       branch_id: e.branch_id,
       branch_name: e.branch_name,
       branch_code: e.branch_code,
       shift_code: e.shift_code,
       addr1: e.address1,
+      partner_no: parseInt(e.partner_brunch_organization),
       addr2: e.address2,
       is_active: e.status ? 1 : 0,
     };
     console.log(partnerBranchData);
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}partner-branches/update/${location.state.id}`,
+        partnerBranchData,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        swal({
+          position: "top-end",
+          text: "Partner Branch update Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
+        navigate("/partner-branch");
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: error.response.data.detail,
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
+      });
   };
 
   const getPartnerList = () => {
@@ -106,6 +144,7 @@ const PartnerBranchUpdate = () => {
                       <CFormInput
                         type="text"
                         {...register("branch_id")}
+                        defaultValue={location.state.branch_id}
                         placeholder="Branch ID"
                       />
                     </CCol>
@@ -117,9 +156,8 @@ const PartnerBranchUpdate = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("branch_name", {
-                          required: "Please provide Branch Name",
-                        })}
+                        {...register("branch_name")}
+                        defaultValue={location.state.branch_name}
                         placeholder="Branch Name"
                       />
                       <span className="text-danger">
@@ -132,14 +170,23 @@ const PartnerBranchUpdate = () => {
                       Organization Name
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormSelect aria-label="Default select example">
-                        {partnerList &&
-                          getOption(partnerList).map((partner, index) => (
-                            organizationList&&organizationList.map((organization) => (
-                              <option value={partner.id} key={index}>
-                                {organization.id}
-                              </option>
-                          ))
+                      <CFormSelect
+                        {...register("partner_brunch_organization")}
+                        aria-label="Default select example"
+                      >
+                        {organizationList &&
+                          organizationList.map((organization, index) => (
+                            <option
+                              value={organization.id}
+                              key={index}
+                              selected={
+                                organization.id === location.state.partner_no
+                                  ? "selected"
+                                  : ""
+                              }
+                            >
+                              {organization.name}
+                            </option>
                           ))}
                       </CFormSelect>
                     </CCol>
@@ -151,9 +198,8 @@ const PartnerBranchUpdate = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("branch_code", {
-                          required: "Please provide Branch code",
-                        })}
+                        {...register("branch_code")}
+                        defaultValue={location.state.branch_code}
                         placeholder="Branch Code"
                       />
                       <span className="text-danger">
@@ -169,6 +215,7 @@ const PartnerBranchUpdate = () => {
                       <CFormInput
                         type="text"
                         {...register("shift_code")}
+                        defaultValue={location.state.shift_code}
                         placeholder="Shift Code"
                       />
                     </CCol>
@@ -181,6 +228,7 @@ const PartnerBranchUpdate = () => {
                       <CFormInput
                         type="text"
                         {...register("address1")}
+                        defaultValue={location.state.addr1}
                         placeholder="Address Line 1"
                       />
                     </CCol>
@@ -193,6 +241,7 @@ const PartnerBranchUpdate = () => {
                       <CFormInput
                         type="text"
                         {...register("address2")}
+                        defaultValue={location.state.addr2}
                         placeholder="Address Line 2"
                       />
                     </CCol>
@@ -202,7 +251,13 @@ const PartnerBranchUpdate = () => {
                       Status
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormCheck label="Active" {...register("status")} />
+                      <CFormCheck
+                        label="Active"
+                        defaultChecked={
+                          location.state.is_active == 1 ? true : false
+                        }
+                        {...register("status")}
+                      />
                     </CCol>
                   </CRow>
                   <div className="text-center ">
@@ -211,8 +266,8 @@ const PartnerBranchUpdate = () => {
                         Cancle
                       </CButton>
                     </Link>
-                    <CButton type="submit" color="success">
-                      Save
+                    <CButton type="submit" color="info">
+                      Update
                     </CButton>
                   </div>
                 </CForm>

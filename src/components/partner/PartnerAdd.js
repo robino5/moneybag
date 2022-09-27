@@ -95,14 +95,14 @@ const PartnerAdd = () => {
 
   const getOption = (e) => {
     let options = [];
-    e && e.forEach((element) => {
-      options.push({ value: element.id, label: element.name });
-    })
+    e &&
+      e.forEach((element) => {
+        options.push({ value: element.id, label: element.name });
+      });
     return options;
-  }
+  };
 
-
-  console.log("Option", getOption(organizationList))
+  console.log("Option", getOption(organizationList));
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row">
@@ -148,12 +148,14 @@ const PartnerAdd = () => {
                     <CCol sm={9}>
                       <CFormSelect
                         aria-label="Default select example"
-                        value={getOption(organizationList).value}
-                        options={getOption(organizationList)}
-                        {...register("org_name", {
-                          required: "Please provide Organization Name",
-                        })}
+                        {...register("org_name")}
                       >
+                        {organizationList &&
+                          organizationList.map((organization, index) => (
+                            <option value={organization.id} key={index}>
+                              {organization.name}
+                            </option>
+                          ))}
                       </CFormSelect>
                       <span className="text-danger">
                         {errors.org_name?.message}
@@ -234,7 +236,7 @@ const PartnerAdd = () => {
                         Cancle
                       </CButton>
                     </Link>
-                    <CButton disabled={!isDirty}  type="submit" color="success">
+                    <CButton disabled={!isDirty} type="submit" color="success">
                       Save
                     </CButton>
                   </div>

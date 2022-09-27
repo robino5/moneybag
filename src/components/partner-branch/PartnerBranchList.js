@@ -60,11 +60,11 @@ const PartnerBranchList = () => {
           <CButton
             className="btn btn-sm d-inline mx-1"
             color="info"
-            // onClick={() => {
-            //   navigate("/category-services/update-category-services", {
-            //     state: row,
-            //   });
-            // }}
+            onClick={() => {
+              navigate("/partner-branch/update-partner-branch", {
+                state: row,
+              });
+            }}
           >
             Update
           </CButton>

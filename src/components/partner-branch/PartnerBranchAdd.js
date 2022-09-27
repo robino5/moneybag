@@ -16,7 +16,7 @@ import {
   CButton,
 } from "@coreui/react";
 
-const BranchAdd = () => {
+const PartnerBranchAdd = () => {
   const {
     register,
     formState: { errors, isDirty },
@@ -35,9 +35,42 @@ const BranchAdd = () => {
       shift_code: e.shift_code,
       addr1: e.address1,
       addr2: e.address2,
+      partner_no: parseInt(e.partner_brunch_organization),
       is_active: e.status ? 1 : 0,
     };
     console.log(partnerBranchData);
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}partner-branches/`,
+        partnerBranchData,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        swal({
+          position: "top-end",
+          text: "Category Service Created Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
+        navigate("/partner-branch");
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: error.response.data.detail,
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
+      });
   };
 
   const getPartnerList = () => {
@@ -132,14 +165,17 @@ const BranchAdd = () => {
                       Organization Name
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormSelect aria-label="Default select example">
-                        {partnerList &&
-                          getOption(partnerList).map((partner, index) => (
-                            organizationList&&organizationList.map((organization) => (
-                              <option value={partner.id} key={index}>
-                                {organization.id}
-                              </option>
-                          ))
+                      <CFormSelect
+                        {...register("partner_brunch_organization", {
+                          required: "Please Select  organization",
+                        })}
+                        aria-label="Default select example"
+                      >
+                        {organizationList &&
+                          organizationList.map((organization, index) => (
+                            <option value={organization.id} key={index}>
+                              {organization.name}
+                            </option>
                           ))}
                       </CFormSelect>
                     </CCol>
@@ -225,4 +261,4 @@ const BranchAdd = () => {
   );
 };
 
-export default BranchAdd;
+export default PartnerBranchAdd;

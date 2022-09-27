@@ -101,7 +101,9 @@ const CatagoryServicesList = React.lazy(() =>
   import("./components/catagory-services/CatagoryServicesList")
 );
 const PartnerAdd = React.lazy(() => import("./components/partner/PartnerAdd"));
-const PartnerUpdate = React.lazy(() => import("./components/partner/PartnerUpdate"));
+const PartnerUpdate = React.lazy(() =>
+  import("./components/partner/PartnerUpdate")
+);
 const PartnerList = React.lazy(() =>
   import("./components/partner/PartnerList")
 );
@@ -146,6 +148,9 @@ const PartnerBranchList = React.lazy(() =>
 );
 const PartnerBranchAdd = React.lazy(() =>
   import("./components/partner-branch/PartnerBranchAdd")
+);
+const PartnerBranchUpdate = React.lazy(() =>
+  import("./components/partner-branch/PartnerBranchUpdate")
 );
 
 const routes = [
@@ -313,6 +318,11 @@ const routes = [
     path: "/partner-branch/add-partner-branch",
     name: "add-partner-branch",
     element: PartnerBranchAdd,
+  },
+  {
+    path: "/partner-branch/update-partner-branch",
+    name: "update-partner-branch",
+    element: PartnerBranchUpdate,
   },
 ];
 

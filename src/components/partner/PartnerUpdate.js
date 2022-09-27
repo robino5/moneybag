@@ -39,37 +39,40 @@ const PartnerUpdate = () => {
       contact_person: e.contace_person,
       contact_person_mobile: e.contace_person_mobile,
       is_active: e.status ? 1 : 0,
-
     };
-    console.log("kk",partnerdata);
-    // const headers = {
-    //   Authorization: `Bearer ${localStorage.getItem("token")}`,
-    // };
-    // axios
-    //   .post(`${process.env.REACT_APP_API_URL}partners/update/${location.state.id}`, partnerdata, {
-    //     headers,
-    //   })
-    //   .then((response) => {
-    //     console.log(response);
-    //     swal({
-    //       position: "top-end",
-    //       text: "Category Service Created Successfull",
-    //       icon: "success",
-    //       button: false,
-    //       timer: 1500,
-    //     });
-    //     navigate("/partner");
-    //   })
-    //   .catch((error) => {
-    //     console.error("There was an error!", error);
-    //     swal({
-    //       position: "top-end",
-    //       text: error.response.data.detail,
-    //       icon: "error",
-    //       button: false,
-    //       timer: 1500,
-    //     });
-    //   });
+    console.log("kk", partnerdata);
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}partners/update/${location.state.id}`,
+        partnerdata,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        swal({
+          position: "top-end",
+          text: "Partner Update Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
+        navigate("/partner");
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: error.response.data.detail,
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
+      });
   };
 
   const getOrganization = () => {
@@ -80,7 +83,8 @@ const PartnerUpdate = () => {
       .get(`${process.env.REACT_APP_API_URL}financial-organizations/`, {
         headers,
       })
-      .then((responce) => { setOrganizationList(responce.data);
+      .then((responce) => {
+        setOrganizationList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -90,28 +94,6 @@ const PartnerUpdate = () => {
   useEffect(() => {
     getOrganization();
   }, []);
-
-  const getOption = (e) => {
-    let options = [];
-    e && e.forEach((element) => {
-      options.push({ value: element.id, label: element.name });
-    })
-    return options;
-  }
-
-
-
-  const selectOption = (options) => {
-    let val
-      options&&options.forEach((option) => {
-        if (option.id === location.state.organization_id){
-          val= option.id;
-        }
-      })
-      return val;
-  }
-
-  console.log(selectOption(organizationList));
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row">
@@ -158,12 +140,27 @@ const PartnerUpdate = () => {
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormSelect
+                        se
                         aria-label="Default select example"
-                        value={getOption(organizationList).value}
-                        options={getOption(organizationList)}
-                        defaultValue={selectOption(organizationList) }
+                        type="number"
                         {...register("org_name")}
                       >
+                        {organizationList &&
+                          organizationList.map((organization, index) => (
+                            <option
+                              value={organization.id}
+                              defaultValue={location.state.organization_id}
+                              selected={
+                                organization.id ===
+                                location.state.organization_id
+                                  ? "selected"
+                                  : ""
+                              }
+                              key={index}
+                            >
+                              {organization.name}
+                            </option>
+                          ))}
                       </CFormSelect>
                       <span className="text-danger">
                         {errors.org_name?.message}
@@ -240,11 +237,13 @@ const PartnerUpdate = () => {
                       Status
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormCheck label="Active"
+                      <CFormCheck
+                        label="Active"
                         defaultChecked={
                           location.state.is_active == 1 ? true : false
                         }
-                        {...register("status")} />
+                        {...register("status")}
+                      />
                     </CCol>
                   </CRow>
                   <div className="text-center ">
