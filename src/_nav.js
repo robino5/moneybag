@@ -84,18 +84,23 @@ const _nav = [
 
   {
     component: CNavGroup,
-    name: "Category",
+    name: "Setup",
     to: "",
     items: [
-      // {
-      //   component: CNavItem,
-      //   name: "Category List",
-      //   to: "/category",
-      // },
+      {
+        component: CNavItem,
+        name: "Bank Account",
+        to: "/bank-account",
+      },
       {
         component: CNavItem,
         name: "Category Services List",
         to: "/category-services",
+      },
+      {
+        component: CNavItem,
+        name: "Store List",
+        to: "/store",
       },
     ],
   },

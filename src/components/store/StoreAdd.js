@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import swal from "sweetalert";
 import axios from "axios";
 import {
   CCard,
@@ -16,7 +17,7 @@ import {
   CButton,
 } from "@coreui/react";
 
-const PartnerBranchAdd = () => {
+const StoreAdd = () => {
   const {
     register,
     formState: { errors, isDirty },
@@ -24,42 +25,38 @@ const PartnerBranchAdd = () => {
     setValue,
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
-  const [partnerList, setPartnerList] = useState();
-  const [organizationList, setOrganizationList] = useState();
 
-  const savePartnerBranch = (e) => {
-    const partnerBranchData = {
-      branch_id: e.branch_id,
-      branch_name: e.branch_name,
-      branch_code: e.branch_code,
-      shift_code: e.shift_code,
-      addr1: e.address1,
-      addr2: e.address2,
-      partner_no: parseInt(e.partner_brunch_organization),
+  const saveStore = (e) => {
+    const storeDate = {
+      store_id: e.store_id,
+      store_name: e.store_name,
+      short_name: e.short_name,
+      email: e.email,
+      mobile: e.mobile,
+      contact_person: e.contact_person,
+      address1: e.address1,
+      address2: e.address2,
+      hash_id: e.hash_id,
       is_active: e.status ? 1 : 0,
     };
-    console.log(partnerBranchData);
+    console.log(storeDate);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .post(
-        `${process.env.REACT_APP_API_URL}partner-branches/`,
-        partnerBranchData,
-        {
-          headers,
-        }
-      )
+      .post(`${process.env.REACT_APP_API_URL}stores/`, storeDate, {
+        headers,
+      })
       .then((response) => {
         console.log(response);
         swal({
           position: "top-end",
-          text: "Category Service Created Successfull",
+          text: "Store Created Successfull",
           icon: "success",
           button: false,
           timer: 1500,
         });
-        navigate("/partner-branch");
+        navigate("/store");
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -73,43 +70,6 @@ const PartnerBranchAdd = () => {
       });
   };
 
-  const getPartnerList = () => {
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .get(`${process.env.REACT_APP_API_URL}partners/`, {
-        headers,
-      })
-      .then((responce) => {
-        console.log(responce.data), setPartnerList(responce.data);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
-  };
-
-  const getOrganization = () => {
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .get(`${process.env.REACT_APP_API_URL}financial-organizations/`, {
-        headers,
-      })
-      .then((responce) => {
-        console.log(responce.data), setOrganizationList(responce.data);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
-  };
-
-  useEffect(() => {
-    getPartnerList();
-    getOrganization();
-  }, []);
-
   return (
     <div className="bg-light min-vh-100 d-flex flex-row">
       <CContainer>
@@ -117,67 +77,47 @@ const PartnerBranchAdd = () => {
           <CCol md={8}>
             <CCard className="p-4">
               <CCardBody>
-                <CForm onSubmit={handleSubmit(savePartnerBranch)}>
+                <CForm onSubmit={handleSubmit(saveStore)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Branch ID
+                      Store ID
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("branch_id")}
-                        placeholder="Branch ID"
+                        {...register("store_id")}
+                        placeholder="Store ID"
                       />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Branch Name
+                      Store Name
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("branch_name", {
-                          required: "Please provide Branch Name",
+                        {...register("store_name", {
+                          required: "Please provide Store Name",
                         })}
-                        placeholder="Branch Name"
+                        placeholder="Store Name"
                       />
                       <span className="text-danger">
-                        {errors.branch_name?.message}
+                        {errors.store_name?.message}
                       </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Organization Name
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormSelect
-                        {...register("partner_brunch_organization", {
-                          required: "Please Select  organization",
-                        })}
-                        aria-label="Default select example"
-                      >
-                        {organizationList &&
-                          organizationList.map((organization, index) => (
-                            <option value={organization.id} key={index}>
-                              {organization.name}
-                            </option>
-                          ))}
-                      </CFormSelect>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Branch Code
+                      Short Name
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("branch_code", {
-                          required: "Please provide Branch code",
+                        {...register("short_name", {
+                          required: "Please provide Short Name",
                         })}
-                        placeholder="Branch Code"
+                        placeholder="Short Name"
                       />
                       <span className="text-danger">
                         {errors.branch_code?.message}
@@ -186,13 +126,37 @@ const PartnerBranchAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Shift Code
+                      E-mail
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("shift_code")}
-                        placeholder="Shift Code"
+                        {...register("email")}
+                        placeholder="E-mail"
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Phone Number
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        {...register("mobile")}
+                        placeholder="Phone Number"
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Contact Person
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        {...register("contact_person")}
+                        placeholder="Contact Person"
                       />
                     </CCol>
                   </CRow>
@@ -222,6 +186,18 @@ const PartnerBranchAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
+                      Hash Id
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        {...register("hash_id")}
+                        placeholder="Hash Id"
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
                       Status
                     </CFormLabel>
                     <CCol sm={9}>
@@ -229,12 +205,12 @@ const PartnerBranchAdd = () => {
                     </CCol>
                   </CRow>
                   <div className="text-center ">
-                    <Link to="/partner-branch">
+                    <Link to="/store">
                       <CButton color="danger" className="mx-3">
                         Cancle
                       </CButton>
                     </Link>
-                    <CButton type="submit" color="success">
+                    <CButton disabled={!isDirty} type="submit" color="success">
                       Save
                     </CButton>
                   </div>
@@ -248,4 +224,4 @@ const PartnerBranchAdd = () => {
   );
 };
 
-export default PartnerBranchAdd;
+export default StoreAdd;

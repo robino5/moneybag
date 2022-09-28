@@ -153,6 +153,20 @@ const PartnerBranchUpdate = React.lazy(() =>
   import("./components/partner-branch/PartnerBranchUpdate")
 );
 
+const StoreList = React.lazy(() => import("./components/store/StoreList"));
+const StoreAdd = React.lazy(() => import("./components/store/StoreAdd"));
+const StoreUpdate = React.lazy(() => import("./components/store/StoreUpdate"));
+
+const BankAccountList = React.lazy(() =>
+  import("./components/bank-account/BankAccountList")
+);
+const BankAccountAdd = React.lazy(() =>
+  import("./components/bank-account/BankAccountAdd")
+);
+const BankAccountUpdate = React.lazy(() =>
+  import("./components/bank-account/BankAccountUpdate")
+);
+
 const routes = [
   // { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", element: Dashboard },
@@ -323,6 +337,38 @@ const routes = [
     path: "/partner-branch/update-partner-branch",
     name: "update-partner-branch",
     element: PartnerBranchUpdate,
+  },
+
+  {
+    path: "/store",
+    name: "store",
+    element: StoreList,
+  },
+  {
+    path: "/store/add-store",
+    name: "add-store",
+    element: StoreAdd,
+  },
+  {
+    path: "/store/update-store",
+    name: "update-store",
+    element: StoreUpdate,
+  },
+
+  {
+    path: "/bank-account",
+    name: "bank-account",
+    element: BankAccountList,
+  },
+  {
+    path: "/bank-account/add-bank-account",
+    name: "add-bank-account",
+    element: BankAccountAdd,
+  },
+  {
+    path: "/bank-account/update-bank-account",
+    name: "update-bank-account",
+    element: BankAccountUpdate,
   },
 ];
 

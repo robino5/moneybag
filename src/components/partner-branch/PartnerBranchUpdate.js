@@ -26,19 +26,20 @@ const PartnerBranchUpdate = () => {
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location.state);
   const [partnerList, setPartnerList] = useState();
   const [organizationList, setOrganizationList] = useState();
 
-  const savePartnerBranch = (e) => {
-
+  const updatePartnerBranch = (e) => {
     const partnerBranchData = {
       branch_id: e.branch_id,
       branch_name: e.branch_name,
       branch_code: e.branch_code,
       shift_code: e.shift_code,
       addr1: e.address1,
-      partner_no: e.partner_brunch_organization===''?location.state.partner_no:parseInt(e.partner_brunch_organization),
+      partner_no:
+        e.partner_brunch_organization === ""
+          ? location.state.partner_no
+          : parseInt(e.partner_brunch_organization),
       addr2: e.address2,
       is_active: e.status ? 1 : 0,
     };
@@ -134,7 +135,7 @@ const PartnerBranchUpdate = () => {
           <CCol md={8}>
             <CCard className="p-4">
               <CCardBody>
-                <CForm onSubmit={handleSubmit(savePartnerBranch)}>
+                <CForm onSubmit={handleSubmit(updatePartnerBranch)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Branch ID

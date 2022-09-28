@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import swal from "sweetalert";
 import axios from "axios";
 import {
   CCard,
@@ -16,50 +17,48 @@ import {
   CButton,
 } from "@coreui/react";
 
-const PartnerBranchAdd = () => {
+const BankAccountAdd = () => {
   const {
     register,
     formState: { errors, isDirty },
     handleSubmit,
     setValue,
   } = useForm({ mode: "all" });
-  const navigate = useNavigate();
-  const [partnerList, setPartnerList] = useState();
   const [organizationList, setOrganizationList] = useState();
+  const [storeList, setStoreList] = useState();
+  const navigate = useNavigate();
 
-  const savePartnerBranch = (e) => {
-    const partnerBranchData = {
-      branch_id: e.branch_id,
+  const saveBankAccount = (e) => {
+    const bankAccountDate = {
+      bank_id: e.bank_account_id,
+      organization_id: parseInt(e.bank_account_organization),
+      store_id: parseInt(e.bank_account_store),
+      account_name: e.account_name,
+      account_no: e.account_no,
       branch_name: e.branch_name,
-      branch_code: e.branch_code,
-      shift_code: e.shift_code,
-      addr1: e.address1,
-      addr2: e.address2,
-      partner_no: parseInt(e.partner_brunch_organization),
+      account_type: parseInt(e.account_type),
+      swift_code: e.swift_code,
+      route_no: e.route_number,
       is_active: e.status ? 1 : 0,
     };
-    console.log(partnerBranchData);
+    console.log(bankAccountDate);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .post(
-        `${process.env.REACT_APP_API_URL}partner-branches/`,
-        partnerBranchData,
-        {
-          headers,
-        }
-      )
+      .post(`${process.env.REACT_APP_API_URL}bank-accounts/`, bankAccountDate, {
+        headers,
+      })
       .then((response) => {
         console.log(response);
         swal({
           position: "top-end",
-          text: "Category Service Created Successfull",
+          text: "Bank Account Created Successfull",
           icon: "success",
           button: false,
           timer: 1500,
         });
-        navigate("/partner-branch");
+        navigate("/bank-account");
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -70,22 +69,6 @@ const PartnerBranchAdd = () => {
           button: false,
           timer: 1500,
         });
-      });
-  };
-
-  const getPartnerList = () => {
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .get(`${process.env.REACT_APP_API_URL}partners/`, {
-        headers,
-      })
-      .then((responce) => {
-        console.log(responce.data), setPartnerList(responce.data);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
       });
   };
 
@@ -105,9 +88,25 @@ const PartnerBranchAdd = () => {
       });
   };
 
+  const getStoreList = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}stores/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setStoreList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
   useEffect(() => {
-    getPartnerList();
     getOrganization();
+    getStoreList();
   }, []);
 
   return (
@@ -117,17 +116,99 @@ const PartnerBranchAdd = () => {
           <CCol md={8}>
             <CCard className="p-4">
               <CCardBody>
-                <CForm onSubmit={handleSubmit(savePartnerBranch)}>
+                <CForm onSubmit={handleSubmit(saveBankAccount)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Branch ID
+                      Bank Account ID
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("branch_id")}
-                        placeholder="Branch ID"
+                        {...register("bank_account_id")}
+                        placeholder="Bank Account ID"
                       />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Organization
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormSelect
+                        {...register("bank_account_organization", {
+                          required: "Please Select  organization",
+                        })}
+                        aria-label="Default select example"
+                      >
+                        <option>Select Organization</option>
+                        {organizationList &&
+                          organizationList.map((organization, index) => (
+                            <option value={organization.id} key={index}>
+                              {organization.name}
+                            </option>
+                          ))}
+                      </CFormSelect>
+                      <span className="text-danger">
+                        {errors.bank_account_organization?.message}
+                      </span>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Store
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormSelect
+                        {...register("bank_account_store", {
+                          required: "Please Select  Store",
+                        })}
+                        aria-label="Default select example"
+                      >
+                        <option>Select Store</option>
+                        {storeList &&
+                          storeList.map((store, index) => (
+                            <option value={store.id} key={index}>
+                              {store.store_name}
+                            </option>
+                          ))}
+                      </CFormSelect>
+                      <span className="text-danger">
+                        {errors.bank_account_store?.message}
+                      </span>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Account Name
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        {...register("account_name", {
+                          required: "Please provide Account Name",
+                        })}
+                        placeholder="Account Name"
+                      />
+                      <span className="text-danger">
+                        {errors.account_name?.message}
+                      </span>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Account No.
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        {...register("account_no", {
+                          required: "Please provide  Account No.",
+                        })}
+                        placeholder=" Account No."
+                      />
+                      <span className="text-danger">
+                        {errors.account_no?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -137,86 +218,48 @@ const PartnerBranchAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("branch_name", {
-                          required: "Please provide Branch Name",
-                        })}
+                        {...register("branch_name")}
                         placeholder="Branch Name"
                       />
-                      <span className="text-danger">
-                        {errors.branch_name?.message}
-                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Organization Name
+                      Account Type
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormSelect
-                        {...register("partner_brunch_organization", {
-                          required: "Please Select  organization",
-                        })}
+                        {...register("account_type")}
                         aria-label="Default select example"
                       >
-                        {organizationList &&
-                          organizationList.map((organization, index) => (
-                            <option value={organization.id} key={index}>
-                              {organization.name}
-                            </option>
-                          ))}
+                        <option>Select Store</option>
+                        <option value={1}>Saving Account</option>
+                        <option value={2}>Current Account</option>
+                        <option value={3}>Join Account</option>
                       </CFormSelect>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Branch Code
+                      Swift Code
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("branch_code", {
-                          required: "Please provide Branch code",
-                        })}
-                        placeholder="Branch Code"
-                      />
-                      <span className="text-danger">
-                        {errors.branch_code?.message}
-                      </span>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Shift Code
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("shift_code")}
-                        placeholder="Shift Code"
+                        {...register("swift_code")}
+                        placeholder="Swift Code"
                       />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Address 1
+                      Route Number
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("address1")}
-                        placeholder="Address Line 1"
-                      />
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Address 2
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("address2")}
-                        placeholder="Address Line 2"
+                        {...register("route_number")}
+                        placeholder=" Route Number"
                       />
                     </CCol>
                   </CRow>
@@ -229,12 +272,12 @@ const PartnerBranchAdd = () => {
                     </CCol>
                   </CRow>
                   <div className="text-center ">
-                    <Link to="/partner-branch">
+                    <Link to="/bank-account">
                       <CButton color="danger" className="mx-3">
                         Cancle
                       </CButton>
                     </Link>
-                    <CButton type="submit" color="success">
+                    <CButton disabled={!isDirty} type="submit" color="success">
                       Save
                     </CButton>
                   </div>
@@ -248,4 +291,4 @@ const PartnerBranchAdd = () => {
   );
 };
 
-export default PartnerBranchAdd;
+export default BankAccountAdd;

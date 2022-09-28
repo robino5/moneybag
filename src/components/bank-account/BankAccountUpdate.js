@@ -1,56 +1,65 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import swal from "sweetalert";
+import axios from "axios";
 import {
   CCard,
   CCardBody,
-  CFormTextarea,
+  CFormSelect,
   CCol,
   CContainer,
   CForm,
   CFormInput,
   CFormLabel,
   CRow,
-  CFormSelect,
-  CButton,
   CFormCheck,
+  CButton,
 } from "@coreui/react";
 
-const PartnerUpdate = () => {
+const BankAccountUpdate = () => {
   const {
     register,
     formState: { errors, isDirty },
     handleSubmit,
     setValue,
   } = useForm({ mode: "all" });
+  const [organizationList, setOrganizationList] = useState();
+  const [storeList, setStoreList] = useState();
   const navigate = useNavigate();
   const location = useLocation();
-  const [organizationList, setOrganizationList] = useState();
-  const updatePartner = (e) => {
-    const partnerdata = {
-      partner_id: e.partner_id,
-      partner_name: e.partner_name,
+
+  const saveBankAccount = (e) => {
+    console.log(e.bank_account_organization);
+    const bankAccountDate = {
+      bank_id: e.bank_account_id,
       organization_id:
-        e.org_name === ""
+        e.bank_account_organization === ""
           ? location.state.organization_id
-          : parseInt(e.org_name),
-      email: e.email,
-      phone: e.phone,
-      fax: e.fax,
-      contact_person: e.contace_person,
-      contact_person_mobile: e.contace_person_mobile,
+          : parseInt(e.bank_account_organization),
+      store_id:
+        e.bank_account_store === ""
+          ? location.state.store_id
+          : parseInt(e.bank_account_store),
+      account_name: e.account_name,
+      account_no: e.account_no,
+      branch_name: e.branch_name,
+      account_type:
+        e.account_type === ""
+          ? location.state.account_type
+          : parseInt(e.account_type),
+      swift_code: e.swift_code,
+      route_no: e.route_number,
       is_active: e.status ? 1 : 0,
     };
-    console.log("kk", partnerdata);
+    console.log("mm", bankAccountDate);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
       .post(
-        `${process.env.REACT_APP_API_URL}partners/update/${location.state.id}`,
-        partnerdata,
+        `${process.env.REACT_APP_API_URL}bank-accounts/update/${location.state.id}`,
+        bankAccountDate,
         {
           headers,
         }
@@ -59,12 +68,12 @@ const PartnerUpdate = () => {
         console.log(response);
         swal({
           position: "top-end",
-          text: "Partner Update Successfull",
+          text: "Bank Account Created Successfull",
           icon: "success",
           button: false,
           timer: 1500,
         });
-        navigate("/partner");
+        navigate("/bank-account");
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -87,7 +96,23 @@ const PartnerUpdate = () => {
         headers,
       })
       .then((responce) => {
-        setOrganizationList(responce.data);
+        console.log(responce.data), setOrganizationList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const getStoreList = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}stores/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setStoreList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -96,6 +121,7 @@ const PartnerUpdate = () => {
 
   useEffect(() => {
     getOrganization();
+    getStoreList();
   }, []);
 
   return (
@@ -105,36 +131,18 @@ const PartnerUpdate = () => {
           <CCol md={8}>
             <CCard className="p-4">
               <CCardBody>
-                <CForm onSubmit={handleSubmit(updatePartner)}>
+                <CForm onSubmit={handleSubmit(saveBankAccount)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Partner Id
+                      Bank Account ID
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("partner_id")}
-                        defaultValue={location.state.partner_id}
-                        placeholder=" Partner Id"
+                        defaultValue={location.state.bank_id}
+                        {...register("bank_account_id")}
+                        placeholder="Bank Account ID"
                       />
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Partner Name
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("partner_name", {
-                          required: "Please provide Partner Name",
-                        })}
-                        defaultValue={location.state.partner_name}
-                        placeholder="Partner Name"
-                      />
-                      <span className="text-danger">
-                        {errors.partner_name?.message}
-                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -143,94 +151,151 @@ const PartnerUpdate = () => {
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormSelect
+                        {...register("bank_account_organization")}
                         aria-label="Default select example"
-                        type="number"
-                        defaultValue={location.state.organization_id}
-                        {...register("org_name")}
                       >
                         {organizationList &&
                           organizationList.map((organization, index) => (
                             <option
                               value={organization.id}
+                              key={index}
                               selected={
                                 organization.id ===
                                 location.state.organization_id
                                   ? "selected"
                                   : ""
                               }
-                              key={index}
                             >
                               {organization.name}
                             </option>
                           ))}
                       </CFormSelect>
-                      <span className="text-danger">
-                        {errors.org_name?.message}
-                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Email
+                      Store
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormSelect
+                        {...register("bank_account_store")}
+                        aria-label="Default select example"
+                      >
+                        {storeList &&
+                          storeList.map((store, index) => (
+                            <option
+                              value={store.id}
+                              key={index}
+                              selected={
+                                store.id === location.state.store_id
+                                  ? "selected"
+                                  : ""
+                              }
+                            >
+                              {store.store_name}
+                            </option>
+                          ))}
+                      </CFormSelect>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Account Name
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("email")}
-                        defaultValue={location.state.email}
-                        placeholder="Email"
+                        defaultValue={location.state.account_name}
+                        {...register("account_name")}
+                        placeholder="Account Name"
                       />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Phone
+                      Account No.
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("phone")}
-                        defaultValue={location.state.phone}
-                        placeholder="Phone"
+                        {...register("account_no")}
+                        defaultValue={location.state.account_no}
+                        placeholder=" Account No."
                       />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Fax
+                      Branch Name
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("fax")}
-                        defaultValue={location.state.fax}
-                        placeholder="Fax"
+                        {...register("branch_name")}
+                        defaultValue={location.state.branch_name}
+                        placeholder="Branch Name"
                       />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Contact Person
+                      Account Type
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormSelect
+                        {...register("account_type")}
+                        aria-label="Default select example"
+                      >
+                        <option
+                          selected={
+                            location.state.account_type === 1 ? "selected" : ""
+                          }
+                          value={1}
+                        >
+                          Saving Account
+                        </option>
+                        <option
+                          selected={
+                            location.state.account_type === 2 ? "selected" : ""
+                          }
+                          value={2}
+                        >
+                          Current Account
+                        </option>
+                        <option
+                          selected={
+                            location.state.account_type === 3 ? "selected" : ""
+                          }
+                          value={3}
+                        >
+                          Join Account
+                        </option>
+                      </CFormSelect>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Swift Code
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("contace_person")}
-                        placeholder="Contact Person"
-                        defaultValue={location.state.contact_person}
+                        {...register("swift_code")}
+                        defaultValue={location.state.swift_code}
+                        placeholder="Swift Code"
                       />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Contact Person mobile
+                      Route Number
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("contace_person_mobile")}
-                        defaultValue={location.state.contact_person_mobile}
-                        placeholder="Contact Person mobile"
+                        {...register("route_number")}
+                        defaultValue={location.state.route_no}
+                        placeholder=" Route Number"
                       />
                     </CCol>
                   </CRow>
@@ -249,7 +314,7 @@ const PartnerUpdate = () => {
                     </CCol>
                   </CRow>
                   <div className="text-center ">
-                    <Link to="/partner">
+                    <Link to="/bank-account">
                       <CButton color="danger" className="mx-3">
                         Cancle
                       </CButton>
@@ -268,4 +333,4 @@ const PartnerUpdate = () => {
   );
 };
 
-export default PartnerUpdate;
+export default BankAccountUpdate;
