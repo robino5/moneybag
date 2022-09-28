@@ -31,7 +31,6 @@ const PartnerBranchUpdate = () => {
   const [organizationList, setOrganizationList] = useState();
 
   const savePartnerBranch = (e) => {
-    console.log(e.partner_brunch_organization);
 
     const partnerBranchData = {
       branch_id: e.branch_id,
@@ -39,7 +38,7 @@ const PartnerBranchUpdate = () => {
       branch_code: e.branch_code,
       shift_code: e.shift_code,
       addr1: e.address1,
-      partner_no: parseInt(e.partner_brunch_organization),
+      partner_no: e.partner_brunch_organization===''?location.state.partner_no:parseInt(e.partner_brunch_organization),
       addr2: e.address2,
       is_active: e.status ? 1 : 0,
     };

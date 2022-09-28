@@ -58,7 +58,7 @@ const CatagoryServicesUpdate = () => {
       short_name: e.cat_short_name,
       remarks: e.cat_remarks,
       is_group: e.cat_group ? 1 : 0,
-      is_parent: parseInt(e.parent_category),
+      is_parent: e.parent_category===''?location.state.is_parent:parseInt(e.parent_category),
       status: e.status ? 1 : 0,
     };
     console.log("test", catServiceData);

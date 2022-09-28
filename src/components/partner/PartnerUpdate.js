@@ -32,7 +32,7 @@ const PartnerUpdate = () => {
     const partnerdata = {
       partner_id: e.partner_id,
       partner_name: e.partner_name,
-      organization_id: parseInt(e.org_name),
+      organization_id: e.org_name===''?location.state.organization_id:parseInt(e.org_name),
       email: e.email,
       phone: e.phone,
       fax: e.fax,
@@ -41,38 +41,38 @@ const PartnerUpdate = () => {
       is_active: e.status ? 1 : 0,
     };
     console.log("kk", partnerdata);
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}partners/update/${location.state.id}`,
-        partnerdata,
-        {
-          headers,
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        swal({
-          position: "top-end",
-          text: "Partner Update Successfull",
-          icon: "success",
-          button: false,
-          timer: 1500,
-        });
-        navigate("/partner");
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        swal({
-          position: "top-end",
-          text: error.response.data.detail,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
-      });
+    // const headers = {
+    //   Authorization: `Bearer ${localStorage.getItem("token")}`,
+    // };
+    // axios
+    //   .post(
+    //     `${process.env.REACT_APP_API_URL}partners/update/${location.state.id}`,
+    //     partnerdata,
+    //     {
+    //       headers,
+    //     }
+    //   )
+    //   .then((response) => {
+    //     console.log(response);
+    //     swal({
+    //       position: "top-end",
+    //       text: "Partner Update Successfull",
+    //       icon: "success",
+    //       button: false,
+    //       timer: 1500,
+    //     });
+    //     navigate("/partner");
+    //   })
+    //   .catch((error) => {
+    //     console.error("There was an error!", error);
+    //     swal({
+    //       position: "top-end",
+    //       text: error.response.data.detail,
+    //       icon: "error",
+    //       button: false,
+    //       timer: 1500,
+    //     });
+    //   });
   };
 
   const getOrganization = () => {
@@ -140,16 +140,15 @@ const PartnerUpdate = () => {
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormSelect
-                        se
                         aria-label="Default select example"
                         type="number"
+                        defaultValue={location.state.organization_id}
                         {...register("org_name")}
                       >
                         {organizationList &&
                           organizationList.map((organization, index) => (
                             <option
                               value={organization.id}
-                              defaultValue={location.state.organization_id}
                               selected={
                                 organization.id ===
                                 location.state.organization_id
