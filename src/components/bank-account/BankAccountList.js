@@ -8,9 +8,6 @@ const BankAccountList = () => {
   const navigate = useNavigate();
   const [bankAccountList, setBankAccountList] = useState();
   const [organizationList, setOrganizationList] = useState();
-
-  const [vv, setOvv] = useState(6);
-
   const getBankAccountList = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
