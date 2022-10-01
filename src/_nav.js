@@ -69,11 +69,11 @@ const _nav = [
         name: "Branch List",
         to: "/branch",
       },
-      {
-        component: CNavItem,
-        name: "Survice List",
-        to: "/service",
-      },
+      // {
+      //   component: CNavItem,
+      //   name: "Survice List",
+      //   to: "/service",
+      // },
       {
         component: CNavItem,
         name: "Settelment Account",
@@ -94,8 +94,18 @@ const _nav = [
       },
       {
         component: CNavItem,
+        name: "Bank Branch",
+        to: "/bank-branch",
+      },
+      {
+        component: CNavItem,
         name: "Category Services List",
         to: "/category-services",
+      },
+      {
+        component: CNavItem,
+        name: "Services",
+        to: "/service",
       },
       {
         component: CNavItem,

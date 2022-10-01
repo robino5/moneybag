@@ -125,14 +125,6 @@ const BranchUpdate = React.lazy(() =>
   import("./components/branch/BranchUpdate")
 );
 
-const ServiceList = React.lazy(() =>
-  import("./components/service/ServiceList")
-);
-const ServiceAdd = React.lazy(() => import("./components/service/ServiceAdd"));
-const ServiceUpdate = React.lazy(() =>
-  import("./components/service/ServiceUpdate")
-);
-
 const SettelmentList = React.lazy(() =>
   import("./components/settelment-account/SettelmentList")
 );
@@ -167,6 +159,23 @@ const BankAccountUpdate = React.lazy(() =>
   import("./components/bank-account/BankAccountUpdate")
 );
 
+const BankBranchList = React.lazy(() =>
+  import("./components/Banks/BankBranchList")
+);
+const BankBranchAdd = React.lazy(() =>
+  import("./components/Banks/BankBranchAdd")
+);
+const BankBranchUpdate = React.lazy(() =>
+  import("./components/Banks/BankBranchUpdate")
+);
+
+const ServiceList = React.lazy(() =>
+  import("./components/services/ServiceList")
+);
+const ServiceAdd = React.lazy(() => import("./components/services/ServiceAdd"));
+const ServiceUpdate = React.lazy(() =>
+  import("./components/services/ServiceUpdate")
+);
 const routes = [
   // { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", element: Dashboard },
@@ -303,14 +312,6 @@ const routes = [
     element: BranchUpdate,
   },
 
-  { path: "/service", name: "service", element: ServiceList },
-  { path: "/service/add-service", name: "add-service", element: ServiceAdd },
-  {
-    path: "/service/update-service",
-    name: "update-service",
-    element: ServiceUpdate,
-  },
-
   { path: "/settelment", name: "settelment", element: SettelmentList },
   {
     path: "/settelment/add-settelment",
@@ -369,6 +370,37 @@ const routes = [
     path: "/bank-account/update-bank-account",
     name: "update-bank-account",
     element: BankAccountUpdate,
+  },
+
+  {
+    path: "/bank-branch",
+    name: "Bank Branch List",
+    element: BankBranchList,
+  },
+  {
+    path: "/bank-branch/add-bank-branch",
+    name: "add-bank-branch",
+    element: BankBranchAdd,
+  },
+  {
+    path: "/bank-branch/update-bank-branch",
+    name: "update-bank-branch",
+    element: BankBranchUpdate,
+  },
+  {
+    path: "/service",
+    name: "Service",
+    element: ServiceList,
+  },
+  {
+    path: "/service/add-service",
+    name: "add-sevice",
+    element: ServiceAdd,
+  },
+  {
+    path: "/service/update-service",
+    name: "update-service",
+    element: ServiceUpdate,
   },
 ];
 
