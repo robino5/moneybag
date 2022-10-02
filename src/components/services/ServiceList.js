@@ -8,6 +8,7 @@ const ServiceList = () => {
   const navigate = useNavigate();
 
   const [serviceList, setServiceList] = useState();
+  const [bankbranchList, setBankBranchList] = useState();
 
   const getCatService = () => {
     const headers = {
@@ -25,9 +26,37 @@ const ServiceList = () => {
       });
   };
 
+  const getBankBranchList = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}banks/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setBankBranchList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
   useEffect(() => {
     getCatService();
+    getBankBranchList();
   }, []);
+
+  const setBankName = (e) => {
+    let bankName;
+    bankbranchList &&
+    bankbranchList.map((bankBranch) => {
+        if (bankBranch.id === e.bank_id) {
+          bankName = bankBranch.branch_name;
+        }
+      });
+    return bankName;
+  };
 
   const comumn = [
     {
@@ -36,7 +65,7 @@ const ServiceList = () => {
     },
     {
       name: "Bank Name",
-      selector: (row) => row.bank_id,
+      selector: (row) => setBankName(row),
     },
     {
       name: "End Point Url",
