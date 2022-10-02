@@ -8,6 +8,8 @@ const SettelmentList = () => {
   const navigate = useNavigate();
 
   const [settlementAccountList, setSettlementAccountList] = useState();
+  const [serviceList, setServiceList] = useState();
+  const [bankbranchList, setBankBranchList] = useState();
 
   const getSettlementAccountList = () => {
     const headers = {
@@ -25,8 +27,75 @@ const SettelmentList = () => {
       });
   };
 
+  const getBankBranchList = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}banks/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setBankBranchList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const getService = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}services/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setServiceList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const setBankName = (e) => {
+    let bankName;
+    bankbranchList &&
+      bankbranchList.map((bankBranch) => {
+        if (bankBranch.id === e.bank_id) {
+          bankName = bankBranch.branch_name;
+        }
+      });
+    return bankName;
+  };
+
+  const setservice = (e) => {
+    let service;
+    serviceList &&
+      serviceList.map((services) => {
+        if (services.id === parseInt(e.service_name)) {
+          service = services.service_name;
+        }
+      });
+    return service;
+  };
+
+  const setBranchName = (e) => {
+    let bankName;
+    bankbranchList &&
+      bankbranchList.map((bankBranch) => {
+        if (bankBranch.id === e.branch_id) {
+          bankName = bankBranch.branch_name;
+        }
+      });
+    return bankName;
+  };
+
   useEffect(() => {
     getSettlementAccountList();
+    getBankBranchList();
+    getService();
   }, []);
 
   const columns = [
@@ -36,15 +105,15 @@ const SettelmentList = () => {
     },
     {
       name: "Service Name",
-      selector: (row) => row.service_name,
+      selector: (row) => setservice(row),
     },
     {
       name: "Bank",
-      selector: (row) => row.bank_id,
+      selector: (row) => setBankName(row),
     },
     {
       name: "Branch",
-      selector: (row) => row.branch_id,
+      selector: (row) => setBranchName(row),
     },
     {
       name: "Status",
@@ -87,7 +156,7 @@ const SettelmentList = () => {
         <CRow className="justify-content-center">
           <CCol md={12}>
             <DataTable
-              title="Store List"
+              title="Settelment List"
               columns={columns}
               data={settlementAccountList}
               pagination

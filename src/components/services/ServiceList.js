@@ -10,7 +10,7 @@ const ServiceList = () => {
   const [serviceList, setServiceList] = useState();
   const [bankbranchList, setBankBranchList] = useState();
 
-  const getCatService = () => {
+  const getService = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
@@ -43,14 +43,14 @@ const ServiceList = () => {
   };
 
   useEffect(() => {
-    getCatService();
+    getService();
     getBankBranchList();
   }, []);
 
   const setBankName = (e) => {
     let bankName;
     bankbranchList &&
-    bankbranchList.map((bankBranch) => {
+      bankbranchList.map((bankBranch) => {
         if (bankBranch.id === e.bank_id) {
           bankName = bankBranch.branch_name;
         }

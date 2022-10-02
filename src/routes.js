@@ -85,12 +85,6 @@ const OrganizationUpdate = React.lazy(() =>
 const OrganizationList = React.lazy(() =>
   import("./components/f-organization/OrganizationList")
 );
-const CategoryAdd = React.lazy(() =>
-  import("./components/category/CategoryAdd")
-);
-const CategoryList = React.lazy(() =>
-  import("./components/category/CategoryList")
-);
 const CatagoryServicesAdd = React.lazy(() =>
   import("./components/catagory-services/CatagoryServicesAdd")
 );
@@ -118,13 +112,6 @@ const FintechAdd = React.lazy(() => import("./components/fintech/FintechAdd"));
 const FintechUpdate = React.lazy(() =>
   import("./components/fintech/FintechUpdate")
 );
-
-const BranchList = React.lazy(() => import("./components/branch/BranchList"));
-const BranchAdd = React.lazy(() => import("./components/branch/BranchAdd"));
-const BranchUpdate = React.lazy(() =>
-  import("./components/branch/BranchUpdate")
-);
-
 const SettelmentList = React.lazy(() =>
   import("./components/settelment-account/SettelmentList")
 );
@@ -252,12 +239,6 @@ const routes = [
     name: "update-orgnization",
     element: OrganizationUpdate,
   },
-  { path: "/category", name: "orgnization", element: CategoryList },
-  {
-    path: "/category/add-category",
-    name: "add-orgnization",
-    element: CategoryAdd,
-  },
   {
     path: "/category-services",
     name: "orgnization",
@@ -303,15 +284,6 @@ const routes = [
     name: "update-fintech",
     element: FintechUpdate,
   },
-
-  { path: "/branch", name: "branch", element: BranchList },
-  { path: "/branch/add-branch", name: "add-branch", element: BranchAdd },
-  {
-    path: "/branch/update-branch",
-    name: "update-branch",
-    element: BranchUpdate,
-  },
-
   { path: "/settelment", name: "settelment", element: SettelmentList },
   {
     path: "/settelment/add-settelment",
