@@ -163,8 +163,7 @@ const ServiceAdd = () => {
                         })}
                         aria-label="Default select example"
                       >
-                        <option>select Category</option>
-                        <option value={0}>select Bank</option>
+                        <option>select Bank</option>
                         {getBankOption(bankbranchList) &&
                           getBankOption(bankbranchList).map((bank, index) => (
                             <option value={bank.id} key={index}>
