@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import swal from "sweetalert";
+import Select from 'react-select';
 import axios from "axios";
 import {
   CCard,
@@ -41,38 +42,38 @@ const SettelmentAdd = () => {
       is_active: e.status ? 1 : 0,
     };
     console.log(sattelementAccount);
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}account-settlements/`,
-        sattelementAccount,
-        {
-          headers,
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        swal({
-          position: "top-end",
-          text: "Store Created Successfull",
-          icon: "success",
-          button: false,
-          timer: 1500,
-        });
-        navigate("/settelment");
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        swal({
-          position: "top-end",
-          text: error.response.data.detail,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
-      });
+    // const headers = {
+    //   Authorization: `Bearer ${localStorage.getItem("token")}`,
+    // };
+    // axios
+    //   .post(
+    //     `${process.env.REACT_APP_API_URL}account-settlements/`,
+    //     sattelementAccount,
+    //     {
+    //       headers,
+    //     }
+    //   )
+    //   .then((response) => {
+    //     console.log(response);
+    //     swal({
+    //       position: "top-end",
+    //       text: "Store Created Successfull",
+    //       icon: "success",
+    //       button: false,
+    //       timer: 1500,
+    //     });
+    //     navigate("/settelment");
+    //   })
+    //   .catch((error) => {
+    //     console.error("There was an error!", error);
+    //     swal({
+    //       position: "top-end",
+    //       text: error.response.data.detail,
+    //       icon: "error",
+    //       button: false,
+    //       timer: 1500,
+    //     });
+    //   });
   };
   const getBankBranchList = () => {
     const headers = {
@@ -123,7 +124,7 @@ const SettelmentAdd = () => {
       e.map((element) => {
         console.log("element", id);
         if (element.bank_id === parseInt(id)) {
-          date.push({ id: element.id, service_name: element.service_name });
+          date.push({ value: element.id, label: element.service_name });
         }
       });
     return date;
@@ -209,7 +210,7 @@ const SettelmentAdd = () => {
                       Service Name
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormSelect
+                      {/* <CFormSelect
                         aria-label="Default select example"
                         {...register("select_service_name", {
                           required: "Please Select service",
@@ -221,7 +222,10 @@ const SettelmentAdd = () => {
                               {service.service_name}
                             </option>
                           ))}
-                      </CFormSelect>
+                      </CFormSelect> */}
+                      <Select options={services}  {...register("select_service_name", {
+                        required: "Please Select service",
+                      })} />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
