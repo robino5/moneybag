@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import swal from "sweetalert";
-import Select from 'react-select';
+import Select from "react-select";
 import axios from "axios";
 import {
   CCard,
@@ -30,12 +30,14 @@ const SettelmentAdd = () => {
   const [bankbranchList, setBankBranchList] = useState();
   const [services, setService] = useState();
   const [serviceList, setServiceList] = useState();
+  const [service, setServices] = useState();
+  console.log(service);
 
   const saveSattelmentAccount = (e) => {
     const sattelementAccount = {
       bank_id: parseInt(e.select_bank_name),
       branch_id: parseInt(e.select_branch_name),
-      service_name: e.select_service_name,
+      service_name: JSON.stringify(e.select_service_name),
       account_name: e.account_name,
       account_id: e.account_id,
       note: e.note,
@@ -210,22 +212,28 @@ const SettelmentAdd = () => {
                       Service Name
                     </CFormLabel>
                     <CCol sm={9}>
-                      {/* <CFormSelect
+                      <CFormSelect
                         aria-label="Default select example"
+                        multiple
                         {...register("select_service_name", {
                           required: "Please Select service",
                         })}
                       >
                         {services &&
                           services.map((service, index) => (
-                            <option value={service.id} key={index}>
-                              {service.service_name}
+                            <option value={service.value} key={index}>
+                              {service.label}
                             </option>
                           ))}
-                      </CFormSelect> */}
-                      <Select options={services}  {...register("select_service_name", {
-                        required: "Please Select service",
-                      })} />
+                      </CFormSelect>
+                      {/* <Select
+                        options={services}
+                        isMulti
+                        name="select_service_name"
+                        {...register("select_service_name", {
+                          required: "Please Select service",
+                        })}
+                      /> */}
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
