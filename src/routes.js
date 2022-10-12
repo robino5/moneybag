@@ -163,6 +163,10 @@ const ServiceAdd = React.lazy(() => import("./components/services/ServiceAdd"));
 const ServiceUpdate = React.lazy(() =>
   import("./components/services/ServiceUpdate")
 );
+const MerchantManagement = React.lazy(() =>
+  import("./components/merchant management/MerchantManagement")
+);
+
 const routes = [
   // { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", element: Dashboard },
@@ -373,6 +377,11 @@ const routes = [
     path: "/service/update-service",
     name: "update-service",
     element: ServiceUpdate,
+  },
+  {
+    path: "/merchant_management",
+    name: "merchant_management",
+    element: MerchantManagement,
   },
 ];
 
