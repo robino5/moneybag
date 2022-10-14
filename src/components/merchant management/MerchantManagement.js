@@ -3,6 +3,7 @@ import BusinessStructure from "./BusinessStructure";
 import BusinessRepresentative from "./BusinessRepresentative";
 import BusinessDetails from "./BusinessDetails";
 import BankDetails from "./bank details/BankDetails";
+import Summery from "./Summery";
 
 const MerchantManagement = () => {
   const [active, setActive] = useState(1);
@@ -69,7 +70,10 @@ const MerchantManagement = () => {
         <BusinessDetails clickNext={clickNext} />
       </div>
       <div hidden={active !== 4 ? true : false}>
-        <BankDetails />
+        <BankDetails clickNext={clickNext} />
+      </div>
+      <div hidden={active !== 5 ? true : false}>
+        <Summery />
       </div>
     </div>
   );

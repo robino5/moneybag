@@ -45,6 +45,7 @@ const BankBranchAdd = () => {
   };
 
   const saveBankBranch = (e) => {
+    console.log(e.select_bank_name);
     const bankBranchstoreDate = {
       branch_name: e.bank_branch_name,
       alias: e.alias,
@@ -161,7 +162,7 @@ const BankBranchAdd = () => {
                         })}
                         aria-label="Default select example"
                       >
-                        <option>select Bank</option>
+                        <option value={0}>select Bank</option>
                         {getBankOption(bankbranchList) &&
                           getBankOption(bankbranchList).map((bank, index) => (
                             <option value={bank.id} key={index}>

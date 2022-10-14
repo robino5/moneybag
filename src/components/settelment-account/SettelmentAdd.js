@@ -31,51 +31,56 @@ const SettelmentAdd = () => {
   const [services, setService] = useState();
   const [serviceList, setServiceList] = useState();
   const [service, setServices] = useState();
-  console.log(service);
+
+  const multipleInsert = (e) => {
+    e.map((element) => {
+      return element;
+    });
+  };
 
   const saveSattelmentAccount = (e) => {
     const sattelementAccount = {
       bank_id: parseInt(e.select_bank_name),
       branch_id: parseInt(e.select_branch_name),
-      service_name: JSON.stringify(e.select_service_name),
+      service_name: e.select_service_name,
       account_name: e.account_name,
       account_id: e.account_id,
       note: e.note,
       is_active: e.status ? 1 : 0,
     };
     console.log(sattelementAccount);
-    // const headers = {
-    //   Authorization: `Bearer ${localStorage.getItem("token")}`,
-    // };
-    // axios
-    //   .post(
-    //     `${process.env.REACT_APP_API_URL}account-settlements/`,
-    //     sattelementAccount,
-    //     {
-    //       headers,
-    //     }
-    //   )
-    //   .then((response) => {
-    //     console.log(response);
-    //     swal({
-    //       position: "top-end",
-    //       text: "Store Created Successfull",
-    //       icon: "success",
-    //       button: false,
-    //       timer: 1500,
-    //     });
-    //     navigate("/settelment");
-    //   })
-    //   .catch((error) => {
-    //     console.error("There was an error!", error);
-    //     swal({
-    //       position: "top-end",
-    //       text: error.response.data.detail,
-    //       icon: "error",
-    //       button: false,
-    //       timer: 1500,
-    //     });
-    //   });
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}account-settlements/`,
+        sattelementAccount,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        swal({
+          position: "top-end",
+          text: "Store Created Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
+        navigate("/settelment");
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: error.response.data.detail,
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
+      });
   };
   const getBankBranchList = () => {
     const headers = {
