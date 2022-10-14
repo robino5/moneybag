@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import swal from "sweetalert";
 import { useForm } from "react-hook-form";
@@ -24,6 +25,7 @@ const BankDetails = ({ clickNext }) => {
     setValue,
     reset,
   } = useForm({ mode: "all" });
+  const navigate = useNavigate();
   const [pageSetup, setPageSetup] = useState(0);
   const [marchantDetail, setMarchentDetailsList] = useState();
   const [lookupList, setLooupList] = useState();
@@ -230,18 +232,18 @@ const BankDetails = ({ clickNext }) => {
           <CButton
             className="btn btn-sm d-inline mr-1"
             color="danger"
-            //   onClick={() => deleteOrganization(row.id)}
+            // onClick={() => deleteOrganization(row.id)}
           >
             Delete
           </CButton>
           <CButton
             className="btn btn-sm d-inline mx-1"
             color="info"
-            // onClick={() => {
-            //   navigate("/category-services/update-category-services", {
-            //     state: row,
-            //   });
-            // }}
+            onClick={() => {
+              navigate("/update-bank-details", {
+                state: row,
+              });
+            }}
           >
             Update
           </CButton>
@@ -256,6 +258,9 @@ const BankDetails = ({ clickNext }) => {
   return (
     <div className="bg-light min-vh-100 d-flex flex-row">
       <CContainer>
+        <div className="text-center">
+          <h2>Where should we send your payouts?</h2>
+        </div>
         <div hidden={pageSetup !== 0 ? true : false}>
           <div className="justify-content-centert mb-2">
             <CButton color="primary" onClick={handlePageSetup}>
@@ -399,7 +404,15 @@ const BankDetails = ({ clickNext }) => {
                       <CButton color="success" type="submit" className="mx-3">
                         Save
                       </CButton>
-                      <CButton color="primary" onClick={() => clickNext(1)}>
+                      <CButton
+                        color="primary"
+                        onClick={() =>
+                          clickNext(
+                            1,
+                            window.history.replaceState({}, document.title)
+                          )
+                        }
+                      >
                         Next
                       </CButton>
                     </div>

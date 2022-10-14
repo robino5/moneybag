@@ -62,7 +62,7 @@ const _nav = [
       {
         component: CNavItem,
         name: "Fintech List",
-        to: "/orgnization",
+        to: "/fintech",
       },
       {
         component: CNavItem,

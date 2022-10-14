@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import BusinessStructure from "./BusinessStructure";
 import BusinessRepresentative from "./BusinessRepresentative";
 import BusinessDetails from "./BusinessDetails";
@@ -6,13 +7,21 @@ import BankDetails from "./bank details/BankDetails";
 import Summery from "./Summery";
 
 const MerchantManagement = () => {
+  const location = useLocation();
   const [active, setActive] = useState(1);
   const handleNext = (e) => {
     setActive(e);
   };
+  console.log("location", location.state);
   const clickNext = (e) => {
     setActive(active + e);
   };
+
+  useEffect(() => {
+    if (location.state) {
+      setActive(location.state);
+    }
+  }, []);
 
   console.log(active);
   return (

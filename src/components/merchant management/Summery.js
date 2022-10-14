@@ -1,6 +1,8 @@
 import DataTable from "react-data-table-component";
 import { CCol, CContainer, CRow, CButton, CCard } from "@coreui/react";
 import { Link, useNavigate } from "react-router-dom";
+import CIcon from "@coreui/icons-react";
+import { cilCheck, cilX } from "@coreui/icons";
 
 const Summery = () => {
   const navigate = useNavigate();
@@ -12,6 +14,9 @@ const Summery = () => {
   return (
     <div className="bg-light min-vh-100 d-flex flex-row">
       <CContainer>
+        <div className="text-center">
+          <h2>Please Review</h2>
+        </div>
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCard className="p-4">
@@ -22,9 +27,9 @@ const Summery = () => {
                 <CCol md={3}></CCol>
                 <CCol md={3}>
                   {localStorage.getItem("isSubmitBusiness") == 1 ? (
-                    <p>Yes</p>
+                    <CIcon className="text-success" icon={cilCheck} size="xl" />
                   ) : (
-                    <p>No</p>
+                    <CIcon className="text-danger" icon={cilX} size="xl" />
                   )}
                 </CCol>
               </CRow>
@@ -35,9 +40,9 @@ const Summery = () => {
                 <CCol md={3}></CCol>
                 <CCol md={3}>
                   {localStorage.getItem("isSubmitBusiness") == 1 ? (
-                    <p>Yes</p>
+                    <CIcon className="text-success" icon={cilCheck} size="xl" />
                   ) : (
-                    <p>No</p>
+                    <CIcon className="text-danger" icon={cilX} size="xl" />
                   )}
                 </CCol>
               </CRow>
@@ -48,9 +53,9 @@ const Summery = () => {
                 <CCol md={3}></CCol>
                 <CCol md={3}>
                   {localStorage.getItem("isSubmitBusiness") == 1 ? (
-                    <p>Yes</p>
+                    <CIcon className="text-success" icon={cilCheck} size="xl" />
                   ) : (
-                    <p>No</p>
+                    <CIcon className="text-danger" icon={cilX} size="xl" />
                   )}
                 </CCol>
               </CRow>
@@ -61,9 +66,9 @@ const Summery = () => {
                 <CCol md={3}></CCol>
                 <CCol md={3}>
                   {localStorage.getItem("isBankDetailDate") == 1 ? (
-                    <p>Yes</p>
+                    <CIcon className="text-success" icon={cilCheck} size="xl" />
                   ) : (
-                    <p>No</p>
+                    <CIcon className="text-danger" icon={cilX} size="xl" />
                   )}
                 </CCol>
               </CRow>

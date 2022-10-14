@@ -166,6 +166,7 @@ const SettelmentAdd = () => {
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCard className="p-4">
+              <h6 className="text-center">Update Settelment</h6>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(updateSattelmentAccount)}>
                   <CRow className="mb-3">
@@ -260,7 +261,7 @@ const SettelmentAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Account id
+                      Account number
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput

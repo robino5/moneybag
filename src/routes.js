@@ -167,6 +167,10 @@ const MerchantManagement = React.lazy(() =>
   import("./components/merchant management/MerchantManagement")
 );
 
+const BankDetailsUpdate = React.lazy(() =>
+  import("./components/merchant management/bank details/BankDetailsUpdate")
+);
+
 const routes = [
   // { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", element: Dashboard },
@@ -382,6 +386,11 @@ const routes = [
     path: "/merchant_management",
     name: "merchant_management",
     element: MerchantManagement,
+  },
+  {
+    path: "/update-bank-details",
+    name: "merchant_management",
+    element: BankDetailsUpdate,
   },
 ];
 

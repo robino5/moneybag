@@ -1,25 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import swal from "sweetalert";
-import Select from "react-select";
 import axios from "axios";
 import {
   CCard,
   CCardBody,
-  CFormCheck,
+  CFormSelect,
   CCol,
   CContainer,
   CForm,
   CFormInput,
   CFormLabel,
   CRow,
-  CFormSelect,
+  CFormCheck,
   CButton,
 } from "@coreui/react";
-import { element } from "prop-types";
 
-const SettelmentAdd = () => {
+const BankDetailsUpdate = () => {
   const {
     register,
     formState: { errors, isDirty },
@@ -27,35 +25,34 @@ const SettelmentAdd = () => {
     setValue,
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
+  const location = useLocation();
   const [bankbranchList, setBankBranchList] = useState();
-  const [services, setService] = useState();
-  const [serviceList, setServiceList] = useState();
-  const [service, setServices] = useState();
+  const [lookupList, setLooupList] = useState();
 
-  const multipleInsert = (e) => {
-    e.map((element) => {
-      return element;
-    });
-  };
+  console.log(location.state);
 
-  const saveSattelmentAccount = (e) => {
-    const sattelementAccount = {
-      bank_id: parseInt(e.select_bank_name),
-      branch_id: parseInt(e.select_branch_name),
-      service_name: e.select_service_name,
+  const updateBusinessDetails = (e) => {
+    const businessDetailData = {
+      currency_no:
+        e.currency === "" ? location.state.currency_no : parseInt(e.currency),
+      bank_no:
+        e.bank_name === "" ? location.state.bank_no : parseInt(e.bank_name),
+      branch_no:
+        e.branch_name === ""
+          ? location.state.branch_no
+          : parseInt(e.branch_name),
+      routing_no: e.routing_no,
       account_name: e.account_name,
-      account_id: e.account_id,
-      note: e.note,
-      is_active: e.status ? 1 : 0,
+      account_no: e.account_number,
     };
-    console.log(sattelementAccount);
+    console.log(businessDetailData);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
       .post(
-        `${process.env.REACT_APP_API_URL}account-settlements/`,
-        sattelementAccount,
+        `${process.env.REACT_APP_API_URL}marchant-details/update/${location.state.id}`,
+        businessDetailData,
         {
           headers,
         }
@@ -69,7 +66,9 @@ const SettelmentAdd = () => {
           button: false,
           timer: 1500,
         });
-        navigate("/settelment");
+        navigate("/merchant_management", {
+          state: 4,
+        });
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -82,6 +81,23 @@ const SettelmentAdd = () => {
         });
       });
   };
+
+  const getLookupList = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}lookups/detail-list`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setLooupList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
   const getBankBranchList = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -98,40 +114,12 @@ const SettelmentAdd = () => {
       });
   };
 
-  const getService = () => {
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .get(`${process.env.REACT_APP_API_URL}services/`, {
-        headers,
-      })
-      .then((responce) => {
-        console.log(responce.data), setServiceList(responce.data);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
-  };
-
   const getBankOption = (e) => {
     let date = [];
     e &&
       e.map((element) => {
         if (element.bank_flag === 1 && element.is_active === 1) {
           date.push({ id: element.id, branch_name: element.branch_name });
-        }
-      });
-    return date;
-  };
-
-  const getServiceOption = (e, id) => {
-    let date = [];
-    e &&
-      e.map((element) => {
-        console.log("element", id);
-        if (element.bank_id === parseInt(id)) {
-          date.push({ value: element.id, label: element.service_name });
         }
       });
     return date;
@@ -152,9 +140,19 @@ const SettelmentAdd = () => {
     return date;
   };
 
+  const getcurrencyOption = (e) => {
+    let Date = [];
+    e.forEach((element) => {
+      if (element.lov_id === 5001 && element.is_active === 1) {
+        Date.push({ id: element.id, name: element.name });
+      }
+    });
+    return Date;
+  };
+
   useEffect(() => {
+    getLookupList();
     getBankBranchList();
-    getService();
   }, []);
 
   return (
@@ -163,9 +161,37 @@ const SettelmentAdd = () => {
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCard className="p-4">
-              <h6 className="text-center">Add Settelment</h6>
               <CCardBody>
-                <CForm onSubmit={handleSubmit(saveSattelmentAccount)}>
+                <CForm onSubmit={handleSubmit(updateBusinessDetails)}>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Currency
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormSelect
+                        aria-label="Default select example"
+                        {...register("currency")}
+                        type="number"
+                      >
+                        {lookupList &&
+                          getcurrencyOption(lookupList).map(
+                            (currency, index) => (
+                              <option
+                                value={currency.id}
+                                selected={
+                                  currency.id === location.state.currency_no
+                                    ? "selected"
+                                    : ""
+                                }
+                                key={index}
+                              >
+                                {currency.name}
+                              </option>
+                            )
+                          )}
+                      </CFormSelect>
+                    </CCol>
+                  </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Bank Name
@@ -173,19 +199,19 @@ const SettelmentAdd = () => {
                     <CCol sm={9}>
                       <CFormSelect
                         aria-label="Default select example"
-                        {...register("select_bank_name", {
-                          required: "Please Select Bank",
-                        })}
-                        onChange={(e) => {
-                          setService(
-                            getServiceOption(serviceList, e.target.value)
-                          );
-                        }}
+                        {...register("bank_name")}
                       >
-                        <option>select Bank</option>
                         {getBankOption(bankbranchList) &&
                           getBankOption(bankbranchList).map((bank, index) => (
-                            <option value={bank.id} key={index}>
+                            <option
+                              value={bank.id}
+                              selected={
+                                bank.id === location.state.bank_no
+                                  ? "selected"
+                                  : ""
+                              }
+                              key={index}
+                            >
                               {bank.branch_name}
                             </option>
                           ))}
@@ -199,14 +225,19 @@ const SettelmentAdd = () => {
                     <CCol sm={9}>
                       <CFormSelect
                         aria-label="Default select example"
-                        {...register("select_branch_name", {
-                          required: "Please Select Branch",
-                        })}
+                        {...register("branch_name")}
                       >
-                        <option>select Branch</option>
                         {getBranchOption(bankbranchList) &&
                           getBranchOption(bankbranchList).map((bank, index) => (
-                            <option value={bank.id} key={index}>
+                            <option
+                              value={bank.id}
+                              selected={
+                                bank.id === location.state.branch_no
+                                  ? "selected"
+                                  : ""
+                              }
+                              key={index}
+                            >
                               {bank.branch_name}
                             </option>
                           ))}
@@ -215,30 +246,15 @@ const SettelmentAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Service Name
+                      Transit/Routing No:
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormSelect
-                        aria-label="Default select example"
-                        {...register("select_service_name", {
-                          required: "Please Select service",
-                        })}
-                      >
-                        {services &&
-                          services.map((service, index) => (
-                            <option value={service.value} key={index}>
-                              {service.label}
-                            </option>
-                          ))}
-                      </CFormSelect>
-                      {/* <Select
-                        options={services}
-                        isMulti
-                        name="select_service_name"
-                        {...register("select_service_name", {
-                          required: "Please Select service",
-                        })}
-                      /> */}
+                      <CFormInput
+                        type="text"
+                        defaultValue={location.state.routing_no}
+                        {...register("routing_no")}
+                        placeholder="Transit/Routing No:"
+                      />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -248,14 +264,10 @@ const SettelmentAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("account_name", {
-                          required: "Please provide Account Name",
-                        })}
+                        defaultValue={location.state.account_name}
+                        {...register("account_name")}
                         placeholder="Account Name"
                       />
-                      <span className="text-danger">
-                        {errors.account_name?.message}
-                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -265,45 +277,22 @@ const SettelmentAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("account_id", {
-                          required: "Please provide Account Number",
-                        })}
-                        placeholder="Account id"
+                        defaultValue={location.state.account_no}
+                        {...register("account_number")}
+                        placeholder="Account Number"
                       />
                       <span className="text-danger">
-                        {errors.account_id?.message}
+                        {errors.account_number?.message}
                       </span>
                     </CCol>
                   </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Note
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("note")}
-                        placeholder="Note"
-                      />
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Status
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormCheck label="Active" {...register("status")} />
-                    </CCol>
-                  </CRow>
                   <div className="text-center ">
-                    <Link to="/settelment">
-                      <CButton color="danger" className="mx-3">
-                        Cancle
-                      </CButton>
-                    </Link>
-                    <CButton type="submit" disabled={!isDirty} color="success">
-                      Save
+                    <CButton color="info" type="submit" className="mx-3">
+                      Update
                     </CButton>
+                    {/* <CButton color="primary" onClick={() => clickNext(1)}>
+                      Next
+                    </CButton> */}
                   </div>
                 </CForm>
               </CCardBody>
@@ -315,4 +304,4 @@ const SettelmentAdd = () => {
   );
 };
 
-export default SettelmentAdd;
+export default BankDetailsUpdate;

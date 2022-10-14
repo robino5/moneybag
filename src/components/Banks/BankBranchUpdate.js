@@ -123,6 +123,7 @@ const BankBranchUpdate = () => {
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCard className="p-4">
+              <h6 className="text-center">Update Bank/Branch</h6>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(updateBankBranch)}>
                   <CRow className="mb-3">

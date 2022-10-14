@@ -115,6 +115,7 @@ const BankBranchAdd = () => {
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCard className="p-4">
+              <h6 className="text-center">Add Bank/Branch</h6>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(saveBankBranch)}>
                   <CRow className="mb-3">
@@ -315,11 +316,11 @@ const BankBranchAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Flag Status
+                      Bank Status
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormCheck
-                        label="Is Flag?"
+                        label="Is Bank?"
                         {...register("flag_status")}
                       />
                     </CCol>

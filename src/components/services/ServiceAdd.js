@@ -133,6 +133,7 @@ const ServiceAdd = () => {
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCard className="p-4">
+              <h6 className="text-center">Add Service</h6>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(saveService)}>
                   <CRow className="mb-3">
@@ -178,7 +179,7 @@ const ServiceAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Category
+                      Service Category
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormSelect

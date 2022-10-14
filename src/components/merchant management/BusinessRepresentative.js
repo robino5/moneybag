@@ -246,7 +246,7 @@ const BusinessRepresentative = ({ clickNext }) => {
                       <CFormInput
                         type="text"
                         {...register("national_id")}
-                        placeholder="Postal Code"
+                        placeholder="Nationnal Id"
                       />
                     </CCol>
                   </CRow>
