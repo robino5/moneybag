@@ -71,14 +71,16 @@ const SettelmentList = () => {
   };
 
   const setservice = (e) => {
-    let service;
+    let service=[];
     serviceList &&
       serviceList.map((services) => {
-        if (services.id === parseInt(e.service_name)) {
+        if (e.service_name.match(services.id)) {
           service = services.service_name;
         }
+        
       });
-    return service;
+      return service+","
+ 
   };
 
   const setBranchName = (e) => {

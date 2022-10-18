@@ -33,22 +33,30 @@ const SettelmentAdd = () => {
   const [service, setServices] = useState();
 
   const multipleInsert = (e) => {
-    e.map((element) => {
-      return element;
-    });
+    let message
+    if(e){
+      setServices(Array.isArray(e)?e.map((value)=> value.value):[])
+    }
+    else{
+      message="Please Select Services"
+    }
+   return message;
   };
+
+  console.log(JSON.stringify(service));
 
   const saveSattelmentAccount = (e) => {
     const sattelementAccount = {
       bank_id: parseInt(e.select_bank_name),
       branch_id: parseInt(e.select_branch_name),
-      service_name: e.select_service_name,
+      service_name: JSON.stringify(service),
       account_name: e.account_name,
       account_id: e.account_id,
       note: e.note,
       is_active: e.status ? 1 : 0,
     };
     console.log(sattelementAccount);
+   if(service){
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
@@ -81,7 +89,19 @@ const SettelmentAdd = () => {
           timer: 1500,
         });
       });
+   }
+   else{
+    swal({
+      position: "top-end",
+      text: "Please Select services",
+      icon: "warning",
+      button: false,
+      timer: 1500,
+    });
+   }
   };
+
+  
   const getBankBranchList = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -218,7 +238,7 @@ const SettelmentAdd = () => {
                       Service Name
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormSelect
+                      {/* <CFormSelect
                         aria-label="Default select example"
                         {...register("select_service_name", {
                           required: "Please Select service",
@@ -230,15 +250,14 @@ const SettelmentAdd = () => {
                               {service.label}
                             </option>
                           ))}
-                      </CFormSelect>
-                      {/* <Select
+                      </CFormSelect> */}
+                      <Select
                         options={services}
                         isMulti
+                        required
                         name="select_service_name"
-                        {...register("select_service_name", {
-                          required: "Please Select service",
-                        })}
-                      /> */}
+                        onChange={multipleInsert}
+                      />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
