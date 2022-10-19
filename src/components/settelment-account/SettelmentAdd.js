@@ -31,16 +31,19 @@ const SettelmentAdd = () => {
   const [services, setService] = useState();
   const [serviceList, setServiceList] = useState();
   const [service, setServices] = useState();
-
+  const [service2, setServices2] = useState();
+   console.log("sc",service2);
+ 
   const multipleInsert = (e) => {
     let message
-    if(e){
-      setServices(Array.isArray(e)?e.map((value)=> value.value):[])
+    setServices2(e)
+    if (e) {
+      setServices(Array.isArray(e) ? e.map((value) => value.value) : [])
     }
-    else{
-      message="Please Select Services"
+    else {
+      message = "Please Select Services"
     }
-   return message;
+    return message;
   };
 
   console.log(JSON.stringify(service));
@@ -56,52 +59,52 @@ const SettelmentAdd = () => {
       is_active: e.status ? 1 : 0,
     };
     console.log(sattelementAccount);
-   if(service){
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}account-settlements/`,
-        sattelementAccount,
-        {
-          headers,
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        swal({
-          position: "top-end",
-          text: "Store Created Successfull",
-          icon: "success",
-          button: false,
-          timer: 1500,
+    if (service) {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      };
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}account-settlements/`,
+          sattelementAccount,
+          {
+            headers,
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          swal({
+            position: "top-end",
+            text: "Store Created Successfull",
+            icon: "success",
+            button: false,
+            timer: 1500,
+          });
+          navigate("/settelment");
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+          swal({
+            position: "top-end",
+            text: error.response.data.detail,
+            icon: "error",
+            button: false,
+            timer: 1500,
+          });
         });
-        navigate("/settelment");
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        swal({
-          position: "top-end",
-          text: error.response.data.detail,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
+    }
+    else {
+      swal({
+        position: "top-end",
+        text: "Please Select services",
+        icon: "warning",
+        button: false,
+        timer: 1500,
       });
-   }
-   else{
-    swal({
-      position: "top-end",
-      text: "Please Select services",
-      icon: "warning",
-      button: false,
-      timer: 1500,
-    });
-   }
+    }
   };
 
-  
+
   const getBankBranchList = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -247,6 +250,7 @@ const SettelmentAdd = () => {
                         {services &&
                           services.map((service, index) => (
                             <option value={service.value} key={index}>
+                               <CFormCheck  {...register("status")} />
                               {service.label}
                             </option>
                           ))}
@@ -254,7 +258,6 @@ const SettelmentAdd = () => {
                       <Select
                         options={services}
                         isMulti
-                        required
                         name="select_service_name"
                         onChange={multipleInsert}
                       />
