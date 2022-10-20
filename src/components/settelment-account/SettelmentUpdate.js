@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
+import Select from "react-select";
 import swal from "sweetalert";
 import axios from "axios";
 import {
@@ -31,6 +31,23 @@ const SettelmentAdd = () => {
   const [bankbranchList, setBankBranchList] = useState();
   const [services, setService] = useState();
   const [serviceList, setServiceList] = useState();
+  const [service, setServices] = useState();
+
+  const multipleInsert = (e) => {
+    setServices(Array.isArray(e) ? e.map((value) => value.value) : [])
+  };
+
+  const defaultService = (e)=>{
+    let data=[]
+    e&&e.forEach(element => {
+     if(location.state.service_name.match(element.id)){
+      data.push(element.id);
+     }
+   });
+    return data;
+  }
+
+console.log("d",defaultService(serviceList))
 
   const updateSattelmentAccount = (e) => {
     const sattelementAccount = {
@@ -43,9 +60,8 @@ const SettelmentAdd = () => {
           ? location.state.branch_id
           : parseInt(e.select_branch_name),
       service_name:
-        e.select_service_name === ""
-          ? location.state.service_name
-          : e.select_service_name,
+        !service ? location.state.service_name
+          : JSON.stringify(service),
       account_name: e.account_name,
       account_id: e.account_id,
       note: e.note,
@@ -134,7 +150,7 @@ const SettelmentAdd = () => {
       e.map((element) => {
         console.log("element", id);
         if (element.bank_id === parseInt(id)) {
-          date.push({ id: element.id, service_name: element.service_name });
+          date.push({ value: element.id, label: element.service_name });
         }
       });
     return date;
@@ -233,7 +249,7 @@ const SettelmentAdd = () => {
                       Service Name
                     </CFormLabel>
                     <CCol sm={9}>
-                      <CFormSelect
+                      {/* <CFormSelect
                         aria-label="Default select example"
                         {...register("select_service_name")}
                       >
@@ -243,7 +259,13 @@ const SettelmentAdd = () => {
                               {service.service_name}
                             </option>
                           ))}
-                      </CFormSelect>
+                      </CFormSelect> */}
+                      <Select
+                        options={services}
+                        isMulti
+                        name="select_service_name"
+                        onChange={multipleInsert}
+                      />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">

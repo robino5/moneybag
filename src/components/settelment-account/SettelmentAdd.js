@@ -31,19 +31,9 @@ const SettelmentAdd = () => {
   const [services, setService] = useState();
   const [serviceList, setServiceList] = useState();
   const [service, setServices] = useState();
-  const [service2, setServices2] = useState();
-   console.log("sc",service2);
  
   const multipleInsert = (e) => {
-    let message
-    setServices2(e)
-    if (e) {
-      setServices(Array.isArray(e) ? e.map((value) => value.value) : [])
-    }
-    else {
-      message = "Please Select Services"
-    }
-    return message;
+      setServices(Array.isArray(e) ? e.map((value) => value.value) : []) 
   };
 
   console.log(JSON.stringify(service));
