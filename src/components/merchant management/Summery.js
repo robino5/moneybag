@@ -12,68 +12,70 @@ const Summery = () => {
     navigate("/dashboard");
   };
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row">
+    <div >
       <CContainer>
         <div className="text-center">
           <h2>Please Review</h2>
         </div>
         <CRow className="justify-content-center">
           <CCol md={8}>
-            <CCard className="p-4">
-              <CRow>
-                <CCol md={4}>
-                  <p>Business Structure:</p>
-                </CCol>
-                <CCol md={3}></CCol>
-                <CCol md={3}>
-                  {localStorage.getItem("isSubmitBusiness") == 1 ? (
-                    <CIcon className="text-success" icon={cilCheck} size="xl" />
-                  ) : (
-                    <CIcon className="text-danger" icon={cilX} size="xl" />
-                  )}
-                </CCol>
-              </CRow>
-              <CRow>
-                <CCol md={4}>
-                  <p>Business Representative:</p>
-                </CCol>
-                <CCol md={3}></CCol>
-                <CCol md={3}>
-                  {localStorage.getItem("isSubmitBusiness") == 1 ? (
-                    <CIcon className="text-success" icon={cilCheck} size="xl" />
-                  ) : (
-                    <CIcon className="text-danger" icon={cilX} size="xl" />
-                  )}
-                </CCol>
-              </CRow>
-              <CRow>
-                <CCol md={4}>
-                  <p>Business Details:</p>
-                </CCol>
-                <CCol md={3}></CCol>
-                <CCol md={3}>
-                  {localStorage.getItem("isSubmitBusiness") == 1 ? (
-                    <CIcon className="text-success" icon={cilCheck} size="xl" />
-                  ) : (
-                    <CIcon className="text-danger" icon={cilX} size="xl" />
-                  )}
-                </CCol>
-              </CRow>
-              <CRow>
-                <CCol md={4}>
-                  <p>Bank Details:</p>
-                </CCol>
-                <CCol md={3}></CCol>
-                <CCol md={3}>
-                  {localStorage.getItem("isBankDetailDate") == 1 ? (
-                    <CIcon className="text-success" icon={cilCheck} size="xl" />
-                  ) : (
-                    <CIcon className="text-danger" icon={cilX} size="xl" />
-                  )}
-                </CCol>
-              </CRow>
-              <CButton onClick={clickDone}>OK</CButton>
-            </CCard>
+            <CRow>
+              <CCol md={4}>
+                <p>Business Structure:</p>
+              </CCol>
+              <CCol md={3}></CCol>
+              <CCol md={3}>
+                {localStorage.getItem("isSubmitBusiness") == 1 ? (
+                  <CIcon className="text-success" icon={cilCheck} size="xl" />
+                ) : (
+                  <CIcon className="text-danger" icon={cilX} size="xl" />
+                )}
+              </CCol>
+            </CRow>
+            <CRow>
+              <CCol md={7}>
+                <p>Business Representative:</p>
+              </CCol>
+              <CCol md={3}>
+                {localStorage.getItem("isSubmitBusiness") == 1 ? (
+                  <CIcon className="text-success" icon={cilCheck} size="xl" />
+                ) : (
+                  <CIcon className="text-danger" icon={cilX} size="xl" />
+                )}
+              </CCol>
+            </CRow>
+            <CRow>
+              <CCol md={4}>
+                <p>Business Details:</p>
+              </CCol>
+              <CCol md={3}></CCol>
+              <CCol md={3}>
+                {localStorage.getItem("isSubmitBusiness") == 1 ? (
+                  <CIcon className="text-success" icon={cilCheck} size="xl" />
+                ) : (
+                  <CIcon className="text-danger" icon={cilX} size="xl" />
+                )}
+              </CCol>
+            </CRow>
+            <CRow>
+              <CCol md={4}>
+                <p>Bank Details:</p>
+              </CCol>
+              <CCol md={3}></CCol>
+              <CCol md={3}>
+                {localStorage.getItem("isBankDetailDate") == 1 ? (
+                  <CIcon className="text-success" icon={cilCheck} size="xl" />
+                ) : (
+                  <CIcon className="text-danger" icon={cilX} size="xl" />
+                )}
+              </CCol>
+            </CRow>
+            <CRow>
+              <CCol md={12}>
+              <CButton className="form-control" onClick={clickDone}>OK</CButton>
+              </CCol>
+            
+            </CRow>
           </CCol>
         </CRow>
       </CContainer>

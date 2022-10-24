@@ -204,6 +204,7 @@ const BankDetails = ({ clickNext }) => {
     {
       name: "Currency",
       selector: (row) => setCurrenct(row),
+      maxWidth: "80px",
     },
     {
       name: "Bank Name",
@@ -232,7 +233,7 @@ const BankDetails = ({ clickNext }) => {
           <CButton
             className="btn btn-sm d-inline mr-1"
             color="danger"
-            // onClick={() => deleteOrganization(row.id)}
+          // onClick={() => deleteOrganization(row.id)}
           >
             Delete
           </CButton>
@@ -256,173 +257,157 @@ const BankDetails = ({ clickNext }) => {
   };
 
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row">
-      <CContainer>
-        <div className="text-center">
-          <h2>Where should we send your payouts?</h2>
+    <div>
+      <div hidden={pageSetup !== 0 ? true : false}>
+        <div className="justify-content-centert mb-2">
+          <CButton color="primary" onClick={handlePageSetup}>
+            Add New
+          </CButton>
         </div>
-        <div hidden={pageSetup !== 0 ? true : false}>
-          <div className="justify-content-centert mb-2">
-            <CButton color="primary" onClick={handlePageSetup}>
-              Add New
+        <CRow className="justify-content-center">
+          <CCol md={12}>
+            <DataTable columns={comumn} data={marchantDetail} pagination />
+          </CCol>
+        </CRow>
+      </div>
+      <div hidden={pageSetup !== 1 ? true : false}>
+        <CForm onSubmit={handleSubmit(saveBusinessDetails)}>
+          <CRow className="mb-3">
+            <CFormLabel className="col-sm-4 col-form-label">
+              Currency
+            </CFormLabel>
+            <CCol sm={8}>
+              <CFormSelect
+                aria-label="Default select example"
+                {...register("currency")}
+                type="number"
+              >
+                <option>Select Currency</option>
+                {lookupList &&
+                  getcurrencyOption(lookupList).map(
+                    (currency, index) => (
+                      <option value={currency.id} key={index}>
+                        {currency.name}
+                      </option>
+                    )
+                  )}
+              </CFormSelect>
+            </CCol>
+          </CRow>
+          <CRow className="mb-3">
+            <CFormLabel className="col-sm-4 col-form-label">
+              Bank Name
+            </CFormLabel>
+            <CCol sm={8}>
+              <CFormSelect
+                aria-label="Default select example"
+                {...register("bank_name", {
+                  required: "Please select Industry",
+                })}
+              >
+                <option>select Bank</option>
+                {getBankOption(bankbranchList) &&
+                  getBankOption(bankbranchList).map((bank, index) => (
+                    <option value={bank.id} key={index}>
+                      {bank.branch_name}
+                    </option>
+                  ))}
+              </CFormSelect>
+              <span className="text-danger">
+                {errors.bank_name?.message}
+              </span>
+            </CCol>
+          </CRow>
+          <CRow className="mb-3">
+            <CFormLabel className="col-sm-4 col-form-label">
+              Branch Name
+            </CFormLabel>
+            <CCol sm={8}>
+              <CFormSelect
+                aria-label="Default select example"
+                {...register("branch_name", {
+                  required: "Please select Industry",
+                })}
+              >
+                <option>select Branch</option>
+                {getBranchOption(bankbranchList) &&
+                  getBranchOption(bankbranchList).map(
+                    (bank, index) => (
+                      <option value={bank.id} key={index}>
+                        {bank.branch_name}
+                      </option>
+                    )
+                  )}
+              </CFormSelect>
+              <span className="text-danger">
+                {errors.first_name?.message}
+              </span>
+            </CCol>
+          </CRow>
+          <CRow className="mb-3">
+            <CFormLabel className="col-sm-4 col-form-label">
+              Transit/Routing No:
+            </CFormLabel>
+            <CCol sm={8}>
+              <CFormInput
+                type="text"
+                {...register("routing_no")}
+                placeholder="Transit/Routing No:"
+              />
+            </CCol>
+          </CRow>
+          <CRow className="mb-3">
+            <CFormLabel className="col-sm-4 col-form-label">
+              Account Name
+            </CFormLabel>
+            <CCol sm={8}>
+              <CFormInput
+                type="text"
+                {...register("account_name", {
+                  required: "Please select Industry",
+                })}
+                placeholder="Account Name"
+              />
+              <span className="text-danger">
+                {errors.account_name?.message}
+              </span>
+            </CCol>
+          </CRow>
+          <CRow className="mb-3">
+            <CFormLabel className="col-sm-4 col-form-label">
+              Account Number
+            </CFormLabel>
+            <CCol sm={8}>
+              <CFormInput
+                type="text"
+                {...register("account_number", {
+                  required: "Please select Industry",
+                })}
+                placeholder="Account Number"
+              />
+              <span className="text-danger">
+                {errors.account_number?.message}
+              </span>
+            </CCol>
+          </CRow>
+          <div className="text-center ">
+            <CButton color="success" type="submit" className="mx-3">
+              Save
+            </CButton>
+            <CButton
+              color="primary"
+              onClick={() =>
+                clickNext(
+                  1,
+                  window.history.replaceState({}, document.title)
+                )
+              }
+            >
+              Next
             </CButton>
           </div>
-          <CRow className="justify-content-center">
-            <CCol md={12}>
-              <DataTable columns={comumn} data={marchantDetail} pagination />
-            </CCol>
-          </CRow>
-        </div>
-        <div hidden={pageSetup !== 1 ? true : false}>
-          <div className="text-center">
-            <h2>Personal Details</h2>
-          </div>
-          <CRow className="justify-content-center">
-            <CCol md={8}>
-              <CCard className="p-4">
-                <CCardBody>
-                  <CForm onSubmit={handleSubmit(saveBusinessDetails)}>
-                    <CRow className="mb-3">
-                      <CFormLabel className="col-sm-3 col-form-label">
-                        Currency
-                      </CFormLabel>
-                      <CCol sm={9}>
-                        <CFormSelect
-                          aria-label="Default select example"
-                          {...register("currency")}
-                          type="number"
-                        >
-                          <option>Select Currency</option>
-                          {lookupList &&
-                            getcurrencyOption(lookupList).map(
-                              (currency, index) => (
-                                <option value={currency.id} key={index}>
-                                  {currency.name}
-                                </option>
-                              )
-                            )}
-                        </CFormSelect>
-                      </CCol>
-                    </CRow>
-                    <CRow className="mb-3">
-                      <CFormLabel className="col-sm-3 col-form-label">
-                        Bank Name
-                      </CFormLabel>
-                      <CCol sm={9}>
-                        <CFormSelect
-                          aria-label="Default select example"
-                          {...register("bank_name", {
-                            required: "Please select Industry",
-                          })}
-                        >
-                          <option>select Bank</option>
-                          {getBankOption(bankbranchList) &&
-                            getBankOption(bankbranchList).map((bank, index) => (
-                              <option value={bank.id} key={index}>
-                                {bank.branch_name}
-                              </option>
-                            ))}
-                        </CFormSelect>
-                        <span className="text-danger">
-                          {errors.bank_name?.message}
-                        </span>
-                      </CCol>
-                    </CRow>
-                    <CRow className="mb-3">
-                      <CFormLabel className="col-sm-3 col-form-label">
-                        Branch Name
-                      </CFormLabel>
-                      <CCol sm={9}>
-                        <CFormSelect
-                          aria-label="Default select example"
-                          {...register("branch_name", {
-                            required: "Please select Industry",
-                          })}
-                        >
-                          <option>select Branch</option>
-                          {getBranchOption(bankbranchList) &&
-                            getBranchOption(bankbranchList).map(
-                              (bank, index) => (
-                                <option value={bank.id} key={index}>
-                                  {bank.branch_name}
-                                </option>
-                              )
-                            )}
-                        </CFormSelect>
-                        <span className="text-danger">
-                          {errors.first_name?.message}
-                        </span>
-                      </CCol>
-                    </CRow>
-                    <CRow className="mb-3">
-                      <CFormLabel className="col-sm-3 col-form-label">
-                        Transit/Routing No:
-                      </CFormLabel>
-                      <CCol sm={9}>
-                        <CFormInput
-                          type="text"
-                          {...register("routing_no")}
-                          placeholder="Transit/Routing No:"
-                        />
-                      </CCol>
-                    </CRow>
-                    <CRow className="mb-3">
-                      <CFormLabel className="col-sm-3 col-form-label">
-                        Account Name
-                      </CFormLabel>
-                      <CCol sm={9}>
-                        <CFormInput
-                          type="text"
-                          {...register("account_name", {
-                            required: "Please select Industry",
-                          })}
-                          placeholder="Account Name"
-                        />
-                        <span className="text-danger">
-                          {errors.account_name?.message}
-                        </span>
-                      </CCol>
-                    </CRow>
-                    <CRow className="mb-3">
-                      <CFormLabel className="col-sm-3 col-form-label">
-                        Account Number
-                      </CFormLabel>
-                      <CCol sm={9}>
-                        <CFormInput
-                          type="text"
-                          {...register("account_number", {
-                            required: "Please select Industry",
-                          })}
-                          placeholder="Account Number"
-                        />
-                        <span className="text-danger">
-                          {errors.account_number?.message}
-                        </span>
-                      </CCol>
-                    </CRow>
-                    <div className="text-center ">
-                      <CButton color="success" type="submit" className="mx-3">
-                        Save
-                      </CButton>
-                      <CButton
-                        color="primary"
-                        onClick={() =>
-                          clickNext(
-                            1,
-                            window.history.replaceState({}, document.title)
-                          )
-                        }
-                      >
-                        Next
-                      </CButton>
-                    </div>
-                  </CForm>
-                </CCardBody>
-              </CCard>
-            </CCol>
-          </CRow>
-        </div>
-      </CContainer>
+        </CForm>
+      </div>
     </div>
   );
 };

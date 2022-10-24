@@ -131,80 +131,68 @@ const BusinessDetails = ({ clickNext }) => {
   }, []);
 
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row">
-      <CContainer>
-        <div className="text-center">
-          <h2>Personal Details</h2>
-        </div>
-        <CRow className="justify-content-center">
-          <CCol md={8}>
-            <CCard className="p-4">
-              <CCardBody>
-                <CForm onSubmit={handleSubmit(saveBusinessDetails)}>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Industry
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormSelect
-                        aria-label="Default select example"
-                        {...register("industry", {
-                          required: "Please select Industry",
-                        })}
-                        type="number"
-                      >
-                        <option>Select State</option>
-                        {lookupList &&
-                          getIndustryOption(lookupList).map(
-                            (country, index) => (
-                              <option value={country.id} key={index}>
-                                {country.name}
-                              </option>
-                            )
-                          )}
-                      </CFormSelect>
-                      <span className="text-danger">
-                        {errors.industry?.message}
-                      </span>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Business website
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("bussiness_website")}
-                        placeholder="Business website"
-                      />
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Product description
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormTextarea
-                        type="text"
-                        {...register("Product_desc")}
-                      />
-                    </CCol>
-                  </CRow>
-                  <div className="text-center ">
-                    <CButton type="submit" color="success" className="mx-3">
-                      Save
-                    </CButton>
-                    <CButton color="primary" onClick={() => clickNext(1)}>
-                      Next
-                    </CButton>
-                  </div>
-                </CForm>
-              </CCardBody>
-            </CCard>
+    <div >
+
+      <CForm onSubmit={handleSubmit(saveBusinessDetails)}>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            Industry
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormSelect
+              aria-label="Default select example"
+              {...register("industry", {
+                required: "Please select Industry",
+              })}
+              type="number"
+            >
+              <option>Select State</option>
+              {lookupList &&
+                getIndustryOption(lookupList).map(
+                  (country, index) => (
+                    <option value={country.id} key={index}>
+                      {country.name}
+                    </option>
+                  )
+                )}
+            </CFormSelect>
+            <span className="text-danger">
+              {errors.industry?.message}
+            </span>
           </CCol>
         </CRow>
-      </CContainer>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            Business website
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("bussiness_website")}
+              placeholder="Business website"
+            />
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            Product description
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormTextarea
+              type="text"
+              {...register("Product_desc")}
+            />
+          </CCol>
+        </CRow>
+        <div className="text-center ">
+          <CButton type="submit" color="success" className="mx-3">
+            Save
+          </CButton>
+          <CButton color="primary" onClick={() => clickNext(1)}>
+            Next
+          </CButton>
+        </div>
+      </CForm>
     </div>
   );
 };

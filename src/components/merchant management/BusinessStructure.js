@@ -106,165 +106,152 @@ const BusinessStructure = ({ clickNext }) => {
   }, []);
 
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row">
-      <CContainer>
-        <div className="text-center">
-          <h2>Business Information</h2>
-        </div>
-        <CRow className="justify-content-center">
-          <CCol md={8}>
-            <CCard className="p-4">
-              <CCardBody>
-                <CForm onSubmit={handleSubmit(saveBusinessStructure)}>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Registered business address
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormSelect
-                        aria-label="Default select example"
-                        type="number"
-                        {...register("Reg_business_address")}
-                      >
-                        <option>Select Country</option>
-                        {lookupList &&
-                          getCountryOption(lookupList).map((country, index) => (
-                            <option value={country.id} key={index}>
-                              {country.name}
-                            </option>
-                          ))}
-                      </CFormSelect>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Type of business
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormSelect
-                        aria-label="Default select example"
-                        type="number"
-                        {...register("type_of_business")}
-                      >
-                        <option>Type of Business</option>
-                        {lookupList &&
-                          getBusinessOption(lookupList).map(
-                            (country, index) => (
-                              <option value={country.id} key={index}>
-                                {country.name}
-                              </option>
-                            )
-                          )}
-                      </CFormSelect>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Business Name
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("business_name", {
-                          required: "Please provide Business Name",
-                        })}
-                        placeholder="Business Name"
-                      />
-                      <span className="text-danger">
-                        {errors.business_name?.message}
-                      </span>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Address
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("b_address_line_1")}
-                        placeholder="Address Line 1"
-                      />
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label"></CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("b_address_line_2")}
-                        placeholder="Address Line 2"
-                      />
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      City
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("b_city", {
-                          required: "Please provide City",
-                        })}
-                        placeholder="City"
-                      />
-                      <span className="text-danger">
-                        {errors.city?.message}
-                      </span>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      State
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormSelect
-                        aria-label="Default select example"
-                        {...register("b_state", {
-                          required: "Please Select Your State",
-                        })}
-                        type="number"
-                      >
-                        <option>Select State</option>
-                        {lookupList &&
-                          getStateOption(lookupList).map((country, index) => (
-                            <option value={country.id} key={index}>
-                              {country.name}
-                            </option>
-                          ))}
-                      </CFormSelect>
-                      <span className="text-danger">
-                        {errors.state?.message}
-                      </span>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Postal Code
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("b_postel_code")}
-                        placeholder="Postal Code"
-                      />
-                    </CCol>
-                  </CRow>
-                  <div className="text-center ">
-                    <CButton color="success" type="submit" className="mx-3">
-                      Save
-                    </CButton>
-                    <CButton color="primary" onClick={() => clickNext(1)}>
-                      Next
-                    </CButton>
-                  </div>
-                </CForm>
-              </CCardBody>
-            </CCard>
+    <div>
+      <CForm onSubmit={handleSubmit(saveBusinessStructure)}>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label text-right">
+            Registered business address
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormSelect
+              aria-label="Default select example"
+              type="number"
+              {...register("Reg_business_address")}
+            >
+              <option>Select Country</option>
+              {lookupList &&
+                getCountryOption(lookupList).map((country, index) => (
+                  <option value={country.id} key={index}>
+                    {country.name}
+                  </option>
+                ))}
+            </CFormSelect>
           </CCol>
         </CRow>
-      </CContainer>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label text-right">
+            Type of business
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormSelect
+              aria-label="Default select example"
+              type="number"
+              {...register("type_of_business")}
+            >
+              <option>Type of Business</option>
+              {lookupList &&
+                getBusinessOption(lookupList).map(
+                  (country, index) => (
+                    <option value={country.id} key={index}>
+                      {country.name}
+                    </option>
+                  )
+                )}
+            </CFormSelect>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label text-right">
+            Business Name
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("business_name", {
+                required: "Please provide Business Name",
+              })}
+              placeholder="Business Name"
+            />
+            <span className="text-danger">
+              {errors.business_name?.message}
+            </span>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label text-right">
+            Address
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("b_address_line_1")}
+              placeholder="Address Line 1"
+            />
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label"></CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("b_address_line_2")}
+              placeholder="Address Line 2"
+            />
+          </CCol>
+        </CRow>
+        <CRow className="mb-3"> 
+          <CFormLabel className="col-sm-4 col-form-label text-right">
+            City
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("b_city", {
+                required: "Please provide City",
+              })}
+              placeholder="City"
+            />
+            <span className="text-danger">
+              {errors.city?.message}
+            </span>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label text-right">
+            State
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormSelect
+              aria-label="Default select example"
+              {...register("b_state", {
+                required: "Please Select Your State",
+              })}
+              type="number"
+            >
+              <option>Select State</option>
+              {lookupList &&
+                getStateOption(lookupList).map((country, index) => (
+                  <option value={country.id} key={index}>
+                    {country.name}
+                  </option>
+                ))}
+            </CFormSelect>
+            <span className="text-danger">
+              {errors.state?.message}
+            </span>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label text-right">
+            Postal Code
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("b_postel_code")}
+              placeholder="Postal Code"
+            />
+          </CCol>
+        </CRow>
+        <div className="text-center ">
+          <CButton color="success" type="submit" className="mx-3">
+            Save
+          </CButton>
+          <CButton color="primary" onClick={() => clickNext(1)}>
+            Next
+          </CButton>
+        </div>
+      </CForm>
     </div>
   );
 };

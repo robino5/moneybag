@@ -88,192 +88,179 @@ const BusinessRepresentative = ({ clickNext }) => {
   }, []);
 
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row">
-      <CContainer>
-        <div className="text-center">
-          <h2>Personal Details</h2>
-        </div>
-        <CRow className="justify-content-center">
-          <CCol md={8}>
-            <CCard className="p-4">
-              <CCardBody>
-                <CForm onSubmit={handleSubmit(saveBusinessRepresentative)}>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Legal Name Of Person
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("first_name", {
-                          required: "Please provide Business Name",
-                        })}
-                        placeholder="First Name"
-                      />
-                      <span className="text-danger">
-                        {errors.first_name?.message}
-                      </span>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label"></CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("last_name", {
-                          required: "Please provide Business Name",
-                        })}
-                        placeholder="Last Name"
-                      />
-                      <span className="text-danger">
-                        {errors.last_name?.message}
-                      </span>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Email Address
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("email")}
-                        placeholder="Email Address"
-                      />
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Date of Birth
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="date"
-                        {...register("dob")}
-                        placeholder=" Date of Birth"
-                      />
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Address
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("address_line_1", {
-                          required: "Please provide Address line 1",
-                        })}
-                        placeholder="Address Line 1"
-                      />
-                      <span className="text-danger">
-                        {errors.address_line_1?.message}
-                      </span>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label"></CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("address_line_2")}
-                        placeholder="Address Line 2"
-                      />
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      City
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("city", {
-                          required: "Please provide City",
-                        })}
-                        placeholder="City"
-                      />
-                      <span className="text-danger">
-                        {errors.city?.message}
-                      </span>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      State
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormSelect
-                        aria-label="Default select example"
-                        {...register("state")}
-                        type="number"
-                      >
-                        <option>Select State</option>
-                        {lookupList &&
-                          getStateOption(lookupList).map((country, index) => (
-                            <option value={country.id} key={index}>
-                              {country.name}
-                            </option>
-                          ))}
-                      </CFormSelect>
-                      <span className="text-danger">
-                        {errors.state?.message}
-                      </span>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Postal Code
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("postal_code", {
-                          required: "Please Select Postal Code",
-                        })}
-                        placeholder="Postal Code"
-                      />
-                      <span className="text-danger">
-                        {errors.postal_code?.message}
-                      </span>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      National Id
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("national_id")}
-                        placeholder="Nationnal Id"
-                      />
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label"></CFormLabel>
-                    <CCol sm={9}>
-                      <p>
-                        We use this information to verify your identity. If you
-                        leave this feld blank, we’ll email you instructions to
-                        submit another form of ID.
-                      </p>
-                    </CCol>
-                  </CRow>
-                  <div className="text-center ">
-                    <CButton color="success" type="submit" className="mx-3">
-                      Save
-                    </CButton>
-                    <CButton color="primary" onClick={() => clickNext(1)}>
-                      Next
-                    </CButton>
-                  </div>
-                </CForm>
-              </CCardBody>
-            </CCard>
+    <div>
+      <CForm onSubmit={handleSubmit(saveBusinessRepresentative)}>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            Legal Name Of Person
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("first_name", {
+                required: "Please provide Business Name",
+              })}
+              placeholder="First Name"
+            />
+            <span className="text-danger">
+              {errors.first_name?.message}
+            </span>
           </CCol>
         </CRow>
-      </CContainer>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label"></CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("last_name", {
+                required: "Please provide Business Name",
+              })}
+              placeholder="Last Name"
+            />
+            <span className="text-danger">
+              {errors.last_name?.message}
+            </span>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            Email Address
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("email")}
+              placeholder="Email Address"
+            />
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            Date of Birth
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="date"
+              {...register("dob")}
+              placeholder=" Date of Birth"
+            />
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            Address
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("address_line_1", {
+                required: "Please provide Address line 1",
+              })}
+              placeholder="Address Line 1"
+            />
+            <span className="text-danger">
+              {errors.address_line_1?.message}
+            </span>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label"></CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("address_line_2")}
+              placeholder="Address Line 2"
+            />
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            City
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("city", {
+                required: "Please provide City",
+              })}
+              placeholder="City"
+            />
+            <span className="text-danger">
+              {errors.city?.message}
+            </span>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            State
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormSelect
+              aria-label="Default select example"
+              {...register("state")}
+              type="number"
+            >
+              <option>Select State</option>
+              {lookupList &&
+                getStateOption(lookupList).map((country, index) => (
+                  <option value={country.id} key={index}>
+                    {country.name}
+                  </option>
+                ))}
+            </CFormSelect>
+            <span className="text-danger">
+              {errors.state?.message}
+            </span>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            Postal Code
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("postal_code", {
+                required: "Please Select Postal Code",
+              })}
+              placeholder="Postal Code"
+            />
+            <span className="text-danger">
+              {errors.postal_code?.message}
+            </span>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            National Id
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("national_id")}
+              placeholder="Nationnal Id"
+            />
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label"></CFormLabel>
+          <CCol sm={8}>
+            <p>
+              We use this information to verify your identity. If you
+              leave this feld blank, we’ll email you instructions to
+              submit another form of ID.
+            </p>
+          </CCol>
+        </CRow>
+        <div className="text-center ">
+          <CButton color="success" type="submit" className="mx-3">
+            Save
+          </CButton>
+          <CButton color="primary" onClick={() => clickNext(1)}>
+            Next
+          </CButton>
+        </div>
+      </CForm>
     </div>
   );
 };
