@@ -92,6 +92,11 @@ const _nav = [
         name: "Merchant Management",
         to: "/merchant_management",
       },
+      {
+        component: CNavItem,
+        name: "Bank Payment",
+        to: "/bank-payment",
+      },
     ],
   },
 

@@ -171,6 +171,8 @@ const BankDetailsUpdate = React.lazy(() =>
   import("./components/merchant management/bank details/BankDetailsUpdate")
 );
 
+const PaymetBank = React.lazy(() => import("./components/payment/PaymetBank"));
+
 const routes = [
   // { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", element: Dashboard },
@@ -391,6 +393,11 @@ const routes = [
     path: "/update-bank-details",
     name: "merchant_management",
     element: BankDetailsUpdate,
+  },
+  {
+    path: "/bank-payment",
+    name: "bank-payment",
+    element: PaymetBank,
   },
 ];
 
