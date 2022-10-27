@@ -94,6 +94,11 @@ const _nav = [
       },
       {
         component: CNavItem,
+        name: "Merchant Store",
+        to: "/merchant-store",
+      },
+      {
+        component: CNavItem,
         name: "Bank Payment",
         to: "/bank-payment",
       },
