@@ -31,7 +31,7 @@ const PartnerAdd = () => {
 
   const savePartner = (e) => {
     const partnerdata = {
-      partner_id: e.partner_id,
+      partner_id: parseInt(e.partner_id),
       partner_name: e.partner_name,
       organization_id: parseInt(e.org_name),
       email: e.email,

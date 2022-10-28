@@ -28,7 +28,7 @@ const StoreAdd = () => {
 
   const saveStore = (e) => {
     const storeDate = {
-      store_id: e.store_id,
+      store_id: parseInt(e.store_id),
       store_name: e.store_name,
       short_name: e.short_name,
       email: e.email,
@@ -39,7 +39,6 @@ const StoreAdd = () => {
       hash_id: e.hash_id,
       is_active: e.status ? 1 : 0,
     };
-    // !e.store_id ? delete storeDate.store_id : "";
     console.log(storeDate);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
