@@ -170,10 +170,18 @@ const MerchantManagement = React.lazy(() =>
 const BankDetailsUpdate = React.lazy(() =>
   import("./components/merchant management/bank details/BankDetailsUpdate")
 );
-const MerchantStore = React.lazy(() => import("./components/merchant management/merchant store/MerchantStore"));
-const MerchantStoreAdd = React.lazy(() => import("./components/merchant management/merchant store/MerchantStoreAdd"));
+const MerchantStore = React.lazy(() =>
+  import("./components/merchant management/merchant store/MerchantStore")
+);
+const MerchantStoreAdd = React.lazy(() =>
+  import("./components/merchant management/merchant store/MerchantStoreAdd")
+);
 
 const PaymetBank = React.lazy(() => import("./components/payment/PaymetBank"));
+
+const DefaultService = React.lazy(() =>
+  import("./components/default-service/DefaultService")
+);
 
 const routes = [
   // { path: "/", exact: true, name: "Home" },
@@ -410,6 +418,11 @@ const routes = [
     path: "/add-merchant-store",
     name: "add-merchant-store",
     element: MerchantStoreAdd,
+  },
+  {
+    path: "/add-default-service",
+    name: "add-default-service",
+    element: DefaultService,
   },
 ];
 

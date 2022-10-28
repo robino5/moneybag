@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { CCol, CContainer, CRow, CButton } from "@coreui/react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import swal from "sweetalert";
 
 const SettelmentList = () => {
   const navigate = useNavigate();
@@ -71,15 +72,14 @@ const SettelmentList = () => {
   };
 
   const setservice = (e) => {
-    let service=[];
+    let service = [];
     serviceList &&
       serviceList.map((services) => {
         if (e.service_name.match(services.id)) {
           service.push(services.service_name);
         }
       });
-      return "("+service+",)";
-
+    return "(" + service + ",)";
   };
 
   const setBranchName = (e) => {
@@ -91,6 +91,46 @@ const SettelmentList = () => {
         }
       });
     return bankName;
+  };
+
+  const deleteSettelment = (id) => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    swal({
+      title: "Are you sure?",
+      text: "Do you want to delete the Organization?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        axios
+          .delete(`${process.env.REACT_APP_API_URL}account-settlements/${id}`, {
+            headers,
+          })
+          .then((response) => {
+            console.log(response),
+              swal({
+                position: "top",
+                text: "Ofganization Deleted Successfull",
+                icon: "success",
+                button: false,
+                timer: 1500,
+              });
+            getSettlementAccountList();
+          })
+          .catch((error) => {
+            console.log(error),
+              swal({
+                text: error.response.data.detail,
+                icon: "error",
+                button: false,
+                timer: 1500,
+              });
+          });
+      }
+    });
   };
 
   useEffect(() => {
@@ -127,7 +167,7 @@ const SettelmentList = () => {
           <CButton
             className="btn btn-sm d-inline mr-1"
             color="danger"
-            //   onClick={() => deleteOrganization(row.id)}
+            onClick={() => deleteSettelment(row.id)}
           >
             Delete
           </CButton>

@@ -25,6 +25,46 @@ const StoreList = () => {
       });
   };
 
+  const deleteStore = (id) => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    swal({
+      title: "Are you sure?",
+      text: "Do you want to delete the Organization?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        axios
+          .delete(`${process.env.REACT_APP_API_URL}stores/${id}`, {
+            headers,
+          })
+          .then((response) => {
+            console.log(response),
+              swal({
+                position: "top",
+                text: "Ofganization Deleted Successfull",
+                icon: "success",
+                button: false,
+                timer: 1500,
+              });
+            getStoreList();
+          })
+          .catch((error) => {
+            console.log(error),
+              swal({
+                text: error.response.data.detail,
+                icon: "error",
+                button: false,
+                timer: 1500,
+              });
+          });
+      }
+    });
+  };
+
   useEffect(() => {
     getStoreList();
   }, []);
@@ -57,7 +97,7 @@ const StoreList = () => {
           <CButton
             className="btn btn-sm d-inline mr-1"
             color="danger"
-            //   onClick={() => deleteOrganization(row.id)}
+            onClick={() => deleteStore(row.id)}
           >
             Delete
           </CButton>

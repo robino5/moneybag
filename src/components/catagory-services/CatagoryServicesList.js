@@ -24,6 +24,46 @@ const CatagoryServicesList = () => {
       });
   };
 
+  const deleteCatagoryService = (id) => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    swal({
+      title: "Are you sure?",
+      text: "Do you want to delete the Organization?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        axios
+          .delete(`${process.env.REACT_APP_API_URL}category-services/${id}`, {
+            headers,
+          })
+          .then((response) => {
+            console.log(response),
+              swal({
+                position: "top",
+                text: "Ofganization Deleted Successfull",
+                icon: "success",
+                button: false,
+                timer: 1500,
+              });
+            getCatService();
+          })
+          .catch((error) => {
+            console.log(error),
+              swal({
+                text: error.response.data.detail,
+                icon: "error",
+                button: false,
+                timer: 1500,
+              });
+          });
+      }
+    });
+  };
+
   useEffect(() => {
     getCatService();
   }, []);
@@ -56,7 +96,7 @@ const CatagoryServicesList = () => {
           <CButton
             className="btn btn-sm d-inline mr-1"
             color="danger"
-            //   onClick={() => deleteOrganization(row.id)}
+            onClick={() => deleteCatagoryService(row.id)}
           >
             Delete
           </CButton>
@@ -88,7 +128,7 @@ const CatagoryServicesList = () => {
         </CRow>
         <CRow className="justify-content-center">
           <CCol md={12}>
-            <DataTable columns={comumn} data={catserviceList} pagination/>
+            <DataTable columns={comumn} data={catserviceList} pagination />
           </CCol>
         </CRow>
       </CContainer>

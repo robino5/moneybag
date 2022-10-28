@@ -79,6 +79,11 @@ const _nav = [
         name: "Settelment Account",
         to: "/settelment",
       },
+      {
+        component: CNavItem,
+        name: "Add Default Service",
+        to: "/add-default-service",
+      },
     ],
   },
 

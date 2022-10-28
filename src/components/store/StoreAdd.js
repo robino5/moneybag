@@ -39,6 +39,7 @@ const StoreAdd = () => {
       hash_id: e.hash_id,
       is_active: e.status ? 1 : 0,
     };
+    // !e.store_id ? delete storeDate.store_id : "";
     console.log(storeDate);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
