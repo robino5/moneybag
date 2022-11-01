@@ -8,11 +8,13 @@ const Summery = () => {
   const navigate = useNavigate();
   const clickDone = () => {
     localStorage.removeItem("isSubmitBusiness");
+    localStorage.removeItem("merchant_id");
     localStorage.removeItem("isBankDetailDate");
+
     navigate("/dashboard");
   };
   return (
-    <div >
+    <div>
       <CContainer>
         <div className="text-center">
           <h2>Please Review</h2>
@@ -72,9 +74,10 @@ const Summery = () => {
             </CRow>
             <CRow>
               <CCol md={12}>
-              <CButton className="form-control" onClick={clickDone}>OK</CButton>
+                <CButton className="form-control" onClick={clickDone}>
+                  OK
+                </CButton>
               </CCol>
-            
             </CRow>
           </CCol>
         </CRow>

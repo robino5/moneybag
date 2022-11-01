@@ -38,6 +38,7 @@ const BusinessStructure = ({ clickNext }) => {
       localStorage.setItem("country_no", parseInt(e.Reg_business_address));
       localStorage.setItem("business_type", parseInt(e.type_of_business));
       localStorage.setItem("business_name", e.business_name);
+      localStorage.setItem("business_no", e.business_no);
       localStorage.setItem("business_address1", e.b_address_line_1);
       localStorage.setItem("business_address2", e.b_address_line_2);
       localStorage.setItem("business_city", e.b_city);
@@ -140,13 +141,11 @@ const BusinessStructure = ({ clickNext }) => {
             >
               <option>Type of Business</option>
               {lookupList &&
-                getBusinessOption(lookupList).map(
-                  (country, index) => (
-                    <option value={country.id} key={index}>
-                      {country.name}
-                    </option>
-                  )
-                )}
+                getBusinessOption(lookupList).map((country, index) => (
+                  <option value={country.id} key={index}>
+                    {country.name}
+                  </option>
+                ))}
             </CFormSelect>
           </CCol>
         </CRow>
@@ -162,9 +161,22 @@ const BusinessStructure = ({ clickNext }) => {
               })}
               placeholder="Business Name"
             />
-            <span className="text-danger">
-              {errors.business_name?.message}
-            </span>
+            <span className="text-danger">{errors.business_name?.message}</span>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label text-right">
+            Business No.
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("business_no", {
+                required: "Please provide Business no",
+              })}
+              placeholder="Business Name"
+            />
+            <span className="text-danger">{errors.business_no?.message}</span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -189,7 +201,7 @@ const BusinessStructure = ({ clickNext }) => {
             />
           </CCol>
         </CRow>
-        <CRow className="mb-3"> 
+        <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label text-right">
             City
           </CFormLabel>
@@ -201,9 +213,7 @@ const BusinessStructure = ({ clickNext }) => {
               })}
               placeholder="City"
             />
-            <span className="text-danger">
-              {errors.city?.message}
-            </span>
+            <span className="text-danger">{errors.city?.message}</span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -226,9 +236,7 @@ const BusinessStructure = ({ clickNext }) => {
                   </option>
                 ))}
             </CFormSelect>
-            <span className="text-danger">
-              {errors.state?.message}
-            </span>
+            <span className="text-danger">{errors.state?.message}</span>
           </CCol>
         </CRow>
         <CRow className="mb-3">

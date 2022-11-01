@@ -33,6 +33,7 @@ const BankDetails = ({ clickNext }) => {
 
   const saveBusinessDetails = (e) => {
     const businessDetailData = {
+      merchant_no: localStorage.getItem("merchant_id"),
       currency_no: parseInt(e.currency),
       bank_no: parseInt(e.bank_name),
       branch_no: parseInt(e.branch_name),
@@ -76,7 +77,7 @@ const BankDetails = ({ clickNext }) => {
       });
   };
 
-  const getCatService = () => {
+  const getMertchantList = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
@@ -194,7 +195,7 @@ const BankDetails = ({ clickNext }) => {
   };
 
   useEffect(() => {
-    getCatService();
+    getMertchantList();
     getLookupList();
     getBankBranchList();
     localStorage.setItem("isBankDetailDate", 0);
@@ -233,7 +234,7 @@ const BankDetails = ({ clickNext }) => {
           <CButton
             className="btn btn-sm d-inline mr-1"
             color="danger"
-          // onClick={() => deleteOrganization(row.id)}
+            // onClick={() => deleteOrganization(row.id)}
           >
             Delete
           </CButton>
@@ -284,13 +285,11 @@ const BankDetails = ({ clickNext }) => {
               >
                 <option>Select Currency</option>
                 {lookupList &&
-                  getcurrencyOption(lookupList).map(
-                    (currency, index) => (
-                      <option value={currency.id} key={index}>
-                        {currency.name}
-                      </option>
-                    )
-                  )}
+                  getcurrencyOption(lookupList).map((currency, index) => (
+                    <option value={currency.id} key={index}>
+                      {currency.name}
+                    </option>
+                  ))}
               </CFormSelect>
             </CCol>
           </CRow>
@@ -313,9 +312,7 @@ const BankDetails = ({ clickNext }) => {
                     </option>
                   ))}
               </CFormSelect>
-              <span className="text-danger">
-                {errors.bank_name?.message}
-              </span>
+              <span className="text-danger">{errors.bank_name?.message}</span>
             </CCol>
           </CRow>
           <CRow className="mb-3">
@@ -331,17 +328,13 @@ const BankDetails = ({ clickNext }) => {
               >
                 <option>select Branch</option>
                 {getBranchOption(bankbranchList) &&
-                  getBranchOption(bankbranchList).map(
-                    (bank, index) => (
-                      <option value={bank.id} key={index}>
-                        {bank.branch_name}
-                      </option>
-                    )
-                  )}
+                  getBranchOption(bankbranchList).map((bank, index) => (
+                    <option value={bank.id} key={index}>
+                      {bank.branch_name}
+                    </option>
+                  ))}
               </CFormSelect>
-              <span className="text-danger">
-                {errors.first_name?.message}
-              </span>
+              <span className="text-danger">{errors.first_name?.message}</span>
             </CCol>
           </CRow>
           <CRow className="mb-3">
@@ -397,10 +390,7 @@ const BankDetails = ({ clickNext }) => {
             <CButton
               color="primary"
               onClick={() =>
-                clickNext(
-                  1,
-                  window.history.replaceState({}, document.title)
-                )
+                clickNext(1, window.history.replaceState({}, document.title))
               }
             >
               Next

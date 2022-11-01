@@ -41,14 +41,18 @@ const BusinessDetails = ({ clickNext }) => {
       country_no: localStorage.getItem("country_no"),
       business_type: localStorage.getItem("business_type"),
       business_name: localStorage.getItem("business_name"),
+      bin: localStorage.getItem("business_no"),
       business_address1: localStorage.getItem("business_address1"),
       business_address2: localStorage.getItem("business_address2"),
       business_city: localStorage.getItem("business_city"),
       business_state: localStorage.getItem("business_state"),
       business_postal_code: localStorage.getItem("business_postal_code"),
+      marchant_id: e.merchant_id,
       industry_no: e.industry,
+      category_code: e.cat_code,
       website: e.bussiness_website,
       product_desc: e.Product_desc,
+      upload_file: "test",
     };
     console.log(Data);
     const headers = {
@@ -60,6 +64,7 @@ const BusinessDetails = ({ clickNext }) => {
       })
       .then((response) => {
         console.log(response);
+        localStorage.setItem("merchant_id", response.data.id);
         swal({
           position: "top-end",
           text: "Save Successfull",
@@ -81,6 +86,7 @@ const BusinessDetails = ({ clickNext }) => {
         localStorage.removeItem("country_no");
         localStorage.removeItem("business_type");
         localStorage.removeItem("business_name");
+        localStorage.removeItem("business_no");
         localStorage.removeItem("business_address1");
         localStorage.removeItem("business_address2"),
           localStorage.removeItem("business_city");
@@ -131,13 +137,25 @@ const BusinessDetails = ({ clickNext }) => {
   }, []);
 
   return (
-    <div >
-
+    <div>
       <CForm onSubmit={handleSubmit(saveBusinessDetails)}>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label">
-            Industry
+            Merchant Id
           </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("merchant_id", {
+                required: "Please select Merchant Id",
+              })}
+              placeholder="Merchant cetagory Id"
+            />
+            <span className="text-danger">{errors.merchant_id?.message}</span>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">Industry</CFormLabel>
           <CCol sm={8}>
             <CFormSelect
               aria-label="Default select example"
@@ -148,17 +166,28 @@ const BusinessDetails = ({ clickNext }) => {
             >
               <option>Select State</option>
               {lookupList &&
-                getIndustryOption(lookupList).map(
-                  (country, index) => (
-                    <option value={country.id} key={index}>
-                      {country.name}
-                    </option>
-                  )
-                )}
+                getIndustryOption(lookupList).map((country, index) => (
+                  <option value={country.id} key={index}>
+                    {country.name}
+                  </option>
+                ))}
             </CFormSelect>
-            <span className="text-danger">
-              {errors.industry?.message}
-            </span>
+            <span className="text-danger">{errors.industry?.message}</span>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            Merchant cetagory code
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("cat_code", {
+                required: "Please select cetagory code",
+              })}
+              placeholder="Merchant cetagory code"
+            />
+            <span className="text-danger">{errors.cat_code?.message}</span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -178,10 +207,7 @@ const BusinessDetails = ({ clickNext }) => {
             Product description
           </CFormLabel>
           <CCol sm={8}>
-            <CFormTextarea
-              type="text"
-              {...register("Product_desc")}
-            />
+            <CFormTextarea type="text" {...register("Product_desc")} />
           </CCol>
         </CRow>
         <div className="text-center ">
