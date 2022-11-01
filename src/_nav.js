@@ -99,6 +99,11 @@ const _nav = [
       },
       {
         component: CNavItem,
+        name: "Merchant Service",
+        to: "/merchant-service",
+      },
+      {
+        component: CNavItem,
         name: "Merchant Store",
         to: "/merchant-store",
       },
