@@ -41,9 +41,7 @@ const MerchantServiceAdd = () => {
     charge_ammount: 0,
   });
 
-  const [slabserviceId, setSlabServceId] = useState({
-    mrservice_no: 0,
-  });
+  const [slabserviceId, setSlabServceId] = useState();
 
   const getMertchant = () => {
     const headers = {
@@ -205,14 +203,45 @@ const MerchantServiceAdd = () => {
   };
 
   const saveSlabService = (e) => {
-    e.map((element) => {
-      if (element.service_charge_type === "S") {
-        setSlabServceId({ mrservice_no: element.id });
+    console.log(e)
+    let data = []
+    e && e.map((element) => {
+      if (element.service_charge_type === 'S') {
+        data.push({
+          mrservice_no: element.id, 
+          from_slab_amount: parseInt(slabservice.from_slab_amount) , 
+          to_slab_amount: parseInt(slabservice.to_slab_amount),
+          charge_ammount: parseInt(slabservice.from_slab_amount)
+        })
       }
+    })
+    console.log(data)
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+    .post(
+      `${process.env.REACT_APP_API_URL}merchant-slabs/`,
+      data,
+      {
+        headers,
+      }
+    )
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.error("There was an error!", error);
+      swal({
+        position: "top-end",
+        text: error.response.data.detail,
+        icon: "error",
+        button: false,
+        timer: 1500,
+      });
     });
-
-    console.log("jhgjkl;", slabserviceId);
   };
+
   console.log(slabservice);
   const addMerchantServices = (e) => {
     const merchantServiceData = {
@@ -240,6 +269,7 @@ const MerchantServiceAdd = () => {
       .then((response) => {
         console.log(response);
         saveSlabService(response.data);
+
         swal({
           position: "top-end",
           text: "Store Created Successfull",
@@ -247,7 +277,6 @@ const MerchantServiceAdd = () => {
           button: false,
           timer: 1500,
         });
-        navigate("/merchant-service");
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -405,27 +434,21 @@ const MerchantServiceAdd = () => {
                     <CCol sm={3}>
                       <CFormInput
                         type="text"
-                        {...register("from_slab_amount", {
-                          required: "Please Povide From Amount",
-                        })}
+                        {...register("from_slab_amount")}
                         placeholder="From Amount"
                       />
                     </CCol>
                     <CCol sm={3}>
                       <CFormInput
                         type="text"
-                        {...register("to_slab_amount", {
-                          required: "Please Provide To Amount",
-                        })}
+                        {...register("to_slab_amount")}
                         placeholder="To Amount"
                       />
                     </CCol>
                     <CCol sm={3}>
                       <CFormInput
                         type="text"
-                        {...register("charge_ammount", {
-                          required: "Please Provide Charge Amount",
-                        })}
+                        {...register("charge_ammount")}
                         placeholder="Charge Amount"
                       />
                     </CCol>
