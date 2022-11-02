@@ -2,36 +2,46 @@ import DataTable from "react-data-table-component";
 import React, { useState, useEffect } from "react";
 import { CCol, CContainer, CRow, CButton } from "@coreui/react";
 import { Link, useNavigate } from "react-router-dom";
-
+import swal from "sweetalert";
+import axios from "axios";
 
 const MerchantStoreList = () => {
   const navigate = useNavigate();
-  const [organizationList, setlits] = useState();
+  const [merchantStoreList, setMerchantStoreList] = useState();
+  console.log(merchantStoreList);
 
+  const getsetMerchantStoreList = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}merchant-stores/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setMerchantStoreList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
 
   useEffect(() => {
+    getsetMerchantStoreList();
   }, []);
 
   const columns = [
+    {
+      name: "Merchant Name",
+      selector: (row) => row.merchant_no,
+    },
     {
       name: "Store Name",
       selector: (row) => row.store_name,
     },
     {
-      name: "Email",
-      selector: (row) => row.email,
-    },
-    {
-      name: "Mobile",
-      selector: (row) => row.mobile,
-    },
-    {
-      name: "Contact Person",
-      selector: (row) => row.contact_person,
-    },
-    {
-      name: "Status",
-      selector: (row) => (row.is_active == 1 ? "Active" : "Inactive"),
+      name: "Collection Account name",
+      selector: (row) => row.settlement_bank_no,
     },
     {
       name: "Action",
@@ -69,13 +79,13 @@ const MerchantStoreList = () => {
         </div>
         <CRow className="justify-content-center">
           <CCol md={12}>
-          {/* <DataTable
+            <DataTable
               title="Financial Organization List"
-              columns={comumn}
-              data={}
+              columns={columns}
+              data={merchantStoreList}
               pagination
               expandableCol
-            /> */}
+            />
           </CCol>
         </CRow>
       </CContainer>
