@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate,useLocation } from "react-router-dom";
-import { useForm,useFieldArray  } from "react-hook-form";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useForm, useFieldArray } from "react-hook-form";
 import swal from "sweetalert";
 import axios from "axios";
 import {
@@ -17,33 +17,41 @@ import {
   CButton,
 } from "@coreui/react";
 
-
 const MerchantStoreUpdate = () => {
   const {
     register,
-    formState: { errors, isDirty },control,
+    formState: { errors, isDirty },
+    control,
     handleSubmit,
     setValue,
   } = useForm({ mode: "all" });
   const { fields } = useFieldArray({
-    control, 
-    name: "test", 
+    control,
+    name: "test",
   });
   const navigate = useNavigate();
   const location = useLocation();
   const [merchantList, setmerchantList] = useState();
-  const [marchantDetail, setMarchentDetail] = useState();
   const [marchantDetailList, setMarchentDetailsList] = useState();
   const [bankList, setBankList] = useState();
   const [lookupList, setLookupList] = useState();
   const [marchantId, setMerchantId] = useState();
   const [merchantServiceList, SetMerchantServiceList] = useState();
- console.log(location.state)
-  const getMerchantId = (e) => {
-    setMerchantId(e.target.value);
-  };
-  console.log("service", merchantServiceList);
+  const [merchantStoreDetailList, SetMerchantStoreDetailList] = useState();
 
+  useEffect(() => {
+    getMertchant();
+    getMertchantDetailList();
+    getMertchantServiceList();
+    getBankList();
+    getLookupList();
+    getMerchantStoreDetail();
+  }, []);
+
+  // const getMerchantId = (e) => {
+  //   setMerchantId(e.target.value);
+  // };
+  console.log("service", merchantStoreDetailList);
   const getMertchant = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -124,6 +132,22 @@ const MerchantStoreUpdate = () => {
       });
   };
 
+  const getMerchantStoreDetail = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}merchant-store-details/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), SetMerchantStoreDetailList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
   const getMertchantDetail = (e, id) => {
     let date = [];
     e &&
@@ -174,34 +198,45 @@ const MerchantStoreUpdate = () => {
     return service_name;
   };
 
-  const selectMerchantService = (e) => {
+  const selectMerchantService = (merchantService, merchantStoreDetail) => {
     let data = [];
-    e &&
-      e.map((element, index) => {
-        if (element.merchant_no == marchantId) {
-          data.push({
-            bank_no: element.bank_no,
-            service_no: element.service_no,
-            charge_ammount: element.charge_ammount,
-          });
+    console.log(location.state.id);
+    merchantStoreDetail &&
+      merchantStoreDetail.map((merchatStore, index) => {
+        if (merchatStore.store_no == location.state.id) {
+          merchantService &&
+            merchantService.map((merchatservice, index) => {
+              if (merchatStore.mrservice_no == merchatservice.id) {
+                data.push({
+                  id: merchatStore.id,
+                  mservice_no: merchatStore.mrservice_no,
+                  bank_no: merchatservice.bank_no,
+                  service_no: merchatservice.service_no,
+                  charge_ammount: merchatservice.charge_ammount,
+                  override_charge: merchatStore.override_charge,
+                });
+              }
+            });
         }
       });
     return data;
   };
 
-  const saveMerchantStore = (e) => {
+  const updateMerchantStore = (e) => {
     const merchantStoreData = {
-      merchant_no: parseInt(e.merchant_name),
-      store_name: e.store_name,
-      settlement_bank_no: parseInt(e.merchant_detail_name),
+      merchant_no: location.state.merchant_no,
+      store_name: location.state.store_name,
+      settlement_bank_no:
+        e.merchant_detail_name === ""
+          ? location.state.settlement_bank_no
+          : parseInt(e.merchant_detail_name),
     };
-
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
       .post(
-        `${process.env.REACT_APP_API_URL}merchant-stores/`,
+        `${process.env.REACT_APP_API_URL}merchant-stores/update/${location.state.id}`,
         merchantStoreData,
         {
           headers,
@@ -209,16 +244,14 @@ const MerchantStoreUpdate = () => {
       )
       .then((response) => {
         console.log(response);
-        saveMerchantStoreDetail(e.test,parseInt(e.merchant_name),response.data.id) 
-        
+        updateMerchantStoreDetail(e.test);
         swal({
           position: "top-end",
-          text: "Organization Created Successfull",
+          text: "Partner Update Successfull",
           icon: "success",
           button: false,
           timer: 1500,
         });
-        // navigate("/merchant-store");
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -232,60 +265,56 @@ const MerchantStoreUpdate = () => {
       });
   };
 
- const saveMerchantStoreDetail =(detail,merchant_id,store_id)=>{
-  let data=[]
-  detail&&detail.map((element,index)=>{
-    if(element.isChack){
-      data.push({
-        store_no:store_id,
-        mrservice_no:merchant_id,
-        override_charge:parseFloat(element.value) 
-      })
-    }
-  })
-  console.log("date:",data);
-  const headers = {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  const updateMerchantStoreDetail = (detail) => {
+    detail &&
+      detail.map((element, index) => {
+        if (element.isChack) {
+          console.log(parseInt(element.id));
+          console.log(location.state.id);
+          console.log(parseInt(element.service_no));
+          console.log(parseFloat(element.value));
+          const headers = {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          };
+          axios
+            .post(
+              `${
+                process.env.REACT_APP_API_URL
+              }merchant-store-details/update/${parseInt(element.id)}`,
+              {
+                store_no: location.state.id,
+                mrservice_no: parseInt(element.service_no),
+                override_charge: parseFloat(element.value),
+              },
+              {
+                headers,
+              }
+            )
+            .then((response) => {
+              console.log(response);
+              updateMerchantStoreDetail(e.test);
+              swal({
+                position: "top-end",
+                text: "Partner Update Successfull",
+                icon: "success",
+                button: false,
+                timer: 1500,
+              });
+            })
+            .catch((error) => {
+              console.error("There was an error!", error);
+              swal({
+                position: "top-end",
+                text: error.response.data.detail,
+                icon: "error",
+                button: false,
+                timer: 1500,
+              });
+            });
+        }
+      });
+    return navigate("/merchant-store");
   };
-  axios
-    .post(
-      `${process.env.REACT_APP_API_URL}merchant-store-details/`,
-      data,
-      {
-        headers,
-      }
-    )
-    .then((response) => {
-      console.log(response);
-      swal({
-        position: "top-end",
-        text: "Organization Created Successfull",
-        icon: "success",
-        button: false,
-        timer: 1500,
-      });
-      // navigate("/merchant-store");
-    })
-    .catch((error) => {
-      console.error("There was an error!", error);
-      swal({
-        position: "top-end",
-        text: error.response.data.detail,
-        icon: "error",
-        button: false,
-        timer: 1500,
-      });
-    });
- }
-
-
-  useEffect(() => {
-    getMertchant();
-    getMertchantDetailList();
-    getMertchantServiceList();
-    getBankList();
-    getLookupList()
-  }, []);
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row">
@@ -294,7 +323,7 @@ const MerchantStoreUpdate = () => {
           <CCol md={12}>
             <CCard className="p-4">
               <CCardBody>
-                <CForm onSubmit={handleSubmit(saveMerchantStore)}>
+                <CForm onSubmit={handleSubmit(updateMerchantStore)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Merchant Name
@@ -302,23 +331,29 @@ const MerchantStoreUpdate = () => {
                     <CCol sm={9}>
                       <CFormSelect
                         aria-label="Default select example"
-                        {...register("merchant_name", {
-                          required: "Please select Merchant Name",
-                        })}
-                        onChange={(e) => {
-                          setMarchentDetail(
-                            getMertchantDetail(
-                              marchantDetailList,
-                              e.target.value
-                            )
-                          );
-                          getMerchantId(e);
-                        }}
+                        {...register("merchant_name")}
+                        disabled="true"
+                        // onChange={(e) => {
+                        //   setMarchentDetail(
+                        //     getMertchantDetail(
+                        //       marchantDetailList,
+                        //       location.state.merchant_no
+                        //     )
+                        //   );
+                        //   getMerchantId(e);
+                        // }}
                       >
-                        <option>select Merchant Name</option>
                         {merchantList &&
                           merchantList.map((merchant, index) => (
-                            <option value={merchant.id} key={index}>
+                            <option
+                              value={merchant.id}
+                              selected={
+                                merchant.id === location.state.merchant_no
+                                  ? "selected"
+                                  : ""
+                              }
+                              key={index}
+                            >
                               {merchant.first_name + " " + merchant.last_name}
                             </option>
                           ))}
@@ -332,9 +367,9 @@ const MerchantStoreUpdate = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("store_name", {
-                          required: "Please select Merchant Name",
-                        })}
+                        {...register("store_name")}
+                        disabled="true"
+                        defaultValue={location.state.store_name}
                         placeholder="Store Name"
                       />
                     </CCol>
@@ -346,14 +381,26 @@ const MerchantStoreUpdate = () => {
                     <CCol sm={9}>
                       <CFormSelect
                         aria-label="Default select example"
-                        {...register("merchant_detail_name", {
-                          required: "Please select Merchant detail",
-                        })}
+                        {...register("merchant_detail_name")}
                       >
-                        <option>select Merchant Name</option>
-                        {marchantDetail &&
-                          marchantDetail.map((merchantDetail, index) => (
-                            <option value={merchantDetail.id} key={index}>
+                        {getMertchantDetail(
+                          marchantDetailList,
+                          location.state.merchant_no
+                        ) &&
+                          getMertchantDetail(
+                            marchantDetailList,
+                            location.state.merchant_no
+                          ).map((merchantDetail, index) => (
+                            <option
+                              value={merchantDetail.id}
+                              selected={
+                                merchantDetail.id ===
+                                location.state.settlement_bank_no
+                                  ? "selected"
+                                  : ""
+                              }
+                              key={index}
+                            >
                               {getMerchantName(merchantDetail.merchant_no) +
                                 "(" +
                                 getBankName(merchantDetail.bank_no) +
@@ -365,40 +412,59 @@ const MerchantStoreUpdate = () => {
                       </CFormSelect>
                     </CCol>
                   </CRow>
-                  {/* <CRow>
+                  <CRow>
                     <CCol sm={1}></CCol>
                     <CCol sm={3}>Bank Name</CCol>
                     <CCol sm={2}>Service Name</CCol>
                     <CCol sm={3}> Default Charges</CCol>
                     <CCol sm={3}>Override Charges</CCol>
                   </CRow>
-                  {selectMerchantService(merchantServiceList) &&
-                    selectMerchantService(merchantServiceList).map(
-                      (element, index) => {
-                        return (
-                          <CRow className="mb-2">
-                            <CCol sm={1}>
-                              {" "}
-                              <CFormCheck
-                                {...register(`test.${index}.isChack`)}
-                              />
-                            </CCol>
-                            <CCol sm={3}>
-                              <p>{getBankName(element.bank_no)}</p>
-                            </CCol>
-                            <CCol sm={2}>{getServiceName(element.service_no)}</CCol>
-                            <CCol sm={3}>{element.charge_ammount}</CCol>
-                            <CCol sm={3}>
+                  <hr></hr>
+                  {merchantList &&
+                    selectMerchantService(
+                      merchantServiceList,
+                      merchantStoreDetailList
+                    ).map((element, index) => {
+                      return (
+                        <CRow className="mb-2">
+                          <CCol sm={1}>
+                            {" "}
+                            <CFormCheck
+                              {...register(`test.${index}.isChack`)}
+                            />
+                          </CCol>
+                          <CCol sm={3}>
+                            <p>
+                              {getBankName(element.bank_no)}
                               <CFormInput
                                 type="text"
-                                {...register(`test.${index}.value`)}
-                                placeholder="Override Charges"
+                                hidden
+                                defaultValue={element.id}
+                                {...register(`test.${index}.id`)}
                               />
-                            </CCol>
-                          </CRow>
-                        );
-                      }
-                    )} */}
+                            </p>
+                          </CCol>
+                          <CCol sm={2}>
+                            {getServiceName(element.service_no)}
+                            <CFormInput
+                              type="text"
+                              hidden
+                              defaultValue={element.mservice_no}
+                              {...register(`test.${index}.service_no`)}
+                            />
+                          </CCol>
+                          <CCol sm={3}>{element.charge_ammount}</CCol>
+                          <CCol sm={3}>
+                            <CFormInput
+                              type="text"
+                              defaultValue={element.override_charge}
+                              {...register(`test.${index}.value`)}
+                              placeholder="Override Charges"
+                            />
+                          </CCol>
+                        </CRow>
+                      );
+                    })}
 
                   <div className="text-center ">
                     <Link to="/merchant-store">

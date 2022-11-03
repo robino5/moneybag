@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useForm,useFieldArray  } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import swal from "sweetalert";
 import axios from "axios";
 import {
@@ -21,13 +21,14 @@ import { element } from "prop-types";
 const MerchantStoreAdd = () => {
   const {
     register,
-    formState: { errors, isDirty },control,
+    formState: { errors, isDirty },
+    control,
     handleSubmit,
     setValue,
   } = useForm({ mode: "all" });
   const { fields } = useFieldArray({
-    control, 
-    name: "test", 
+    control,
+    name: "test",
   });
   const navigate = useNavigate();
   const [merchantList, setmerchantList] = useState();
@@ -179,6 +180,7 @@ const MerchantStoreAdd = () => {
       e.map((element, index) => {
         if (element.merchant_no == marchantId) {
           data.push({
+            id: element.id,
             bank_no: element.bank_no,
             service_no: element.service_no,
             charge_ammount: element.charge_ammount,
@@ -189,6 +191,7 @@ const MerchantStoreAdd = () => {
   };
 
   const saveMerchantStore = (e) => {
+    console.log("element:", e);
     const merchantStoreData = {
       merchant_no: parseInt(e.merchant_name),
       store_name: e.store_name,
@@ -208,8 +211,8 @@ const MerchantStoreAdd = () => {
       )
       .then((response) => {
         console.log(response);
-        saveMerchantStoreDetail(e.test,parseInt(e.merchant_name),response.data.id) 
-        
+        saveMerchantStoreDetail(e.test, response.data.id);
+
         swal({
           position: "top-end",
           text: "Organization Created Successfull",
@@ -231,59 +234,55 @@ const MerchantStoreAdd = () => {
       });
   };
 
- const saveMerchantStoreDetail =(detail,merchant_id,store_id)=>{
-  let data=[]
-  detail&&detail.map((element,index)=>{
-    if(element.isChack){
-      data.push({
-        store_no:store_id,
-        mrservice_no:merchant_id,
-        override_charge:parseFloat(element.value) 
-      })
-    }
-  })
-  console.log("date:",data);
-  const headers = {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  };
-  axios
-    .post(
-      `${process.env.REACT_APP_API_URL}merchant-store-details/`,
-      data,
-      {
+  const saveMerchantStoreDetail = (detail, store_id) => {
+    let data = [];
+    detail &&
+      detail.map((element, index) => {
+        if (element.isChack) {
+          data.push({
+            store_no: store_id,
+            mrservice_no: parseInt(element.id),
+            override_charge: parseFloat(element.value),
+          });
+        }
+      });
+    console.log("date:", data);
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .post(`${process.env.REACT_APP_API_URL}merchant-store-details/`, data, {
         headers,
-      }
-    )
-    .then((response) => {
-      console.log(response);
-      swal({
-        position: "top-end",
-        text: "Organization Created Successfull",
-        icon: "success",
-        button: false,
-        timer: 1500,
+      })
+      .then((response) => {
+        console.log(response);
+        swal({
+          position: "top-end",
+          text: "Organization Created Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
+        navigate("/merchant-store");
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: error.response.data.detail,
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
       });
-      // navigate("/merchant-store");
-    })
-    .catch((error) => {
-      console.error("There was an error!", error);
-      swal({
-        position: "top-end",
-        text: error.response.data.detail,
-        icon: "error",
-        button: false,
-        timer: 1500,
-      });
-    });
- }
-
+  };
 
   useEffect(() => {
     getMertchant();
     getMertchantDetailList();
     getMertchantServiceList();
     getBankList();
-    getLookupList()
+    getLookupList();
   }, []);
 
   return (
@@ -371,6 +370,7 @@ const MerchantStoreAdd = () => {
                     <CCol sm={3}> Default Charges</CCol>
                     <CCol sm={3}>Override Charges</CCol>
                   </CRow>
+                  <hr></hr>
                   {selectMerchantService(merchantServiceList) &&
                     selectMerchantService(merchantServiceList).map(
                       (element, index) => {
@@ -384,8 +384,17 @@ const MerchantStoreAdd = () => {
                             </CCol>
                             <CCol sm={3}>
                               <p>{getBankName(element.bank_no)}</p>
+                              <CFormInput
+                                type="text"
+                                hidden
+                                defaultValue={element.id}
+                                {...register(`test.${index}.id`)}
+                                placeholder="Override Charges"
+                              />
                             </CCol>
-                            <CCol sm={2}>{getServiceName(element.service_no)}</CCol>
+                            <CCol sm={2}>
+                              {getServiceName(element.service_no)}
+                            </CCol>
                             <CCol sm={3}>{element.charge_ammount}</CCol>
                             <CCol sm={3}>
                               <CFormInput

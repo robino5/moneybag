@@ -8,7 +8,9 @@ import axios from "axios";
 const MerchantStoreList = () => {
   const navigate = useNavigate();
   const [merchantStoreList, setMerchantStoreList] = useState();
-  console.log(merchantStoreList);
+  const [merchantList, setmerchantList] = useState();
+  const [marchantDetailList, setMarchentDetailsList] = useState();
+  const [bankList, setBankList] = useState();
 
   const getsetMerchantStoreList = () => {
     const headers = {
@@ -26,14 +28,101 @@ const MerchantStoreList = () => {
       });
   };
 
+  const getMertchant = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}marchants/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setmerchantList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const getMertchantDetailList = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}marchant-details/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setMarchentDetailsList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const getBankList = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}banks/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setBankList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const getMerchantName = (e) => {
+    let merchatname;
+    merchantList &&
+      merchantList.map((element) => {
+        if (element.id === e) {
+          merchatname = element.first_name + " " + element.last_name;
+        }
+      });
+    return merchatname;
+  };
+
+  const getMertchantDetail = (e) => {
+    let data = {};
+    marchantDetailList &&
+      marchantDetailList.map((element) => {
+        if (element.id == e) {
+          data = {
+            bank_no: element.bank_no,
+            branch_no: element.branch_no,
+          };
+        }
+      });
+    return data;
+  };
+
+  const getBankName = (e) => {
+    let bank_name;
+    bankList &&
+      bankList.map((element) => {
+        if (element.id === e) {
+          bank_name = element.branch_name;
+        }
+      });
+    return bank_name;
+  };
+
   useEffect(() => {
     getsetMerchantStoreList();
+    getMertchant();
+    getMertchantDetailList();
+    getBankList();
   }, []);
 
   const columns = [
     {
       name: "Merchant Name",
-      selector: (row) => row.merchant_no,
+      selector: (row) => getMerchantName(row.merchant_no),
     },
     {
       name: "Store Name",
@@ -41,7 +130,13 @@ const MerchantStoreList = () => {
     },
     {
       name: "Collection Account name",
-      selector: (row) => row.settlement_bank_no,
+      selector: (row) =>
+        getMerchantName(row.merchant_no) +
+        "(" +
+        getBankName(getMertchantDetail(row.settlement_bank_no).bank_no) +
+        "-" +
+        getBankName(getMertchantDetail(row.settlement_bank_no).branch_no) +
+        ")",
     },
     {
       name: "Action",
@@ -58,7 +153,7 @@ const MerchantStoreList = () => {
             className="btn btn-sm d-inline mx-1"
             color="info"
             onClick={() => {
-              navigate("update-merchant-store", {
+              navigate("/merchant-store/update-merchant-store", {
                 state: row,
               });
             }}
