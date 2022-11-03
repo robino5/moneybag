@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate,useLocation } from "react-router-dom";
 import { useForm,useFieldArray  } from "react-hook-form";
 import swal from "sweetalert";
 import axios from "axios";
@@ -16,9 +16,9 @@ import {
   CFormCheck,
   CButton,
 } from "@coreui/react";
-import { element } from "prop-types";
 
-const MerchantStoreAdd = () => {
+
+const MerchantStoreUpdate = () => {
   const {
     register,
     formState: { errors, isDirty },control,
@@ -30,6 +30,7 @@ const MerchantStoreAdd = () => {
     name: "test", 
   });
   const navigate = useNavigate();
+  const location = useLocation();
   const [merchantList, setmerchantList] = useState();
   const [marchantDetail, setMarchentDetail] = useState();
   const [marchantDetailList, setMarchentDetailsList] = useState();
@@ -37,7 +38,7 @@ const MerchantStoreAdd = () => {
   const [lookupList, setLookupList] = useState();
   const [marchantId, setMerchantId] = useState();
   const [merchantServiceList, SetMerchantServiceList] = useState();
-
+ console.log(location.state)
   const getMerchantId = (e) => {
     setMerchantId(e.target.value);
   };
@@ -364,7 +365,7 @@ const MerchantStoreAdd = () => {
                       </CFormSelect>
                     </CCol>
                   </CRow>
-                  <CRow>
+                  {/* <CRow>
                     <CCol sm={1}></CCol>
                     <CCol sm={3}>Bank Name</CCol>
                     <CCol sm={2}>Service Name</CCol>
@@ -397,7 +398,7 @@ const MerchantStoreAdd = () => {
                           </CRow>
                         );
                       }
-                    )}
+                    )} */}
 
                   <div className="text-center ">
                     <Link to="/merchant-store">
@@ -405,8 +406,8 @@ const MerchantStoreAdd = () => {
                         Cancle
                       </CButton>
                     </Link>
-                    <CButton disabled={!isDirty} type="submit" color="success">
-                      Save
+                    <CButton type="submit" color="info">
+                      Update
                     </CButton>
                   </div>
                 </CForm>
@@ -419,4 +420,4 @@ const MerchantStoreAdd = () => {
   );
 };
 
-export default MerchantStoreAdd;
+export default MerchantStoreUpdate;
