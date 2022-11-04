@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import swal from "sweetalert";
 import axios from "axios";
 import CIcon from "@coreui/icons-react";
-import { cilPlus, cilMinus } from "@coreui/icons";
+import { cilPen, cilMinus } from "@coreui/icons";
 import {
   CCard,
   CCardBody,
@@ -50,13 +50,11 @@ const MerchantServiceUpdate = () => {
     end_date: "",
   });
 
-  console.log("Combination", location.state);
-
-  const getMertchant = () => {
+  const getMertchant = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}marchants/`, {
         headers,
       })
@@ -68,11 +66,11 @@ const MerchantServiceUpdate = () => {
       });
   };
 
-  const getBankList = () => {
+  const getBankList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}banks/`, {
         headers,
       })
@@ -84,11 +82,11 @@ const MerchantServiceUpdate = () => {
       });
   };
 
-  const getMertchantDetailList = () => {
+  const getMertchantDetailList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}marchant-details/`, {
         headers,
       })
@@ -100,11 +98,11 @@ const MerchantServiceUpdate = () => {
       });
   };
 
-  const getMerchantService = () => {
+  const getMerchantService = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}merchant-services/`, {
         headers,
       })
@@ -116,11 +114,11 @@ const MerchantServiceUpdate = () => {
       });
   };
 
-  const getLookupList = () => {
+  const getLookupList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}lookups/detail-list`, {
         headers,
       })
@@ -186,12 +184,6 @@ const MerchantServiceUpdate = () => {
       return "Combination";
     }
   };
-
-  //   const removemerchantService = (i) => {
-  //     let data = [...merchantService];
-  //     data.splice(i, 1);
-  //     setMerchantServicee(data);
-  //   };
 
   const getMertchantDetail = (e, id) => {
     let date = [];
@@ -370,6 +362,7 @@ const MerchantServiceUpdate = () => {
       )
       .then((response) => {
         console.log(response);
+        getMerchantService();
         swal({
           text: "Updated Successfull",
           icon: "success",
@@ -390,49 +383,92 @@ const MerchantServiceUpdate = () => {
       });
   };
 
-  const saveMerchantServices = () => {
+  // const saveMerchantServices = () => {
+  //   const headers = {
+  //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //   };
+  //   axios
+  //     .post(
+  //       `${process.env.REACT_APP_API_URL}merchant-services/`,
+  //       merchantService,
+  //       {
+  //         headers,
+  //       }
+  //     )
+  //     .then((response) => {
+  //       console.log("servive", response);
+  //       saveSlabService(response.data);
+  //       saveConbinationService(response.data);
+  //       swal({
+  //         position: "top-end",
+  //         text: "Store Created Successfull",
+  //         icon: "success",
+  //         button: false,
+  //         timer: 1500,
+  //       });
+  //       navigate("/merchant-service");
+  //     })
+  //     .catch((error) => {
+  //       console.error("There was an error!", error);
+  //       swal({
+  //         position: "top-end",
+  //         text: error.response.data.detail,
+  //         icon: "error",
+  //         button: false,
+  //         timer: 1500,
+  //       });
+  //     });
+  // };
+
+  const removemerchantService = (e) => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}merchant-services/`,
-        merchantService,
-        {
-          headers,
-        }
-      )
-      .then((response) => {
-        console.log("servive", response);
-        saveSlabService(response.data);
-        saveConbinationService(response.data);
-        swal({
-          position: "top-end",
-          text: "Store Created Successfull",
-          icon: "success",
-          button: false,
-          timer: 1500,
-        });
-        navigate("/merchant-service");
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        swal({
-          position: "top-end",
-          text: error.response.data.detail,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
-      });
+    swal({
+      title: "Are you sure?",
+      text: "Do you want to delete the Organization?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        axios
+          .delete(`${process.env.REACT_APP_API_URL}merchant-services/${e}`, {
+            headers,
+          })
+          .then((response) => {
+            console.log(response),
+              swal({
+                position: "top",
+                text: "Deleted Successfull",
+                icon: "success",
+                button: false,
+                timer: 1500,
+              });
+            getMerchantService();
+          })
+          .catch((error) => {
+            console.log(error),
+              swal({
+                text: error.response.data.detail,
+                icon: "error",
+                button: false,
+                timer: 1500,
+              });
+          });
+      }
+    });
   };
 
   useEffect(() => {
-    getMertchant();
-    getMertchantDetailList();
-    getMerchantService();
-    getBankList();
-    getLookupList();
+    const getAllData = async () => {
+      await getMertchant();
+      await getMertchantDetailList();
+      await getMerchantService();
+      await getBankList();
+      await getLookupList();
+    };
+    getAllData();
   }, []);
 
   return (
@@ -550,14 +586,11 @@ const MerchantServiceUpdate = () => {
                     <CCol sm={3}>
                       <CFormSelect
                         aria-label="Default select example"
-                        {...register("service_charge_type", {
-                          required: "Please select service charge type",
-                        })}
+                        {...register("service_charge_type")}
                         onChange={(e) => {
                           setChargeType(e.target.value);
                         }}
                       >
-                        <option>Select service charge type</option>
                         <option
                           selected={servicevalue.service_charge_type == "F"}
                           value={"F"}
@@ -585,12 +618,8 @@ const MerchantServiceUpdate = () => {
                       </CFormSelect>
                     </CCol>
                     <CCol sm={1}>
-                      <CButton
-                        className="btn-sm"
-                        disabled={!isDirty}
-                        type="submit"
-                      >
-                        <CIcon icon={cilPlus} />
+                      <CButton className="btn-sm" color="info" type="submit">
+                        Edit
                       </CButton>
                     </CCol>
                   </CRow>
@@ -706,7 +735,7 @@ const MerchantServiceUpdate = () => {
                             <CCol sm={2}>
                               <p>{element.charge_ammount}</p>
                             </CCol>
-                            <CCol sm={3}>
+                            <CCol sm={2}>
                               <p>
                                 {getChargeType(element.service_charge_type)}
                               </p>
@@ -719,13 +748,15 @@ const MerchantServiceUpdate = () => {
                                 className="btn-sm"
                                 color="info"
                               >
-                                Edit
+                                <CIcon icon={cilPen} />
                               </CButton>
+                            </CCol>
+                            <CCol sm={1}>
                               <CButton
                                 className="btn-sm"
                                 color="danger"
                                 onClick={(e) => {
-                                  removemerchantService(index);
+                                  removemerchantService(element.id);
                                 }}
                               >
                                 <CIcon icon={cilMinus} />

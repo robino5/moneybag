@@ -40,23 +40,22 @@ const MerchantStoreUpdate = () => {
   const [merchantStoreDetailList, SetMerchantStoreDetailList] = useState();
 
   useEffect(() => {
-    getMertchant();
-    getMertchantDetailList();
-    getMertchantServiceList();
-    getBankList();
-    getLookupList();
-    getMerchantStoreDetail();
+    const getAllData = async () => {
+      await getMertchant();
+      await getMertchantDetailList();
+      await getMertchantServiceList();
+      await getBankList();
+      await getLookupList();
+      await getMerchantStoreDetail();
+    };
+    getAllData();
   }, []);
-
-  // const getMerchantId = (e) => {
-  //   setMerchantId(e.target.value);
-  // };
   console.log("service", merchantStoreDetailList);
-  const getMertchant = () => {
+  const getMertchant = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}marchants/`, {
         headers,
       })
@@ -68,11 +67,11 @@ const MerchantStoreUpdate = () => {
       });
   };
 
-  const getMertchantDetailList = () => {
+  const getMertchantDetailList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}marchant-details/`, {
         headers,
       })
@@ -84,11 +83,11 @@ const MerchantStoreUpdate = () => {
       });
   };
 
-  const getMertchantServiceList = () => {
+  const getMertchantServiceList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}merchant-services/`, {
         headers,
       })
@@ -100,11 +99,11 @@ const MerchantStoreUpdate = () => {
       });
   };
 
-  const getBankList = () => {
+  const getBankList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}banks/`, {
         headers,
       })
@@ -116,11 +115,11 @@ const MerchantStoreUpdate = () => {
       });
   };
 
-  const getLookupList = () => {
+  const getLookupList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}lookups/detail-list`, {
         headers,
       })
@@ -132,11 +131,11 @@ const MerchantStoreUpdate = () => {
       });
   };
 
-  const getMerchantStoreDetail = () => {
+  const getMerchantStoreDetail = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}merchant-store-details/`, {
         headers,
       })

@@ -28,7 +28,8 @@ const DefaultService = () => {
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
   const [organizationList, setOrganizationList] = useState();
-  const [serviceList, setServiceList] = useState();
+  // const [serviceList, setServiceList] = useState();
+  const [lookupList, setLooupList] = useState();
   const [defaultService, setdefaultService] = useState([]);
 
   const getOrganization = () => {
@@ -46,17 +47,16 @@ const DefaultService = () => {
         console.error("There was an error!", error);
       });
   };
-
-  const getService = () => {
+  const getLookupList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
-      .get(`${process.env.REACT_APP_API_URL}services/`, {
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}lookups/detail-list`, {
         headers,
       })
       .then((responce) => {
-        console.log(responce.data), setServiceList(responce.data);
+        console.log(responce.data), setLooupList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -108,6 +108,16 @@ const DefaultService = () => {
     });
   };
 
+  const getServiceOption = (e) => {
+    let Date = [];
+    e.forEach((element) => {
+      if (element.lov_id === 6001 && element.is_active === 1) {
+        Date.push({ id: element.id, name: element.name });
+      }
+    });
+    return Date;
+  };
+
   const removeDefaultService = (i) => {
     let data = [...defaultService];
     data.splice(i, 1);
@@ -127,10 +137,10 @@ const DefaultService = () => {
 
   const setServiceName = (id) => {
     let name;
-    serviceList &&
-      serviceList.map((element) => {
+    lookupList &&
+      lookupList.map((element) => {
         if (element.id === id) {
-          name = element.service_name;
+          name = element.name;
         }
       });
     return name;
@@ -140,7 +150,7 @@ const DefaultService = () => {
 
   useEffect(() => {
     getOrganization();
-    getService();
+    getLookupList();
   }, []);
 
   return (
@@ -161,10 +171,10 @@ const DefaultService = () => {
                         aria-label="Default select example"
                       >
                         <option>Select Service</option>
-                        {serviceList &&
-                          serviceList.map((servie, index) => (
+                        {lookupList &&
+                          getServiceOption(lookupList).map((servie, index) => (
                             <option value={servie.id} key={index}>
-                              {servie.service_name}
+                              {servie.name}
                             </option>
                           ))}
                       </CFormSelect>

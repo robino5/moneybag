@@ -51,11 +51,11 @@ const MerchantServiceAdd = () => {
 
   console.log("Combination", combinationservice);
 
-  const getMertchant = () => {
+  const getMertchant = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}marchants/`, {
         headers,
       })
@@ -67,11 +67,11 @@ const MerchantServiceAdd = () => {
       });
   };
 
-  const getBankList = () => {
+  const getBankList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}banks/`, {
         headers,
       })
@@ -83,11 +83,11 @@ const MerchantServiceAdd = () => {
       });
   };
 
-  const getMertchantDetailList = () => {
+  const getMertchantDetailList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}marchant-details/`, {
         headers,
       })
@@ -99,11 +99,11 @@ const MerchantServiceAdd = () => {
       });
   };
 
-  const getLookupList = () => {
+  const getLookupList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}lookups/detail-list`, {
         headers,
       })
@@ -349,10 +349,13 @@ const MerchantServiceAdd = () => {
   };
 
   useEffect(() => {
-    getMertchant();
-    getBankList();
-    getLookupList();
-    getMertchantDetailList();
+    const getAllData = async () => {
+      await getMertchant();
+      await getBankList();
+      await getLookupList();
+      await getMertchantDetailList();
+    };
+    getAllData();
   }, []);
 
   return (

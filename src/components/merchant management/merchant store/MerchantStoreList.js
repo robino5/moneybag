@@ -12,11 +12,11 @@ const MerchantStoreList = () => {
   const [marchantDetailList, setMarchentDetailsList] = useState();
   const [bankList, setBankList] = useState();
 
-  const getsetMerchantStoreList = () => {
+  const getsetMerchantStoreList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}merchant-stores/`, {
         headers,
       })
@@ -28,11 +28,11 @@ const MerchantStoreList = () => {
       });
   };
 
-  const getMertchant = () => {
+  const getMertchant = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}marchants/`, {
         headers,
       })
@@ -44,11 +44,11 @@ const MerchantStoreList = () => {
       });
   };
 
-  const getMertchantDetailList = () => {
+  const getMertchantDetailList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}marchant-details/`, {
         headers,
       })
@@ -60,11 +60,11 @@ const MerchantStoreList = () => {
       });
   };
 
-  const getBankList = () => {
+  const getBankList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}banks/`, {
         headers,
       })
@@ -112,11 +112,54 @@ const MerchantStoreList = () => {
     return bank_name;
   };
 
+  const deleteMercnantStore = (e) => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    swal({
+      title: "Are you sure?",
+      text: "Do you want to delete the data?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        axios
+          .delete(`${process.env.REACT_APP_API_URL}merchant-stores/${e}`, {
+            headers,
+          })
+          .then((response) => {
+            console.log(response),
+              swal({
+                position: "top",
+                text: " Deleted Successfull",
+                icon: "success",
+                button: false,
+                timer: 1500,
+              });
+            getOrganization();
+          })
+          .catch((error) => {
+            console.log(error),
+              swal({
+                text: error.response.data.detail,
+                icon: "error",
+                button: false,
+                timer: 1500,
+              });
+          });
+      }
+    });
+  };
+
   useEffect(() => {
-    getsetMerchantStoreList();
-    getMertchant();
-    getMertchantDetailList();
-    getBankList();
+    const getAllData = async () => {
+      await getsetMerchantStoreList();
+      await getMertchant();
+      await getMertchantDetailList();
+      await getBankList();
+    };
+    getAllData();
   }, []);
 
   const columns = [
@@ -145,7 +188,7 @@ const MerchantStoreList = () => {
           <CButton
             className="btn btn-sm d-inline mr-1"
             color="danger"
-            //   onClick={() => deleteOrganization(row.id)}
+            onClick={() => deleteMercnantStore(row.id)}
           >
             Delete
           </CButton>
@@ -175,7 +218,7 @@ const MerchantStoreList = () => {
         <CRow className="justify-content-center">
           <CCol md={12}>
             <DataTable
-              title="Financial Organization List"
+              title="Merchant Store List"
               columns={columns}
               data={merchantStoreList}
               pagination

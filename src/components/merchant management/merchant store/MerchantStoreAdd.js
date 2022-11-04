@@ -44,11 +44,11 @@ const MerchantStoreAdd = () => {
   };
   console.log("service", merchantServiceList);
 
-  const getMertchant = () => {
+  const getMertchant = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}marchants/`, {
         headers,
       })
@@ -60,11 +60,11 @@ const MerchantStoreAdd = () => {
       });
   };
 
-  const getMertchantDetailList = () => {
+  const getMertchantDetailList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}marchant-details/`, {
         headers,
       })
@@ -76,11 +76,11 @@ const MerchantStoreAdd = () => {
       });
   };
 
-  const getMertchantServiceList = () => {
+  const getMertchantServiceList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}merchant-services/`, {
         headers,
       })
@@ -92,11 +92,11 @@ const MerchantStoreAdd = () => {
       });
   };
 
-  const getBankList = () => {
+  const getBankList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}banks/`, {
         headers,
       })
@@ -108,11 +108,11 @@ const MerchantStoreAdd = () => {
       });
   };
 
-  const getLookupList = () => {
+  const getLookupList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}lookups/detail-list`, {
         headers,
       })
@@ -278,11 +278,14 @@ const MerchantStoreAdd = () => {
   };
 
   useEffect(() => {
-    getMertchant();
-    getMertchantDetailList();
-    getMertchantServiceList();
-    getBankList();
-    getLookupList();
+    const getAllData = async () => {
+      await getMertchant();
+      await getMertchantDetailList();
+      await getMertchantServiceList();
+      await getBankList();
+      await getLookupList();
+    };
+    getAllData();
   }, []);
 
   return (

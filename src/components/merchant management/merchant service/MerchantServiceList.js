@@ -12,11 +12,11 @@ const StoreList = () => {
   const [marchantDetailList, setMarchentDetailsList] = useState();
   const [bankList, setBankList] = useState();
 
-  const getMertchant = () => {
+  const getMertchant = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}marchants/`, {
         headers,
       })
@@ -28,11 +28,11 @@ const StoreList = () => {
       });
   };
 
-  const getMerchantService = () => {
+  const getMerchantService = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}merchant-services/`, {
         headers,
       })
@@ -44,11 +44,11 @@ const StoreList = () => {
       });
   };
 
-  const getMertchantDetailList = () => {
+  const getMertchantDetailList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}marchant-details/`, {
         headers,
       })
@@ -60,11 +60,11 @@ const StoreList = () => {
       });
   };
 
-  const getBankList = () => {
+  const getBankList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}banks/`, {
         headers,
       })
@@ -126,11 +126,54 @@ const StoreList = () => {
     return bank_name;
   };
 
+  const deleteMercnantStore = (e) => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    swal({
+      title: "Are you sure?",
+      text: "Do you want to delete the data?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        axios
+          .delete(`${process.env.REACT_APP_API_URL}merchant-stores/${e}`, {
+            headers,
+          })
+          .then((response) => {
+            console.log(response),
+              swal({
+                position: "top",
+                text: " Deleted Successfull",
+                icon: "success",
+                button: false,
+                timer: 1500,
+              });
+            getOrganization();
+          })
+          .catch((error) => {
+            console.log(error),
+              swal({
+                text: error.response.data.detail,
+                icon: "error",
+                button: false,
+                timer: 1500,
+              });
+          });
+      }
+    });
+  };
+
   useEffect(() => {
-    getMertchant();
-    getMertchantDetailList();
-    getMerchantService();
-    getBankList();
+    const getAllData = async () => {
+      await getMertchant();
+      await getMertchantDetailList();
+      await getMerchantService();
+      await getBankList();
+    };
+    getAllData();
   }, []);
 
   const columns = [
@@ -166,7 +209,7 @@ const StoreList = () => {
           <CButton
             className="btn btn-sm d-inline mr-1"
             color="danger"
-            //   onClick={() => deleteOrganization(row.id)}
+            onClick={() => deleteMerchatService(selectMerchantId(row.id))}
           >
             Delete
           </CButton>
