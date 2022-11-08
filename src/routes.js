@@ -163,6 +163,10 @@ const ServiceAdd = React.lazy(() => import("./components/services/ServiceAdd"));
 const ServiceUpdate = React.lazy(() =>
   import("./components/services/ServiceUpdate")
 );
+const MerchantList = React.lazy(() =>
+  import("./components/merchant management/MerchantList")
+);
+
 const MerchantManagement = React.lazy(() =>
   import("./components/merchant management/MerchantManagement")
 );
@@ -183,8 +187,20 @@ const MerchantStoreUpdate = React.lazy(() =>
 
 const PaymetBank = React.lazy(() => import("./components/payment/PaymetBank"));
 
+const PaymentDetail = React.lazy(() =>
+  import("./components/payment/PaymentDetail")
+);
+
 const DefaultService = React.lazy(() =>
   import("./components/default-service/DefaultService")
+);
+
+const DefaultServiceList = React.lazy(() =>
+  import("./components/default-service/DefaultServiceList")
+);
+
+const DefaultServiceUpdate = React.lazy(() =>
+  import("./components/default-service/DefaultServiceUpdate")
 );
 
 const MerchantServiceList = React.lazy(() =>
@@ -420,6 +436,11 @@ const routes = [
     element: MerchantManagement,
   },
   {
+    path: "/merchant",
+    name: "merchant",
+    element: MerchantList,
+  },
+  {
     path: "/update-bank-details",
     name: "merchant_management",
     element: BankDetailsUpdate,
@@ -428,6 +449,11 @@ const routes = [
     path: "/bank-payment",
     name: "bank-payment",
     element: PaymetBank,
+  },
+  {
+    path: "/payment-details",
+    name: "payment-details",
+    element: PaymentDetail,
   },
   {
     path: "/merchant-store",
@@ -445,9 +471,19 @@ const routes = [
     element: MerchantStoreUpdate,
   },
   {
-    path: "/add-default-service",
+    path: "/default-servic/add-default-service",
     name: "add-default-service",
     element: DefaultService,
+  },
+  {
+    path: "/default-servic/update-default-service",
+    name: "update-default-service",
+    element: DefaultServiceUpdate,
+  },
+  {
+    path: "/default-service",
+    name: "default-service",
+    element: DefaultServiceList,
   },
   {
     path: "/merchant-service",

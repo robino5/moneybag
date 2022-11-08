@@ -81,8 +81,8 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: "Add Default Service",
-        to: "/add-default-service",
+        name: "Default Service",
+        to: "/default-service",
       },
     ],
   },
@@ -99,6 +99,11 @@ const _nav = [
       },
       {
         component: CNavItem,
+        name: "Merchant List",
+        to: "/merchant",
+      },
+      {
+        component: CNavItem,
         name: "Merchant Service",
         to: "/merchant-service",
       },
@@ -107,11 +112,11 @@ const _nav = [
         name: "Merchant Store",
         to: "/merchant-store",
       },
-      {
-        component: CNavItem,
-        name: "Bank Payment",
-        to: "/bank-payment",
-      },
+      // {
+      //   component: CNavItem,
+      //   name: "Bank Payment",
+      //   to: "/bank-payment",
+      // },
     ],
   },
 

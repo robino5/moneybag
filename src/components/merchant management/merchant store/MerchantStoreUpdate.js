@@ -321,6 +321,7 @@ const MerchantStoreUpdate = () => {
         <CRow className="justify-content-center">
           <CCol md={12}>
             <CCard className="p-4">
+              <h6 className="text-center">Update Merchant Store</h6>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(updateMerchantStore)}>
                   <CRow className="mb-3">

@@ -240,7 +240,7 @@ const DefaultService = () => {
                   })}
 
                 <div className="text-center ">
-                  <Link to="/dashboard">
+                  <Link to="/default-service">
                     <CButton color="danger" className="mx-3">
                       Cancle
                     </CButton>

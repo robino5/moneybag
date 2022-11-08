@@ -77,11 +77,11 @@ const BankDetails = ({ clickNext }) => {
       });
   };
 
-  const getMertchantList = () => {
+  const getMertchantList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}marchant-details/`, {
         headers,
       })
@@ -93,11 +93,11 @@ const BankDetails = ({ clickNext }) => {
       });
   };
 
-  const getLookupList = () => {
+  const getLookupList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}lookups/detail-list`, {
         headers,
       })
@@ -109,11 +109,11 @@ const BankDetails = ({ clickNext }) => {
       });
   };
 
-  const getBankBranchList = () => {
+  const getBankBranchList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}banks/`, {
         headers,
       })
@@ -195,10 +195,12 @@ const BankDetails = ({ clickNext }) => {
   };
 
   useEffect(() => {
-    getMertchantList();
-    getLookupList();
-    getBankBranchList();
-    localStorage.setItem("isBankDetailDate", 0);
+    const getAllDate = async () => {
+      await getMertchantList();
+      await getLookupList();
+      await getBankBranchList();
+    };
+    getAllDate();
   }, []);
 
   const comumn = [
@@ -214,10 +216,6 @@ const BankDetails = ({ clickNext }) => {
     {
       name: "Branch Name",
       selector: (row) => setBranchName(row),
-    },
-    {
-      name: "Routing No",
-      selector: (row) => row.routing_no,
     },
     {
       name: "Account Name",

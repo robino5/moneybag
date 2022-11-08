@@ -294,6 +294,7 @@ const MerchantStoreAdd = () => {
         <CRow className="justify-content-center">
           <CCol md={12}>
             <CCard className="p-4">
+              <h6 className="text-center">Add Merchant Store</h6>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(saveMerchantStore)}>
                   <CRow className="mb-3">
