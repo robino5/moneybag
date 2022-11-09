@@ -21,9 +21,13 @@ const PaymetBank = () => {
 
   const addResponce = () => {
     const data = {
-      merchant_id: 5,
-      merchant_pass: 12345,
+      merchant_id: "5",
+      merchant_passwd: "12345",
+      order_id: "3",
+      order_amount: 2020,
+      description: "Test",
     };
+    console.log(data);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
@@ -32,7 +36,6 @@ const PaymetBank = () => {
         headers,
       })
       .then((response) => {
-        console.log(response.data.session_id);
         swal({
           position: "top-end",
           text: "Organization Created Successfull",

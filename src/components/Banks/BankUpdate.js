@@ -50,7 +50,7 @@ const BankUpdate = () => {
     const bankBranchstoreDate = {
       branch_name: e.bank_branch_name,
       alias: e.alias,
-      root_bank:location.state.root_bank,
+      root_bank: location.state.root_bank,
       address1: e.address1,
       address2: e.address2,
       city: e.city,
@@ -62,7 +62,7 @@ const BankUpdate = () => {
       web: e.website,
       note: e.note,
       is_active: e.status ? 1 : 0,
-      bank_flag:1
+      bank_flag: 1,
     };
     console.log("asdfa", bankBranchstoreDate);
     const headers = {
@@ -85,7 +85,7 @@ const BankUpdate = () => {
           button: false,
           timer: 1500,
         });
-        navigate("/bank-branch");
+        navigate("/bank");
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -144,14 +144,9 @@ const BankUpdate = () => {
                       <CFormInput
                         type="text"
                         defaultValue={location.state.alias}
-                        {...register("alias", {
-                          required: "Please Provide Alias",
-                        })}
+                        {...register("alias")}
                         placeholder="Alias"
                       />
-                      <span className="text-danger">
-                        {errors.alias?.message}
-                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -165,9 +160,6 @@ const BankUpdate = () => {
                         {...register("address1")}
                         placeholder="Address-1"
                       />
-                      <span className="text-danger">
-                        {errors.address1?.message}
-                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">

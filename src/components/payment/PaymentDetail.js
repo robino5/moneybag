@@ -19,15 +19,13 @@ const PaymentDetail = () => {
   // const [visible, setVisible] = useState(false);
   const location = useLocation();
 
-  console.log("state", location.state);
-
   const getPaymentList = () => {
     axios
       .get(
         `${process.env.REACT_APP_API_URL}sessions/whoami?sessionId=${location.state}`
       )
       .then((responce) => {
-        console.log(responce.data);
+        console.log("responce", responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);

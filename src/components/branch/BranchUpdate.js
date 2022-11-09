@@ -61,8 +61,9 @@ const BranchUpdate = () => {
       web: e.website,
       note: e.note,
       is_active: e.status ? 1 : 0,
-      bank_flag:0,
-      root_bank: e.bank_name===""?location.state.root_bank:parseInt(e.bank_name) 
+      bank_flag: 0,
+      root_bank:
+        e.bank_name === "" ? location.state.root_bank : parseInt(e.bank_name),
     };
     console.log("asdfa", bankBranchstoreDate);
     const headers = {
@@ -120,22 +121,9 @@ const BranchUpdate = () => {
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCard className="p-4">
-              <h6 className="text-center">Update Bank</h6>
+              <h6 className="text-center">Update Branch</h6>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(updateBankBranch)}>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Bank Name
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        defaultValue={location.state.branch_name}
-                        {...register("bank_branch_name")}
-                        placeholder="Bank Name"
-                      />
-                    </CCol>
-                  </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Bank Name
@@ -147,17 +135,32 @@ const BranchUpdate = () => {
                       >
                         {getBankOption(bankbranchList) &&
                           getBankOption(bankbranchList).map((branch, index) => (
-                            <option value={branch.id} 
-                            selected={
-                              branch.id === location.state.root_bank
-                                ? "selected"
-                                : ""
-                            }
-                            key={index}>
+                            <option
+                              value={branch.id}
+                              selected={
+                                branch.id === location.state.root_bank
+                                  ? "selected"
+                                  : ""
+                              }
+                              key={index}
+                            >
                               {branch.branch_name}
                             </option>
                           ))}
                       </CFormSelect>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Branch Name
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        defaultValue={location.state.branch_name}
+                        {...register("bank_branch_name")}
+                        placeholder="Bank Name"
+                      />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">

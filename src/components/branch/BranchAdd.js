@@ -61,7 +61,7 @@ const BranchAdd = () => {
       note: e.note,
       is_active: e.status ? 1 : 0,
       bank_flag: 0,
-      root_bank: parseInt(e.bank_name) 
+      root_bank: parseInt(e.bank_name),
     };
     console.log(bankBranchstoreDate);
     const headers = {
@@ -94,7 +94,6 @@ const BranchAdd = () => {
       });
   };
 
-
   useEffect(() => {
     getBankBranchList();
   }, []);
@@ -116,26 +115,9 @@ const BranchAdd = () => {
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCard className="p-4">
-              <h6 className="text-center">Add Bank</h6>
+              <h6 className="text-center">Add Branch</h6>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(saveBankBranch)}>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Bank Name
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("bank_branch_name", {
-                          required: "Please Provide Bank/Branch name",
-                        })}
-                        placeholder="Bank Name"
-                      />
-                      <span className="text-danger">
-                        {errors.bank_branch_name?.message}
-                      </span>
-                    </CCol>
-                  </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Bank Name
@@ -157,6 +139,23 @@ const BranchAdd = () => {
                       </CFormSelect>
                       <span className="text-danger">
                         {errors.bank_name?.message}
+                      </span>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Branch Name
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        {...register("bank_branch_name", {
+                          required: "Please Provide Bank/Branch name",
+                        })}
+                        placeholder="Bank Name"
+                      />
+                      <span className="text-danger">
+                        {errors.bank_branch_name?.message}
                       </span>
                     </CCol>
                   </CRow>
