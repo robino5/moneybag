@@ -17,7 +17,7 @@ import {
   CButton,
 } from "@coreui/react";
 
-const BankBranchUpdate = () => {
+const BranchUpdate = () => {
   const {
     register,
     formState: { errors, isDirty },
@@ -50,10 +50,6 @@ const BankBranchUpdate = () => {
     const bankBranchstoreDate = {
       branch_name: e.bank_branch_name,
       alias: e.alias,
-      root_bank:
-        e.select_bank_name === ""
-          ? location.state.root_bank
-          : parseInt(e.select_bank_name),
       address1: e.address1,
       address2: e.address2,
       city: e.city,
@@ -65,7 +61,8 @@ const BankBranchUpdate = () => {
       web: e.website,
       note: e.note,
       is_active: e.status ? 1 : 0,
-      bank_flag: e.flag_status ? 1 : 0,
+      bank_flag:0,
+      root_bank: e.bank_name===""?location.state.root_bank:parseInt(e.bank_name) 
     };
     console.log("asdfa", bankBranchstoreDate);
     const headers = {
@@ -88,7 +85,7 @@ const BankBranchUpdate = () => {
           button: false,
           timer: 1500,
         });
-        navigate("/bank-branch");
+        navigate("/branch");
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -123,20 +120,44 @@ const BankBranchUpdate = () => {
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCard className="p-4">
-              <h6 className="text-center">Update Bank/Branch</h6>
+              <h6 className="text-center">Update Bank</h6>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(updateBankBranch)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Bank/Branch Name
+                      Bank Name
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
                         defaultValue={location.state.branch_name}
                         {...register("bank_branch_name")}
-                        placeholder="Bank/Branch Name"
+                        placeholder="Bank Name"
                       />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Bank Name
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormSelect
+                        {...register("bank_name")}
+                        aria-label="Default select example"
+                      >
+                        {getBankOption(bankbranchList) &&
+                          getBankOption(bankbranchList).map((branch, index) => (
+                            <option value={branch.id} 
+                            selected={
+                              branch.id === location.state.root_bank
+                                ? "selected"
+                                : ""
+                            }
+                            key={index}>
+                              {branch.branch_name}
+                            </option>
+                          ))}
+                      </CFormSelect>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -155,32 +176,6 @@ const BankBranchUpdate = () => {
                       <span className="text-danger">
                         {errors.alias?.message}
                       </span>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Bank name
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormSelect
-                        {...register("select_bank_name")}
-                        aria-label="Default select example"
-                      >
-                        {getBankOption(bankbranchList) &&
-                          getBankOption(bankbranchList).map((bank, index) => (
-                            <option
-                              value={bank.id}
-                              selected={
-                                bank.id === location.state.root_bank
-                                  ? "selected"
-                                  : ""
-                              }
-                              key={index}
-                            >
-                              {bank.branch_name}
-                            </option>
-                          ))}
-                      </CFormSelect>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -208,7 +203,7 @@ const BankBranchUpdate = () => {
                         type="text"
                         defaultValue={location.state.address2}
                         {...register("address2")}
-                        placeholder="Short Name"
+                        placeholder="Address-2"
                       />
                       <span className="text-danger">
                         {errors.branch_code?.message}
@@ -336,22 +331,8 @@ const BankBranchUpdate = () => {
                       />
                     </CCol>
                   </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Flag Status
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormCheck
-                        label="Is Flag?"
-                        defaultChecked={
-                          location.state.bank_flag == 1 ? true : false
-                        }
-                        {...register("flag_status")}
-                      />
-                    </CCol>
-                  </CRow>
                   <div className="text-center ">
-                    <Link to="/bank-branch">
+                    <Link to="/branch">
                       <CButton color="danger" className="mx-3">
                         Cancle
                       </CButton>
@@ -370,4 +351,4 @@ const BankBranchUpdate = () => {
   );
 };
 
-export default BankBranchUpdate;
+export default BranchUpdate;

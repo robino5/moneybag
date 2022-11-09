@@ -3,8 +3,9 @@ import React, { useState, useEffect } from "react";
 import { CCol, CContainer, CRow, CButton } from "@coreui/react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { element } from "prop-types";
 
-const BankBranchList = () => {
+const BankList = () => {
   const navigate = useNavigate();
 
   const [bankbranchList, setBankBranchList] = useState();
@@ -25,13 +26,24 @@ const BankBranchList = () => {
       });
   };
 
+  const getBankList=(e)=>{
+   let data=[];
+     e&&e.map((element)=>{
+        if(element.bank_flag===1){
+          data.push(element);
+        }
+     })
+     console.log("data",data);
+     return data
+  }
+
   useEffect(() => {
     getBankBranchList();
   }, []);
 
   const columns = [
     {
-      name: "Bank/Branch Name",
+      name: "Bank Name",
       selector: (row) => row.branch_name,
     },
     {
@@ -65,7 +77,7 @@ const BankBranchList = () => {
             className="btn btn-sm d-inline mx-1"
             color="info"
             onClick={() => {
-              navigate("/bank-branch/update-bank-branch", {
+              navigate("/bank/update-bank", {
                 state: row,
               });
             }}
@@ -80,16 +92,16 @@ const BankBranchList = () => {
     <div className="bg-light min-vh-100 d-flex flex-row">
       <CContainer>
         <div className="justify-content-centert mb-2">
-          <Link to="/bank-branch/add-bank-branch">
+          <Link to="/bank/add-bank">
             <CButton color="primary">Add New</CButton>
           </Link>
         </div>
         <CRow className="justify-content-center">
           <CCol md={12}>
             <DataTable
-              title="Bank Branch List"
+              title="Bank List"
               columns={columns}
-              data={bankbranchList}
+              data={getBankList(bankbranchList)}
               pagination
             />
           </CCol>
@@ -99,4 +111,4 @@ const BankBranchList = () => {
   );
 };
 
-export default BankBranchList;
+export default BankList;

@@ -17,7 +17,7 @@ import {
   CButton,
 } from "@coreui/react";
 
-const BankBranchAdd = () => {
+const BankAdd = () => {
   const {
     register,
     formState: { errors, isDirty },
@@ -49,7 +49,6 @@ const BankBranchAdd = () => {
     const bankBranchstoreDate = {
       branch_name: e.bank_branch_name,
       alias: e.alias,
-      root_bank: parseInt(e.select_bank_name),
       address1: e.address1,
       address2: e.address2,
       city: e.city,
@@ -61,7 +60,8 @@ const BankBranchAdd = () => {
       web: e.website,
       note: e.note,
       is_active: e.status ? 1 : 0,
-      bank_flag: e.flag_status ? 1 : 0,
+      bank_flag: 1,
+      root_bank:0
     };
     console.log(bankBranchstoreDate);
     const headers = {
@@ -80,7 +80,7 @@ const BankBranchAdd = () => {
           button: false,
           timer: 1500,
         });
-        navigate("/bank-branch");
+        navigate("/bank");
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -98,29 +98,18 @@ const BankBranchAdd = () => {
     getBankBranchList();
   }, []);
 
-  const getBankOption = (e) => {
-    let date = [];
-    e &&
-      e.map((element) => {
-        if (element.bank_flag === 1) {
-          date.push({ id: element.id, branch_name: element.branch_name });
-        }
-      });
-    return date;
-  };
-
   return (
     <div className="bg-light min-vh-100 d-flex flex-row">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCard className="p-4">
-              <h6 className="text-center">Add Bank/Branch</h6>
+              <h6 className="text-center">Add Bank</h6>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(saveBankBranch)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Bank/Branch Name
+                      Bank Name
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
@@ -154,27 +143,6 @@ const BankBranchAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Bank name
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormSelect
-                        {...register("select_bank_name", {
-                          required: "Please Select  organization",
-                        })}
-                        aria-label="Default select example"
-                      >
-                        <option value={0}>select Bank</option>
-                        {getBankOption(bankbranchList) &&
-                          getBankOption(bankbranchList).map((bank, index) => (
-                            <option value={bank.id} key={index}>
-                              {bank.branch_name}
-                            </option>
-                          ))}
-                      </CFormSelect>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
                       Address-1
                     </CFormLabel>
                     <CCol sm={9}>
@@ -198,7 +166,7 @@ const BankBranchAdd = () => {
                       <CFormInput
                         type="text"
                         {...register("address2")}
-                        placeholder="Short Name"
+                        placeholder="Address-2"
                       />
                       <span className="text-danger">
                         {errors.branch_code?.message}
@@ -314,19 +282,8 @@ const BankBranchAdd = () => {
                       <CFormCheck label="Active" {...register("status")} />
                     </CCol>
                   </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Bank Status
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormCheck
-                        label="Is Bank?"
-                        {...register("flag_status")}
-                      />
-                    </CCol>
-                  </CRow>
                   <div className="text-center ">
-                    <Link to="/bank-branch">
+                    <Link to="/bank">
                       <CButton color="danger" className="mx-3">
                         Cancle
                       </CButton>
@@ -345,4 +302,4 @@ const BankBranchAdd = () => {
   );
 };
 
-export default BankBranchAdd;
+export default BankAdd;

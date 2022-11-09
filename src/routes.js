@@ -146,14 +146,24 @@ const BankAccountUpdate = React.lazy(() =>
   import("./components/bank-account/BankAccountUpdate")
 );
 
-const BankBranchList = React.lazy(() =>
-  import("./components/Banks/BankBranchList")
+const BankList = React.lazy(() =>
+  import("./components/Banks/BankList")
 );
-const BankBranchAdd = React.lazy(() =>
-  import("./components/Banks/BankBranchAdd")
+const BankAdd = React.lazy(() =>
+  import("./components/Banks/BankAdd")
 );
-const BankBranchUpdate = React.lazy(() =>
-  import("./components/Banks/BankBranchUpdate")
+const BankUpdate = React.lazy(() =>
+  import("./components/Banks/BankUpdate")
+);
+
+const BranchList = React.lazy(() =>
+  import("./components/branch/BranchList")
+);
+const BranchAdd = React.lazy(() =>
+  import("./components/branch/BranchAdd")
+);
+const BranchUpdate = React.lazy(() =>
+  import("./components/branch/BranchUpdate")
 );
 
 const ServiceList = React.lazy(() =>
@@ -401,19 +411,34 @@ const routes = [
   },
 
   {
-    path: "/bank-branch",
-    name: "Bank Branch List",
-    element: BankBranchList,
+    path: "/bank",
+    name: "Bank  List",
+    element: BankList,
   },
   {
-    path: "/bank-branch/add-bank-branch",
-    name: "add-bank-branch",
-    element: BankBranchAdd,
+    path: "/bank/add-bank",
+    name: "add-bank",
+    element: BankAdd,
   },
   {
-    path: "/bank-branch/update-bank-branch",
-    name: "update-bank-branch",
-    element: BankBranchUpdate,
+    path: "/bank/update-bank",
+    name: "update-bank",
+    element: BankUpdate,
+  },
+  {
+    path: "/branch",
+    name: "Branch List",
+    element: BranchList,
+  },
+  {
+    path: "/branch/add-branch",
+    name: "add-branch",
+    element: BranchAdd,
+  },
+  {
+    path: "/branch/update-branch",
+    name: "update-branch",
+    element: BranchUpdate,
   },
   {
     path: "/service",
