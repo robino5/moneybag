@@ -128,7 +128,7 @@ const FintechUpdate = () => {
     <div className="bg-light min-vh-100 d-flex flex-row">
       <CContainer>
         <CRow className="justify-content-center">
-          <CCol md={8}>
+          <CCol md={12}>
             <CCard className="p-4">
               <h6 className="text-center">Update Fintech</h6>
               <CCardBody>
@@ -346,6 +346,75 @@ const FintechUpdate = () => {
                       />
                     </CCol>
                   </CRow>
+                  <CForm>
+                    <CRow className="mb-3" key={service.id}>
+                      <CCol sm={2}>
+                        <CFormSelect
+                          aria-label="Default select example"
+                          type="number"
+                          {...register("Service_name")}
+                        >
+                          <option>Service Name</option>
+                          {lookupList &&
+                            getServiceCategoryOption(lookupList).map(
+                              (country, index) => (
+                                <option value={country.id} key={index}>
+                                  {country.name}
+                                </option>
+                              )
+                            )}
+                        </CFormSelect>
+                      </CCol>
+                      <CCol sm={2}>
+                        <CFormSelect
+                          aria-label="Default select example"
+                          type="number"
+                          {...register(`services.${index}.category_service_id`)}
+                        >
+                          <option>Service Category</option>
+                          {lookupList &&
+                            getServiceOption(lookupList).map(
+                              (country, index) => (
+                                <option value={country.id} key={index}>
+                                  {country.name}
+                                </option>
+                              )
+                            )}
+                        </CFormSelect>
+                      </CCol>
+                      <CCol sm={3}>
+                        <CFormInput
+                          type="text"
+                          {...register(`services.${index}.end_point_url`)}
+                          placeholder="End Point Url"
+                        />
+                      </CCol>
+                      <CCol sm={3}>
+                        <CFormInput
+                          type="text"
+                          {...register(`services.${index}.call_back_url`)}
+                          placeholder="Call Back Url"
+                        />
+                      </CCol>
+                      <CCol sm={1}>
+                        <CFormCheck
+                          name="status"
+                          label="Active"
+                          {...register(`services.${index}.is_active`)}
+                        />
+                      </CCol>
+                      <CCol sm={1}>
+                        <CButton
+                          color="danger"
+                          onClick={() => {
+                            remove(index);
+                          }}
+                        >
+                          Remove
+                        </CButton>
+                      </CCol>
+                    </CRow>
+                  </CForm>
                   <div className="text-center ">
                     <Link to="/fintech">
                       <CButton color="danger" className="mx-3">
