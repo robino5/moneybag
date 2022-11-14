@@ -9,6 +9,7 @@ const FintechList = () => {
   const [organizationList, setOrganizationList] = useState();
   const navigate = useNavigate();
   const [lookupList, setLooupList] = useState();
+  const [serviceList, setServiceList] = useState();
 
   const getOrganization = () => {
     const headers = {
@@ -36,6 +37,22 @@ const FintechList = () => {
       })
       .then((responce) => {
         console.log(responce.data), setLooupList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const getServiceList = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}services/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setServiceList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -85,6 +102,22 @@ const FintechList = () => {
     });
   };
 
+  const getServiceCategory = (e) => {
+    let data = [];
+    serviceList &&
+      serviceList.map((element) => {
+        if (element.organization_no === e && element.is_active === 1) {
+          lookupList &&
+            lookupList.map((e) => {
+              if (e.id === element.category_service_id) {
+                data.push(e.name, ",");
+              }
+            });
+        }
+      });
+    return data;
+  };
+
   const setCountryOption = (e) => {
     let country;
     lookupList &&
@@ -111,19 +144,11 @@ const FintechList = () => {
     {
       name: "Country",
       selector: (row) => setCountryOption(row),
+      maxWidth: "50px",
     },
     {
-      name: "Service Category",
-      selector: (row) => (
-        <div>
-          (<span>{row.general_banking === 1 ? "GB-" : ""}</span>
-          <span>{row.card_service === 1 ? "CS-" : ""}</span>
-          <span>{row.internet_banking === 1 ? "IB-" : ""}</span>
-          <span>{row.mfs === 1 ? "MFS-" : ""}</span>
-          <span>{row.dfs === 1 ? "DFS-" : ""}</span>
-          <span>{row.qr_code === 1 ? "QR-" : ""}</span>)
-        </div>
-      ),
+      name: "Services",
+      selector: (row) => getServiceCategory(row.id),
     },
     {
       name: "Status",
@@ -159,6 +184,7 @@ const FintechList = () => {
   useEffect(() => {
     getOrganization();
     getLookupList();
+    getServiceList();
   }, []);
 
   return (

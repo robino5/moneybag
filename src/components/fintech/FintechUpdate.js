@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import swal from "sweetalert";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import {
   CCard,
   CCardBody,
@@ -22,70 +22,158 @@ const FintechUpdate = () => {
     register,
     formState: { errors, isDirty },
     handleSubmit,
-    setValue,
-    reset,
+    control,
   } = useForm({ mode: "all" });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "services",
+    name: "addServices",
+  });
   const navigate = useNavigate();
   const location = useLocation();
   const [lookupList, setLooupList] = useState();
   const [serviceList, setServiceList] = useState();
-  const [service, setService] = useState({});
+  // const [service, setService] = useState({});
+  // const [updatedService, setUpdatedService] = useState({
+  //   organization_no: service.organization_no,
+  //   category_service_id: null,
+  //   service_type: null,
+  //   end_point_url: "",
+  //   call_back_url: "",
+  //   is_active: null,
+  // });
 
-  console.log("loaction", service);
-
-  // const updateFintech = (e) => {
-  //   const fintechData = {
-  //     name: e.fintechName,
-  //     short_name: e.shortName,
-  //     country_no:
-  //       e.country === "" ? location.state.country_no : parseInt(e.country),
-  //     address_1: e.address_line_1,
-  //     address_2: e.address_line_2,
-  //     city: e.city,
-  //     state_no: e.state === "" ? location.state.state_no : parseInt(e.state),
-  //     postal_code: e.postal_code,
-  //     swift_code: e.swift_code,
-  //     general_banking: e.general_banking ? 1 : 0,
-  //     card_service: e.card_service ? 1 : 0,
-  //     internet_banking: e.internet_banking ? 1 : 0,
-  //     mfs: e.mfs ? 1 : 0,
-  //     dfs: e.dfs ? 1 : 0,
-  //     qr_code: e.qr_code ? 1 : 0,
-  //   };
-  //   console.log("new", fintechData);
-  //   const headers = {
-  //     Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //   };
-  //   axios
-  //     .put(
-  //       `${process.env.REACT_APP_API_URL}financial-organizations/update/${location.state.id}`,
-  //       fintechData,
-  //       {
-  //         headers,
-  //       }
-  //     )
-  //     .then((response) => {
-  //       console.log(response);
-  //       swal({
-  //         position: "top-end",
-  //         text: "Organization Created Successfull",
-  //         icon: "success",
-  //         button: false,
-  //         timer: 1500,
-  //       });
-  //       navigate("/fintech");
-  //     })
-  //     .catch((error) => {
-  //       console.error("There was an error!", error);
-  //       swal({
-  //         position: "top-end",
-  //         text: error.response.data.detail,
-  //         icon: "error",
-  //         button: false,
-  //         timer: 1500,
-  //       });
-  //     });
+  // const handlesercices = (e) => {
+  //   na = e.target.name;
+  //   value = e.target.value;
+  //   setUpdatedService({ ...updatedService, [na]: value });
+  //   console.log(e);
   // };
+
+  const updateFintech = async (e) => {
+    console.log(e);
+    const fintechData = {
+      org_id: location.state.org_id,
+      name: e.fintechName,
+      short_name: e.shortName,
+      org_type:
+        e.fintech_type === ""
+          ? location.state.org_type
+          : parseInt(e.fintech_type),
+      country_no:
+        e.country === "" ? location.state.country_no : parseInt(e.country),
+      address_1: e.address_line_1,
+      address_2: e.address_line_2,
+      city: e.city,
+      state_no: e.state === "" ? location.state.state_no : parseInt(e.state),
+      postal_code: e.postal_code,
+      swift_code: e.swift_code,
+      status: e.status ? 1 : 0,
+    };
+    console.log("new", fintechData);
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .put(
+        `${process.env.REACT_APP_API_URL}financial-organizations/update/${location.state.id}`,
+        fintechData,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: error.response.data.detail,
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
+      });
+
+    if (e.addServices) {
+      let data = [];
+      e.addServices &&
+        e.addServices.map((element) => {
+          data.push({
+            organization_no: location.state.id,
+            category_service_id: parseInt(element.category_service_id),
+            service_type: parseInt(element.service_type),
+            end_point_url: element.end_point_url,
+            call_back_url: element.call_back_url,
+            is_active: element.is_active ? 1 : 0,
+          });
+        });
+
+      axios
+        .post(`${process.env.REACT_APP_API_URL}services/`, data, {
+          headers,
+        })
+        .then((response) => {
+          console.log(response);
+          getLookupList();
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+          swal({
+            position: "top-end",
+            text: error.response.data.detail,
+            icon: "error",
+            button: false,
+            timer: 1500,
+          });
+        });
+    }
+
+    (await e.services) &&
+      e.services.map((element) => {
+        axios
+          .post(
+            `${process.env.REACT_APP_API_URL}services/update/${parseInt(
+              element.id
+            )}`,
+            {
+              organization_no: location.state.id,
+              category_service_id: parseInt(element.category_service_id),
+              service_type: parseInt(element.service_type),
+              end_point_url: element.end_point_url,
+              call_back_url: element.call_back_url,
+              is_active: element.is_active ? 1 : 0,
+            },
+            {
+              headers,
+            }
+          )
+          .then((response) => {
+            console.log(response);
+
+            swal({
+              position: "top-end",
+              text: "Fintect Update Successfull",
+              icon: "success",
+              button: false,
+              timer: 1500,
+            });
+            navigate("/fintech");
+          })
+          .catch((error) => {
+            console.error("There was an error!", error);
+            swal({
+              position: "top-end",
+              text: error.response.data.detail,
+              icon: "error",
+              button: false,
+              timer: 1500,
+            });
+          });
+      });
+  };
 
   const getLookupList = async () => {
     const headers = {
@@ -130,14 +218,15 @@ const FintechUpdate = () => {
   };
 
   const getServices = (e) => {
-    let data = []
-    e && e.map((element) => {
-      if (element.organization_no === location.state.id) {
-        data.push(element)
-      }
-    })
-    return data
-  }
+    let data = [];
+    e &&
+      e.map((element) => {
+        if (element.organization_no === location.state.id) {
+          data.push(element);
+        }
+      });
+    return data;
+  };
 
   const getfintechType = (e) => {
     let Date = [];
@@ -148,8 +237,6 @@ const FintechUpdate = () => {
     });
     return Date;
   };
-
-
 
   const getServiceOption = (e) => {
     let Date = [];
@@ -181,15 +268,21 @@ const FintechUpdate = () => {
     return Date;
   };
 
-  const getServiceName=(e)=>{
+  const getServiceName = (e) => {
     let data;
-    lookupList&&lookupList.map((element)=>{
-          if(element.id===e){
-            data=element.name
-          }
-    })
+    lookupList &&
+      lookupList.map((element) => {
+        if (element.id === e) {
+          data = element.name;
+        }
+      });
     return data;
-  }
+  };
+
+  // const updateData = () => {
+  //   const multipleValues = getValues(["call_back_url", "end_point_url"]);
+  //   console.log("multipleValues", multipleValues);
+  // };
 
   useEffect(() => {
     getLookupList();
@@ -204,7 +297,7 @@ const FintechUpdate = () => {
             <CCard className="p-4">
               <h6 className="text-center">Add Fintech</h6>
               <CCardBody>
-                <CForm onSubmit={handleSubmit()}>
+                <CForm onSubmit={handleSubmit(updateFintech)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Fintech Name
@@ -235,13 +328,15 @@ const FintechUpdate = () => {
                       >
                         {lookupList &&
                           getfintechType(lookupList).map((country, index) => (
-                            <option value={country.id}
+                            <option
+                              value={country.id}
                               selected={
                                 country.id === location.state.org_type
                                   ? "selected"
                                   : ""
                               }
-                              key={index}>
+                              key={index}
+                            >
                               {country.name}
                             </option>
                           ))}
@@ -278,13 +373,15 @@ const FintechUpdate = () => {
                       >
                         {lookupList &&
                           getCountryOption(lookupList).map((country, index) => (
-                            <option value={country.id}
+                            <option
+                              value={country.id}
                               selected={
                                 country.id === location.state.country_no
                                   ? "selected"
                                   : ""
                               }
-                              key={index}>
+                              key={index}
+                            >
                               {country.name}
                             </option>
                           ))}
@@ -340,13 +437,15 @@ const FintechUpdate = () => {
                       >
                         {lookupList &&
                           getStateOption(lookupList).map((country, index) => (
-                            <option value={country.id}
+                            <option
+                              value={country.id}
                               selected={
                                 country.id === location.state.state_no
                                   ? "selected"
                                   : ""
                               }
-                              key={index}>
+                              key={index}
+                            >
                               {country.name}
                             </option>
                           ))}
@@ -413,117 +512,187 @@ const FintechUpdate = () => {
                     <CCol sm={1}></CCol>
                   </CRow>
                   <hr></hr>
-                  <CRow className="mb-3">
-                    <CCol sm={2}>
-                      <CFormSelect
-                        aria-label="Default select example"
-                        type="number"
-                        {...register("service_type")}
-                      >
-                        {lookupList &&
-                          getServiceOption(lookupList).map(
-                            (country, index) => (
-                              <option value={country.id} 
-                              selected={
-                                country.id === service.service_type
-                                  ? "selected"
-                                  : ""
+                  {getServices(serviceList) &&
+                    getServices(serviceList).map((element, index) => {
+                      return (
+                        <CRow className="mb-3">
+                          <CCol sm={2}>
+                            <CFormSelect
+                              aria-label="Default select example"
+                              type="number"
+                              defaultValue={element.service_type}
+                              {...register(`services.${index}.service_type`)}
+                            >
+                              {lookupList &&
+                                getServiceOption(lookupList).map(
+                                  (country, index) => (
+                                    <option
+                                      value={country.id}
+                                      selected={
+                                        country.id === element.service_type
+                                          ? "selected"
+                                          : ""
+                                      }
+                                      key={index}
+                                    >
+                                      {country.name}
+                                    </option>
+                                  )
+                                )}
+                            </CFormSelect>
+                          </CCol>
+                          <CCol sm={2}>
+                            <CFormSelect
+                              aria-label="Default select example"
+                              type="number"
+                              defaultValue={element.category_service_id}
+                              {...register(
+                                `services.${index}.category_service_id`
+                              )}
+                            >
+                              {lookupList &&
+                                getServiceCategoryOption(lookupList).map(
+                                  (country, index) => (
+                                    <option
+                                      value={country.id}
+                                      selected={
+                                        country.id ===
+                                        element.category_service_id
+                                          ? "selected"
+                                          : ""
+                                      }
+                                      key={index}
+                                    >
+                                      {country.name}
+                                    </option>
+                                  )
+                                )}
+                            </CFormSelect>
+                          </CCol>
+                          <CCol sm={3}>
+                            <CFormInput
+                              type="text"
+                              defaultValue={element.end_point_url}
+                              {...register(`services.${index}.end_point_url`)}
+                              placeholder="End Point Url"
+                            />
+                          </CCol>
+                          <CCol sm={3}>
+                            <CFormInput
+                              type="text"
+                              defaultValue={element.call_back_url}
+                              {...register(`services.${index}.call_back_url`)}
+                              placeholder="Call Back Url"
+                            />
+                          </CCol>
+                          <CCol sm={1}>
+                            <CFormCheck
+                              name="status"
+                              label="Active"
+                              defaultChecked={
+                                element.is_active === 1 ? true : false
                               }
-                              key={index}>
-                                {country.name}
-                              </option>
-                            )
-                          )}
-                      </CFormSelect>
-                    </CCol>
-                    <CCol sm={2}>
-                      <CFormSelect
-                        aria-label="Default select example"
-                        type="number"
-                        {...register("category_service_id"
-                        )}
-                      >
-                        <option>Service Category</option>
-                        {lookupList &&
-                          getServiceCategoryOption(lookupList).map(
-                            (country, index) => (
-                              <option value={country.id} 
-                              selected={
-                                country.id === service.category_service_id
-                                  ? "selected"
-                                  : ""
-                              }
-                              key={index}>
-                                {country.name}
-                              </option>
-                            )
-                          )}
-                      </CFormSelect>
-                    </CCol>
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="text"
-                        {...register("end_point_url")}
-                        defaultValue={service.end_point_url}
-                        placeholder="End Point Url"
-                      />
-                    </CCol>
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="text"
-                        {...register("call_back_url")}
-                        defaultValue={service.call_back_url}
-                        placeholder="Call Back Url"
-                      />
-                    </CCol>
-                    <CCol sm={1}>
-                      <CFormCheck
-                        name="status"
-                        label="Active"
-                        defaultChecked={
-                          service.is_active === 1 ? true : false
-                        }
-                        {...register("is_active")}
-                      />
-                    </CCol>
-                    <CCol sm={1}>
-                      <CButton
-                        color="danger"
-                      >
-                        Remove
-                      </CButton>
-                    </CCol>
-                  </CRow>
-                  <hr></hr>
-                  {getServices(serviceList) && getServices(serviceList).map((element) => {
+                              {...register(`services.${index}.is_active`)}
+                            />
+                          </CCol>
+                          <CCol sm={1}>
+                            <CFormInput
+                              type="text"
+                              defaultValue={element.id}
+                              hidden
+                              {...register(`services.${index}.id`)}
+                              placeholder="End Point Url"
+                            />
+                          </CCol>
+                        </CRow>
+                      );
+                    })}
+                  {fields.map((service, index) => {
                     return (
-                      <CRow className="">
+                      <CRow className="mb-3" key={service.id}>
                         <CCol sm={2}>
-                          <p>{getServiceName(element.service_type)}</p>
-                        </CCol>
-                        <CCol sm={2}>
-                          <p>{getServiceName(element.category_service_id)}</p>
-                        </CCol>
-                        <CCol sm={3}>
-                          <p>{element.end_point_url}</p>
-                        </CCol>
-                        <CCol sm={3}>
-                          <p>{element.call_back_url}</p>
-                        </CCol>
-                        <CCol sm={1}>
-                          <p>{element.is_active === 1 ? "Active" : "Inactive"}</p>
-                        </CCol>
-                        <CCol sm={1}>
-                          <CButton color="info"
-                          onClick={()=>{setService(element)}}
+                          <CFormSelect
+                            aria-label="Default select example"
+                            type="number"
+                            {...register(`addServices.${index}.service_type`)}
                           >
-                            Edit
+                            <option>Service Name</option>
+                            {lookupList &&
+                              getServiceOption(lookupList).map(
+                                (country, index) => (
+                                  <option value={country.id} key={index}>
+                                    {country.name}
+                                  </option>
+                                )
+                              )}
+                          </CFormSelect>
+                        </CCol>
+                        <CCol sm={2}>
+                          <CFormSelect
+                            aria-label="Default select example"
+                            type="number"
+                            {...register(
+                              `addServices.${index}.category_service_id`
+                            )}
+                          >
+                            <option>Service Category</option>
+                            {lookupList &&
+                              getServiceCategoryOption(lookupList).map(
+                                (country, index) => (
+                                  <option value={country.id} key={index}>
+                                    {country.name}
+                                  </option>
+                                )
+                              )}
+                          </CFormSelect>
+                        </CCol>
+                        <CCol sm={3}>
+                          <CFormInput
+                            type="text"
+                            {...register(`addServices.${index}.end_point_url`)}
+                            placeholder="End Point Url"
+                          />
+                        </CCol>
+                        <CCol sm={3}>
+                          <CFormInput
+                            type="text"
+                            {...register(`addServices.${index}.call_back_url`)}
+                            placeholder="Call Back Url"
+                          />
+                        </CCol>
+                        <CCol sm={1}>
+                          <CFormCheck
+                            name="status"
+                            label="Active"
+                            {...register(`addServices.${index}.is_active`)}
+                          />
+                        </CCol>
+                        <CCol sm={1}>
+                          <CButton
+                            color="danger"
+                            onClick={() => {
+                              remove(index);
+                            }}
+                          >
+                            Remove
                           </CButton>
                         </CCol>
                       </CRow>
-                    )
-
+                    );
                   })}
+
+                  <CRow>
+                    <CCol sm={2}>
+                      <CButton
+                        color="primary"
+                        onClick={() => {
+                          append({});
+                        }}
+                      >
+                        Add Service
+                      </CButton>
+                    </CCol>
+                  </CRow>
                   {/* <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Service category
