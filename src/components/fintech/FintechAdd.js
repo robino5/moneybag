@@ -33,7 +33,7 @@ const FintechAdd = () => {
 
   const navigate = useNavigate();
   const [lookupList, setLooupList] = useState();
-
+  console.log("fields",fields)
   const saveFintech = (e) => {
     console.log("element");
     const fintechData = {
@@ -399,7 +399,7 @@ const FintechAdd = () => {
                           >
                             <option>Service Name</option>
                             {lookupList &&
-                              getServiceCategoryOption(lookupList).map(
+                              getServiceOption(lookupList).map(
                                 (country, index) => (
                                   <option value={country.id} key={index}>
                                     {country.name}
@@ -418,7 +418,7 @@ const FintechAdd = () => {
                           >
                             <option>Service Category</option>
                             {lookupList &&
-                              getServiceOption(lookupList).map(
+                              getServiceCategoryOption(lookupList).map(
                                 (country, index) => (
                                   <option value={country.id} key={index}>
                                     {country.name}

@@ -28,72 +28,91 @@ const FintechUpdate = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [lookupList, setLooupList] = useState();
-  console.log(location.state);
+  const [serviceList, setServiceList] = useState();
+  const [service, setService] = useState({});
 
-  const updateFintech = (e) => {
-    const fintechData = {
-      name: e.fintechName,
-      short_name: e.shortName,
-      country_no:
-        e.country === "" ? location.state.country_no : parseInt(e.country),
-      address_1: e.address_line_1,
-      address_2: e.address_line_2,
-      city: e.city,
-      state_no: e.state === "" ? location.state.state_no : parseInt(e.state),
-      postal_code: e.postal_code,
-      swift_code: e.swift_code,
-      general_banking: e.general_banking ? 1 : 0,
-      card_service: e.card_service ? 1 : 0,
-      internet_banking: e.internet_banking ? 1 : 0,
-      mfs: e.mfs ? 1 : 0,
-      dfs: e.dfs ? 1 : 0,
-      qr_code: e.qr_code ? 1 : 0,
-    };
-    console.log("new", fintechData);
+  console.log("loaction", service);
+
+  // const updateFintech = (e) => {
+  //   const fintechData = {
+  //     name: e.fintechName,
+  //     short_name: e.shortName,
+  //     country_no:
+  //       e.country === "" ? location.state.country_no : parseInt(e.country),
+  //     address_1: e.address_line_1,
+  //     address_2: e.address_line_2,
+  //     city: e.city,
+  //     state_no: e.state === "" ? location.state.state_no : parseInt(e.state),
+  //     postal_code: e.postal_code,
+  //     swift_code: e.swift_code,
+  //     general_banking: e.general_banking ? 1 : 0,
+  //     card_service: e.card_service ? 1 : 0,
+  //     internet_banking: e.internet_banking ? 1 : 0,
+  //     mfs: e.mfs ? 1 : 0,
+  //     dfs: e.dfs ? 1 : 0,
+  //     qr_code: e.qr_code ? 1 : 0,
+  //   };
+  //   console.log("new", fintechData);
+  //   const headers = {
+  //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //   };
+  //   axios
+  //     .put(
+  //       `${process.env.REACT_APP_API_URL}financial-organizations/update/${location.state.id}`,
+  //       fintechData,
+  //       {
+  //         headers,
+  //       }
+  //     )
+  //     .then((response) => {
+  //       console.log(response);
+  //       swal({
+  //         position: "top-end",
+  //         text: "Organization Created Successfull",
+  //         icon: "success",
+  //         button: false,
+  //         timer: 1500,
+  //       });
+  //       navigate("/fintech");
+  //     })
+  //     .catch((error) => {
+  //       console.error("There was an error!", error);
+  //       swal({
+  //         position: "top-end",
+  //         text: error.response.data.detail,
+  //         icon: "error",
+  //         button: false,
+  //         timer: 1500,
+  //       });
+  //     });
+  // };
+
+  const getLookupList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    axios
-      .put(
-        `${process.env.REACT_APP_API_URL}financial-organizations/update/${location.state.id}`,
-        fintechData,
-        {
-          headers,
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        swal({
-          position: "top-end",
-          text: "Organization Created Successfull",
-          icon: "success",
-          button: false,
-          timer: 1500,
-        });
-        navigate("/fintech");
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        swal({
-          position: "top-end",
-          text: error.response.data.detail,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
-      });
-  };
-
-  const getLookupList = () => {
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
+    await axios
       .get(`${process.env.REACT_APP_API_URL}lookups/detail-list`, {
         headers,
       })
       .then((responce) => {
         console.log(responce.data), setLooupList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const getServiceList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}services/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setServiceList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -110,6 +129,48 @@ const FintechUpdate = () => {
     return Date;
   };
 
+  const getServices = (e) => {
+    let data = []
+    e && e.map((element) => {
+      if (element.organization_no === location.state.id) {
+        data.push(element)
+      }
+    })
+    return data
+  }
+
+  const getfintechType = (e) => {
+    let Date = [];
+    e.forEach((element) => {
+      if (element.lov_id === 8001 && element.is_active === 1) {
+        Date.push({ id: element.id, name: element.name });
+      }
+    });
+    return Date;
+  };
+
+
+
+  const getServiceOption = (e) => {
+    let Date = [];
+    e.forEach((element) => {
+      if (element.lov_id === 6001 && element.is_active === 1) {
+        Date.push({ id: element.id, name: element.name });
+      }
+    });
+    return Date;
+  };
+
+  const getServiceCategoryOption = (e) => {
+    let Date = [];
+    e.forEach((element) => {
+      if (element.lov_id === 7001 && element.is_active === 1) {
+        Date.push({ id: element.id, name: element.name });
+      }
+    });
+    return Date;
+  };
+
   const getStateOption = (e) => {
     let Date = [];
     e.forEach((element) => {
@@ -120,8 +181,19 @@ const FintechUpdate = () => {
     return Date;
   };
 
+  const getServiceName=(e)=>{
+    let data;
+    lookupList&&lookupList.map((element)=>{
+          if(element.id===e){
+            data=element.name
+          }
+    })
+    return data;
+  }
+
   useEffect(() => {
     getLookupList();
+    getServiceList();
   }, []);
 
   return (
@@ -130,9 +202,9 @@ const FintechUpdate = () => {
         <CRow className="justify-content-center">
           <CCol md={12}>
             <CCard className="p-4">
-              <h6 className="text-center">Update Fintech</h6>
+              <h6 className="text-center">Add Fintech</h6>
               <CCardBody>
-                <CForm onSubmit={handleSubmit(updateFintech)}>
+                <CForm onSubmit={handleSubmit()}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Fintech Name
@@ -140,10 +212,40 @@ const FintechUpdate = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
+                        {...register("fintechName", {
+                          required: "Please provide Fintech Name",
+                        })}
                         defaultValue={location.state.name}
-                        {...register("fintechName")}
                         placeholder="Fintech Name"
                       />
+                      <span className="text-danger">
+                        {errors.fintechName?.message}
+                      </span>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Fintech Type
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormSelect
+                        aria-label="Default select example"
+                        type="number"
+                        {...register("fintech_type")}
+                      >
+                        {lookupList &&
+                          getfintechType(lookupList).map((country, index) => (
+                            <option value={country.id}
+                              selected={
+                                country.id === location.state.org_type
+                                  ? "selected"
+                                  : ""
+                              }
+                              key={index}>
+                              {country.name}
+                            </option>
+                          ))}
+                      </CFormSelect>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -153,10 +255,15 @@ const FintechUpdate = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
+                        {...register("shortName", {
+                          required: "Please provide Short Name",
+                        })}
                         defaultValue={location.state.short_name}
-                        {...register("shortName")}
                         placeholder=" Short Name"
                       />
+                      <span className="text-danger">
+                        {errors.shortName?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -171,15 +278,13 @@ const FintechUpdate = () => {
                       >
                         {lookupList &&
                           getCountryOption(lookupList).map((country, index) => (
-                            <option
-                              value={country.id}
+                            <option value={country.id}
                               selected={
                                 country.id === location.state.country_no
                                   ? "selected"
                                   : ""
                               }
-                              key={index}
-                            >
+                              key={index}>
                               {country.name}
                             </option>
                           ))}
@@ -193,8 +298,8 @@ const FintechUpdate = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        defaultValue={location.state.address_1}
                         {...register("address_line_1")}
+                        defaultValue={location.state.address_1}
                         placeholder="Address Line 1"
                       />
                     </CCol>
@@ -204,8 +309,8 @@ const FintechUpdate = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        defaultValue={location.state.address_2}
                         {...register("address_line_2")}
+                        defaultValue={location.state.address_2}
                         placeholder="Address Line 2"
                       />
                     </CCol>
@@ -217,8 +322,8 @@ const FintechUpdate = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        defaultValue={location.state.city}
                         {...register("city")}
+                        defaultValue={location.state.city}
                         placeholder="City"
                       />
                     </CCol>
@@ -235,15 +340,13 @@ const FintechUpdate = () => {
                       >
                         {lookupList &&
                           getStateOption(lookupList).map((country, index) => (
-                            <option
-                              value={country.id}
+                            <option value={country.id}
                               selected={
                                 country.id === location.state.state_no
                                   ? "selected"
                                   : ""
                               }
-                              key={index}
-                            >
+                              key={index}>
                               {country.name}
                             </option>
                           ))}
@@ -257,8 +360,8 @@ const FintechUpdate = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        defaultValue={location.state.postal_code}
                         {...register("postal_code")}
+                        defaultValue={location.state.postal_code}
                         placeholder="Postal Code"
                       />
                     </CCol>
@@ -270,22 +373,164 @@ const FintechUpdate = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        defaultValue={location.state.swift_code}
                         {...register("swift_code")}
+                        defaultValue={location.state.swift_code}
                         placeholder="Swift Code"
                       />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
+                      Status
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormCheck
+                        name="status"
+                        label="Active"
+                        defaultChecked={
+                          location.state.status == 1 ? true : false
+                        }
+                        {...register("status")}
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className="">
+                    <CCol sm={2}>
+                      <p>Service Name</p>
+                    </CCol>
+                    <CCol sm={2}>
+                      <p>Service Category</p>
+                    </CCol>
+                    <CCol sm={3}>
+                      <p>End Point Url</p>
+                    </CCol>
+                    <CCol sm={3}>
+                      <p>Call Back Url</p>
+                    </CCol>
+                    <CCol sm={1}>
+                      <p>Active?</p>
+                    </CCol>
+                    <CCol sm={1}></CCol>
+                  </CRow>
+                  <hr></hr>
+                  <CRow className="mb-3">
+                    <CCol sm={2}>
+                      <CFormSelect
+                        aria-label="Default select example"
+                        type="number"
+                        {...register("service_type")}
+                      >
+                        {lookupList &&
+                          getServiceOption(lookupList).map(
+                            (country, index) => (
+                              <option value={country.id} 
+                              selected={
+                                country.id === service.service_type
+                                  ? "selected"
+                                  : ""
+                              }
+                              key={index}>
+                                {country.name}
+                              </option>
+                            )
+                          )}
+                      </CFormSelect>
+                    </CCol>
+                    <CCol sm={2}>
+                      <CFormSelect
+                        aria-label="Default select example"
+                        type="number"
+                        {...register("category_service_id"
+                        )}
+                      >
+                        <option>Service Category</option>
+                        {lookupList &&
+                          getServiceCategoryOption(lookupList).map(
+                            (country, index) => (
+                              <option value={country.id} 
+                              selected={
+                                country.id === service.category_service_id
+                                  ? "selected"
+                                  : ""
+                              }
+                              key={index}>
+                                {country.name}
+                              </option>
+                            )
+                          )}
+                      </CFormSelect>
+                    </CCol>
+                    <CCol sm={3}>
+                      <CFormInput
+                        type="text"
+                        {...register("end_point_url")}
+                        defaultValue={service.end_point_url}
+                        placeholder="End Point Url"
+                      />
+                    </CCol>
+                    <CCol sm={3}>
+                      <CFormInput
+                        type="text"
+                        {...register("call_back_url")}
+                        defaultValue={service.call_back_url}
+                        placeholder="Call Back Url"
+                      />
+                    </CCol>
+                    <CCol sm={1}>
+                      <CFormCheck
+                        name="status"
+                        label="Active"
+                        defaultChecked={
+                          service.is_active === 1 ? true : false
+                        }
+                        {...register("is_active")}
+                      />
+                    </CCol>
+                    <CCol sm={1}>
+                      <CButton
+                        color="danger"
+                      >
+                        Remove
+                      </CButton>
+                    </CCol>
+                  </CRow>
+                  <hr></hr>
+                  {getServices(serviceList) && getServices(serviceList).map((element) => {
+                    return (
+                      <CRow className="">
+                        <CCol sm={2}>
+                          <p>{getServiceName(element.service_type)}</p>
+                        </CCol>
+                        <CCol sm={2}>
+                          <p>{getServiceName(element.category_service_id)}</p>
+                        </CCol>
+                        <CCol sm={3}>
+                          <p>{element.end_point_url}</p>
+                        </CCol>
+                        <CCol sm={3}>
+                          <p>{element.call_back_url}</p>
+                        </CCol>
+                        <CCol sm={1}>
+                          <p>{element.is_active === 1 ? "Active" : "Inactive"}</p>
+                        </CCol>
+                        <CCol sm={1}>
+                          <CButton color="info"
+                          onClick={()=>{setService(element)}}
+                          >
+                            Edit
+                          </CButton>
+                        </CCol>
+                      </CRow>
+                    )
+
+                  })}
+                  {/* <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
                       Service category
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormCheck
                         {...register("general_banking")}
-                        defaultChecked={
-                          location.state.general_banking == 1 ? true : false
-                        }
                         label="General Banking"
                       />
                     </CCol>
@@ -293,9 +538,6 @@ const FintechUpdate = () => {
                     <CCol sm={9}>
                       <CFormCheck
                         {...register("card_service")}
-                        defaultChecked={
-                          location.state.card_service == 1 ? true : false
-                        }
                         label="Card Service"
                       />
                     </CCol>
@@ -303,125 +545,33 @@ const FintechUpdate = () => {
                     <CCol sm={9}>
                       <CFormCheck
                         {...register("internet_banking")}
-                        defaultChecked={
-                          location.state.internet_banking == 1 ? true : false
-                        }
                         label="Internet Banking"
                       />
                     </CCol>
                     <CFormLabel className="col-sm-3 col-form-label"></CFormLabel>
                     <CCol sm={9}>
-                      <CFormCheck
-                        {...register("mfs")}
-                        defaultChecked={location.state.mfs == 1 ? true : false}
-                        label="MFS"
-                      />
+                      <CFormCheck {...register("mfs")} label="MFS" />
                     </CCol>
                     <CFormLabel className="col-sm-3 col-form-label"></CFormLabel>
                     <CCol sm={9}>
-                      <CFormCheck
-                        {...register("dfs")}
-                        defaultChecked={location.state.dfs == 1 ? true : false}
-                        label="DFS"
-                      />
+                      <CFormCheck {...register("dfs")} label="DFS" />
                     </CCol>
                     <CFormLabel className="col-sm-3 col-form-label"></CFormLabel>
                     <CCol sm={9}>
-                      <CFormCheck
-                        {...register("otc")}
-                        defaultChecked={
-                          location.state.qr_code == 1 ? true : false
-                        }
-                        label="OTC"
-                      />
+                      <CFormCheck {...register("otc")} label="OTC" />
                     </CCol>
                     <CFormLabel className="col-sm-3 col-form-label"></CFormLabel>
                     <CCol sm={9}>
-                      <CFormCheck
-                        {...register("qr_code")}
-                        defaultChecked={
-                          location.state.status == 1 ? true : false
-                        }
-                        label="QR Code"
-                      />
+                      <CFormCheck {...register("qr_code")} label="QR Code" />
                     </CCol>
-                  </CRow>
-                  <CForm>
-                    <CRow className="mb-3" key={service.id}>
-                      <CCol sm={2}>
-                        <CFormSelect
-                          aria-label="Default select example"
-                          type="number"
-                          {...register("Service_name")}
-                        >
-                          <option>Service Name</option>
-                          {lookupList &&
-                            getServiceCategoryOption(lookupList).map(
-                              (country, index) => (
-                                <option value={country.id} key={index}>
-                                  {country.name}
-                                </option>
-                              )
-                            )}
-                        </CFormSelect>
-                      </CCol>
-                      <CCol sm={2}>
-                        <CFormSelect
-                          aria-label="Default select example"
-                          type="number"
-                          {...register(`services.${index}.category_service_id`)}
-                        >
-                          <option>Service Category</option>
-                          {lookupList &&
-                            getServiceOption(lookupList).map(
-                              (country, index) => (
-                                <option value={country.id} key={index}>
-                                  {country.name}
-                                </option>
-                              )
-                            )}
-                        </CFormSelect>
-                      </CCol>
-                      <CCol sm={3}>
-                        <CFormInput
-                          type="text"
-                          {...register(`services.${index}.end_point_url`)}
-                          placeholder="End Point Url"
-                        />
-                      </CCol>
-                      <CCol sm={3}>
-                        <CFormInput
-                          type="text"
-                          {...register(`services.${index}.call_back_url`)}
-                          placeholder="Call Back Url"
-                        />
-                      </CCol>
-                      <CCol sm={1}>
-                        <CFormCheck
-                          name="status"
-                          label="Active"
-                          {...register(`services.${index}.is_active`)}
-                        />
-                      </CCol>
-                      <CCol sm={1}>
-                        <CButton
-                          color="danger"
-                          onClick={() => {
-                            remove(index);
-                          }}
-                        >
-                          Remove
-                        </CButton>
-                      </CCol>
-                    </CRow>
-                  </CForm>
+                  </CRow> */}
                   <div className="text-center ">
                     <Link to="/fintech">
                       <CButton color="danger" className="mx-3">
                         Cancle
                       </CButton>
                     </Link>
-                    <CButton type="submit" color="info">
+                    <CButton type="submit" color="success">
                       Update
                     </CButton>
                   </div>
