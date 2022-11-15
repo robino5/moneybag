@@ -28,29 +28,36 @@ const SettelmentAdd = () => {
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
   const location = useLocation();
+  const [organizationList, setOrganizationList] = useState();
   const [bankbranchList, setBankBranchList] = useState();
+  const [lookupList, setLooupList] = useState();
   const [services, setService] = useState();
   const [serviceList, setServiceList] = useState();
   const [service, setServices] = useState();
 
   const multipleInsert = (e) => {
-    setServices(Array.isArray(e) ? e.map((value) => value.value) : [])
+    setServices(Array.isArray(e) ? e.map((value) => value.value) : []);
   };
 
-  const defaultService = (e)=>{
-    let data=[]
-    e&&e.forEach(element => {
-     if(location.state.service_name.match(element.id)){
-      data.push(element.id);
-     }
-   });
+  const defaultService = (e) => {
+    let data = [];
+    e &&
+      e.forEach((element) => {
+        if (location.state.service_name.match(element.id)) {
+          data.push(element.id);
+        }
+      });
     return data;
-  }
+  };
 
-console.log("d",defaultService(serviceList))
+  console.log("d", defaultService(serviceList));
 
   const updateSattelmentAccount = (e) => {
     const sattelementAccount = {
+      org_no:
+        e.select_fintech === ""
+          ? location.state.org_no
+          : parseInt(e.select_fintech),
       bank_id:
         e.select_bank_name === ""
           ? location.state.bank_id
@@ -59,9 +66,9 @@ console.log("d",defaultService(serviceList))
         e.select_branch_name === ""
           ? location.state.branch_id
           : parseInt(e.select_branch_name),
-      service_name:
-        !service ? location.state.service_name
-          : JSON.stringify(service),
+      service_name: !service
+        ? location.state.service_name
+        : JSON.stringify(service),
       account_name: e.account_name,
       account_id: e.account_id,
       note: e.note,
@@ -101,6 +108,23 @@ console.log("d",defaultService(serviceList))
         });
       });
   };
+
+  const getOrganization = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}financial-organizations/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setOrganizationList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
   const getBankBranchList = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -132,6 +156,32 @@ console.log("d",defaultService(serviceList))
         console.error("There was an error!", error);
       });
   };
+  const getLookupList = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}lookups/detail-list`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setLooupList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const getOrganizationOption = (e) => {
+    let data = [];
+    e &&
+      e.map((element) => {
+        if (element.status === 1) {
+          data.push({ id: element.id, name: element.name });
+        }
+      });
+    return data;
+  };
 
   const getBankOption = (e) => {
     let date = [];
@@ -145,26 +195,26 @@ console.log("d",defaultService(serviceList))
   };
 
   const getServiceOption = (e, id) => {
-    let date = [];
+    let data = [];
     e &&
       e.map((element) => {
-        console.log("element", id);
-        if (element.bank_id === parseInt(id)) {
-          date.push({ value: element.id, label: element.service_name });
+        if (element.organization_no == id && element.is_active === 1) {
+          lookupList &&
+            lookupList.map((lookup) => {
+              if (lookup.id === element.service_type) {
+                data.push({ value: element.id, label: lookup.name });
+              }
+            });
         }
       });
-    return date;
+    return data;
   };
 
   const getBranchOption = (e) => {
     let date = [];
     e &&
       e.map((element) => {
-        if (
-          element.bank_flag === 0 &&
-          element.is_active === 1 &&
-          element.root_bank === 0
-        ) {
+        if (element.bank_flag === 0 && element.is_active === 1) {
           date.push({ id: element.id, branch_name: element.branch_name });
         }
       });
@@ -172,8 +222,10 @@ console.log("d",defaultService(serviceList))
   };
 
   useEffect(() => {
+    getOrganization();
     getBankBranchList();
     getService();
+    getLookupList();
   }, []);
 
   return (
@@ -187,17 +239,46 @@ console.log("d",defaultService(serviceList))
                 <CForm onSubmit={handleSubmit(updateSattelmentAccount)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
+                      Fintech Name
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormSelect
+                        aria-label="Default select example"
+                        {...register("select_fintech")}
+                        onChange={(e) => {
+                          setService(
+                            getServiceOption(serviceList, e.target.value)
+                          );
+                        }}
+                      >
+                        <option>select Bank</option>
+                        {getOrganizationOption(organizationList) &&
+                          getOrganizationOption(organizationList).map(
+                            (org, index) => (
+                              <option
+                                value={org.id}
+                                selected={
+                                  org.id === location.state.org_no
+                                    ? "selected"
+                                    : ""
+                                }
+                                key={index}
+                              >
+                                {org.name}
+                              </option>
+                            )
+                          )}
+                      </CFormSelect>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
                       Bank Name
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormSelect
                         aria-label="Default select example"
                         {...register("select_bank_name")}
-                        onChange={(e) => {
-                          setService(
-                            getServiceOption(serviceList, e.target.value)
-                          );
-                        }}
                       >
                         {getBankOption(bankbranchList) &&
                           getBankOption(bankbranchList).map((bank, index) => (

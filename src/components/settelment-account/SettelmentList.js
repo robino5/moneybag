@@ -11,6 +11,7 @@ const SettelmentList = () => {
   const [settlementAccountList, setSettlementAccountList] = useState();
   const [serviceList, setServiceList] = useState();
   const [bankbranchList, setBankBranchList] = useState();
+  const [lookupList, setLooupList] = useState();
 
   const getSettlementAccountList = () => {
     const headers = {
@@ -60,6 +61,22 @@ const SettelmentList = () => {
       });
   };
 
+  const getLookupList = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}lookups/detail-list`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setLooupList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
   const setBankName = (e) => {
     let bankName;
     bankbranchList &&
@@ -76,7 +93,12 @@ const SettelmentList = () => {
     serviceList &&
       serviceList.map((services) => {
         if (e.service_name.match(services.id)) {
-          service.push(services.service_name);
+          lookupList &&
+            lookupList.map((element) => {
+              if (services.category_service_id === element.id) {
+                service.push(element.name);
+              }
+            });
         }
       });
     return "(" + service + ",)";
@@ -137,6 +159,7 @@ const SettelmentList = () => {
     getSettlementAccountList();
     getBankBranchList();
     getService();
+    getLookupList();
   }, []);
 
   const columns = [

@@ -159,7 +159,7 @@ const BranchUpdate = () => {
                         type="text"
                         defaultValue={location.state.branch_name}
                         {...register("bank_branch_name")}
-                        placeholder="Bank Name"
+                        placeholder="Branch Name"
                       />
                     </CCol>
                   </CRow>

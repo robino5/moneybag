@@ -34,13 +34,14 @@ const SettelmentAdd = () => {
   const [service, setServices] = useState();
 
   const multipleInsert = (e) => {
-    setServices(Array.isArray(e) ? e.map((value) => value.value) : [])
+    setServices(Array.isArray(e) ? e.map((value) => value.value) : []);
   };
 
   console.log(services);
 
   const saveSattelmentAccount = (e) => {
     const sattelementAccount = {
+      org_no: parseInt(e.select_fintech),
       bank_id: parseInt(e.select_bank_name),
       branch_id: parseInt(e.select_branch_name),
       service_name: JSON.stringify(service),
@@ -83,8 +84,7 @@ const SettelmentAdd = () => {
             timer: 1500,
           });
         });
-    }
-    else {
+    } else {
       swal({
         position: "top-end",
         text: "Please Select services",
@@ -159,14 +159,15 @@ const SettelmentAdd = () => {
   };
 
   const getOrganizationOption = (e) => {
-    let data = []
-    e && e.map((element) => {
-      if (element.status === 1) {
-        data.push({ id: element.id, name: element.name })
-      }
-    })
+    let data = [];
+    e &&
+      e.map((element) => {
+        if (element.status === 1) {
+          data.push({ id: element.id, name: element.name });
+        }
+      });
     return data;
-  }
+  };
 
   const getBankOption = (e) => {
     let date = [];
@@ -181,16 +182,17 @@ const SettelmentAdd = () => {
 
   const getServiceOption = (e, id) => {
     let data = [];
-    e && e.map((element) => {
-      if (element.organization_no == id && element.is_active===1) {
-        lookupList && lookupList.map((lookup) => {
-          if (lookup.id === element.service_type) {
-            data.push({ value: element.id, label: lookup.name })
-          }
-        })
-      }
-    })
-    console.log(data)
+    e &&
+      e.map((element) => {
+        if (element.organization_no == id && element.is_active === 1) {
+          lookupList &&
+            lookupList.map((lookup) => {
+              if (lookup.id === element.service_type) {
+                data.push({ value: element.id, label: lookup.name });
+              }
+            });
+        }
+      });
     return data;
   };
 
@@ -198,10 +200,7 @@ const SettelmentAdd = () => {
     let date = [];
     e &&
       e.map((element) => {
-        if (
-          element.bank_flag === 0 &&
-          element.is_active === 1
-        ) {
+        if (element.bank_flag === 0 && element.is_active === 1) {
           date.push({ id: element.id, branch_name: element.branch_name });
         }
       });
@@ -231,8 +230,8 @@ const SettelmentAdd = () => {
                     <CCol sm={9}>
                       <CFormSelect
                         aria-label="Default select example"
-                        {...register("select_bank_name", {
-                          required: "Please Select Bank",
+                        {...register("select_fintech", {
+                          required: "Please Select Fintech",
                         })}
                         onChange={(e) => {
                           setService(
@@ -242,11 +241,13 @@ const SettelmentAdd = () => {
                       >
                         <option>select Bank</option>
                         {getOrganizationOption(organizationList) &&
-                          getOrganizationOption(organizationList).map((org, index) => (
-                            <option value={org.id} key={index}>
-                              {org.name}
-                            </option>
-                          ))}
+                          getOrganizationOption(organizationList).map(
+                            (org, index) => (
+                              <option value={org.id} key={index}>
+                                {org.name}
+                              </option>
+                            )
+                          )}
                       </CFormSelect>
                     </CCol>
                   </CRow>

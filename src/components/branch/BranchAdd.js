@@ -152,7 +152,7 @@ const BranchAdd = () => {
                         {...register("bank_branch_name", {
                           required: "Please Provide Bank/Branch name",
                         })}
-                        placeholder="Bank Name"
+                        placeholder="Branch Name"
                       />
                       <span className="text-danger">
                         {errors.bank_branch_name?.message}
