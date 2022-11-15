@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import swal from "sweetalert";
 import { useForm } from "react-hook-form";
+import CIcon from "@coreui/icons-react";
+import { cilLowVision } from "@coreui/icons";
 import {
   CCard,
   CCardBody,
@@ -25,6 +27,9 @@ const BusinessRepresentative = ({ clickNext }) => {
     reset,
   } = useForm({ mode: "all" });
   const [lookupList, setLooupList] = useState();
+  const [image, setImage] = useState("");
+
+  console.log("image", image);
 
   const saveBusinessRepresentative = (e) => {
     if (e) {
@@ -45,6 +50,7 @@ const BusinessRepresentative = ({ clickNext }) => {
       localStorage.setItem("state", e.state);
       localStorage.setItem("postal_code", parseInt(e.postal_code));
       localStorage.setItem("nid_number", e.national_id);
+      localStorage.setItem("file", image);
       reset();
     } else {
       swal({
@@ -83,6 +89,31 @@ const BusinessRepresentative = ({ clickNext }) => {
     return Date;
   };
 
+  const uploadFile = (e) => {
+    var data = new FormData();
+    data.append("file", e.target.files[0]);
+
+    axios
+      .post(`${process.env.REACT_APP_API_URL}uploads/upload`, data)
+      .then((response) => {
+        console.log(response), setImage(response.data.fileName);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: "File Upload Failed",
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
+      });
+  };
+
+  const openFile = () => {
+    window.open(`${process.env.REACT_APP_API_URL}uploads/uploads/get/${image}`);
+  };
+
   useEffect(() => {
     getLookupList();
   }, []);
@@ -102,9 +133,7 @@ const BusinessRepresentative = ({ clickNext }) => {
               })}
               placeholder="First Name"
             />
-            <span className="text-danger">
-              {errors.first_name?.message}
-            </span>
+            <span className="text-danger">{errors.first_name?.message}</span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -117,9 +146,7 @@ const BusinessRepresentative = ({ clickNext }) => {
               })}
               placeholder="Last Name"
             />
-            <span className="text-danger">
-              {errors.last_name?.message}
-            </span>
+            <span className="text-danger">{errors.last_name?.message}</span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -147,9 +174,7 @@ const BusinessRepresentative = ({ clickNext }) => {
           </CCol>
         </CRow>
         <CRow className="mb-3">
-          <CFormLabel className="col-sm-4 col-form-label">
-            Address
-          </CFormLabel>
+          <CFormLabel className="col-sm-4 col-form-label">Address</CFormLabel>
           <CCol sm={8}>
             <CFormInput
               type="text"
@@ -174,9 +199,7 @@ const BusinessRepresentative = ({ clickNext }) => {
           </CCol>
         </CRow>
         <CRow className="mb-3">
-          <CFormLabel className="col-sm-4 col-form-label">
-            City
-          </CFormLabel>
+          <CFormLabel className="col-sm-4 col-form-label">City</CFormLabel>
           <CCol sm={8}>
             <CFormInput
               type="text"
@@ -185,15 +208,11 @@ const BusinessRepresentative = ({ clickNext }) => {
               })}
               placeholder="City"
             />
-            <span className="text-danger">
-              {errors.city?.message}
-            </span>
+            <span className="text-danger">{errors.city?.message}</span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
-          <CFormLabel className="col-sm-4 col-form-label">
-            State
-          </CFormLabel>
+          <CFormLabel className="col-sm-4 col-form-label">State</CFormLabel>
           <CCol sm={8}>
             <CFormSelect
               aria-label="Default select example"
@@ -208,9 +227,7 @@ const BusinessRepresentative = ({ clickNext }) => {
                   </option>
                 ))}
             </CFormSelect>
-            <span className="text-danger">
-              {errors.state?.message}
-            </span>
+            <span className="text-danger">{errors.state?.message}</span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -225,9 +242,7 @@ const BusinessRepresentative = ({ clickNext }) => {
               })}
               placeholder="Postal Code"
             />
-            <span className="text-danger">
-              {errors.postal_code?.message}
-            </span>
+            <span className="text-danger">{errors.postal_code?.message}</span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -243,12 +258,25 @@ const BusinessRepresentative = ({ clickNext }) => {
           </CCol>
         </CRow>
         <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            File Upload
+          </CFormLabel>
+          <CCol sm={7}>
+            <CFormInput type="file" onChange={uploadFile} />
+          </CCol>
+          <CCol sm={1}>
+            <CButton onClick={openFile}>
+              <CIcon className="text-light" icon={cilLowVision} />
+            </CButton>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label"></CFormLabel>
           <CCol sm={8}>
             <p>
-              We use this information to verify your identity. If you
-              leave this feld blank, we’ll email you instructions to
-              submit another form of ID.
+              We use this information to verify your identity. If you leave this
+              feld blank, we’ll email you instructions to submit another form of
+              ID.
             </p>
           </CCol>
         </CRow>

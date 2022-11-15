@@ -52,7 +52,7 @@ const BusinessDetails = ({ clickNext }) => {
       category_code: e.cat_code,
       website: e.bussiness_website,
       product_desc: e.Product_desc,
-      upload_file: "test",
+      upload_file: localStorage.getItem("file"),
     };
     console.log(Data);
     const headers = {
@@ -92,6 +92,7 @@ const BusinessDetails = ({ clickNext }) => {
           localStorage.removeItem("business_city");
         localStorage.removeItem("business_state");
         localStorage.removeItem("business_postal_code");
+        localStorage.removeItem("file");
       })
       .catch((error) => {
         console.error("There was an error!", error);
