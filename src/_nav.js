@@ -77,11 +77,11 @@ const _nav = [
         name: "Fintech List",
         to: "/fintech",
       },
-      {
-        component: CNavItem,
-        name: "Services",
-        to: "/service",
-      },
+      // {
+      //   component: CNavItem,
+      //   name: "Services",
+      //   to: "/service",
+      // },
       {
         component: CNavItem,
         name: "Settelment Account",

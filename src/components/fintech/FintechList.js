@@ -59,48 +59,48 @@ const FintechList = () => {
       });
   };
 
-  const deleteOrganization = (id, e) => {
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    swal({
-      title: "Are you sure?",
-      text: "Do you want to delete the Organization?",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        axios
-          .delete(
-            `${process.env.REACT_APP_API_URL}financial-organizations/delete/${id}`,
-            {
-              headers,
-            }
-          )
-          .then((response) => {
-            console.log(response),
-              swal({
-                position: "top",
-                text: "Ofganization Deleted Successfull",
-                icon: "success",
-                button: false,
-                timer: 1500,
-              });
-            getOrganization();
-          })
-          .catch((error) => {
-            console.log(error),
-              swal({
-                text: error.response.data.detail,
-                icon: "error",
-                button: false,
-                timer: 1500,
-              });
-          });
-      }
-    });
-  };
+  // const deleteOrganization = (id, e) => {
+  //   const headers = {
+  //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //   };
+  //   swal({
+  //     title: "Are you sure?",
+  //     text: "Do you want to delete the Organization?",
+  //     icon: "warning",
+  //     buttons: true,
+  //     dangerMode: true,
+  //   }).then((willDelete) => {
+  //     if (willDelete) {
+  //       axios
+  //         .delete(
+  //           `${process.env.REACT_APP_API_URL}financial-organizations/delete/${id}`,
+  //           {
+  //             headers,
+  //           }
+  //         )
+  //         .then((response) => {
+  //           console.log(response),
+  //             swal({
+  //               position: "top",
+  //               text: "Ofganization Deleted Successfull",
+  //               icon: "success",
+  //               button: false,
+  //               timer: 1500,
+  //             });
+  //           getOrganization();
+  //         })
+  //         .catch((error) => {
+  //           console.log(error),
+  //             swal({
+  //               text: error.response.data.detail,
+  //               icon: "error",
+  //               button: false,
+  //               timer: 1500,
+  //             });
+  //         });
+  //     }
+  //   });
+  // };
 
   const getServiceCategory = (e) => {
     let data = [];
@@ -159,13 +159,13 @@ const FintechList = () => {
       name: "Action",
       selector: (row) => (
         <div className="d-flex justify-content-center">
-          <CButton
+          {/* <CButton
             className="btn btn-sm d-inline mr-1"
             color="danger"
             onClick={() => deleteOrganization(row.id)}
           >
             Delete
-          </CButton>
+          </CButton> */}
           <CButton
             className="btn btn-sm d-inline mx-1"
             color="info"
