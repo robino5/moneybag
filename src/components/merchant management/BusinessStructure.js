@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import swal from "sweetalert";
 import { useForm } from "react-hook-form";
+import CIcon from "@coreui/icons-react";
+import { cilLowVision } from "@coreui/icons";
 import {
   CCard,
   CCardBody,
@@ -25,6 +27,7 @@ const BusinessStructure = ({ clickNext }) => {
     reset,
   } = useForm({ mode: "all" });
   const [lookupList, setLooupList] = useState();
+  const [file, setFile] = useState("");
 
   const saveBusinessStructure = (e) => {
     if (e) {
@@ -44,6 +47,7 @@ const BusinessStructure = ({ clickNext }) => {
       localStorage.setItem("business_city", e.b_city);
       localStorage.setItem("business_state", parseInt(e.b_state));
       localStorage.setItem("business_postal_code", e.b_postel_code);
+      localStorage.setItem("file", file);
       reset();
     } else {
       swal({
@@ -100,6 +104,44 @@ const BusinessStructure = ({ clickNext }) => {
       }
     });
     return Date;
+  };
+
+  const uploadFile = (e) => {
+    var data = new FormData();
+    data.append("file", e.target.files[0]);
+    document.getElementById("preview-button").disabled = true;
+
+    if (e.target.files[0].size > 5e6) {
+      swal({
+        position: "top-end",
+        text: "Your File is too Large! Please provide the file below 5MB.",
+        icon: "warning",
+        button: false,
+        timer: 3000,
+      });
+      e.target.value = null;
+    } else {
+      axios
+        .post(`${process.env.REACT_APP_API_URL}uploads/upload`, data)
+        .then((response) => {
+          console.log(response), setFile(response.data.fileName);
+          document.getElementById("preview-button").disabled = false;
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+          swal({
+            position: "top-end",
+            text: "File Upload Failed",
+            icon: "error",
+            button: false,
+            timer: 1500,
+          });
+        });
+    }
+  };
+
+  const openFile = () => {
+    window.open(`${process.env.REACT_APP_API_URL}uploads/uploads/get/${file}`);
   };
 
   useEffect(() => {
@@ -249,6 +291,19 @@ const BusinessStructure = ({ clickNext }) => {
               {...register("b_postel_code")}
               placeholder="Postal Code"
             />
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            File Upload
+          </CFormLabel>
+          <CCol sm={7}>
+            <CFormInput type="file" onChange={uploadFile} />
+          </CCol>
+          <CCol sm={1}>
+            <CButton id="preview-button" onClick={openFile}>
+              <CIcon className="text-light" icon={cilLowVision} />
+            </CButton>
           </CCol>
         </CRow>
         <div className="text-center ">

@@ -35,24 +35,25 @@ const BusinessDetails = ({ clickNext }) => {
       address1: localStorage.getItem("address1"),
       address2: localStorage.getItem("address2"),
       city: localStorage.getItem("city"),
-      state: localStorage.getItem("state"),
+      state: parseInt(localStorage.getItem("state")),
       postal_code: localStorage.getItem("postal_code"),
       nid_number: localStorage.getItem("nid_number"),
-      country_no: localStorage.getItem("country_no"),
-      business_type: localStorage.getItem("business_type"),
+      country_no: parseInt(localStorage.getItem("country_no")),
+      business_type: parseInt(localStorage.getItem("business_type")),
       business_name: localStorage.getItem("business_name"),
       bin: localStorage.getItem("business_no"),
       business_address1: localStorage.getItem("business_address1"),
       business_address2: localStorage.getItem("business_address2"),
       business_city: localStorage.getItem("business_city"),
-      business_state: localStorage.getItem("business_state"),
+      business_state: parseInt(localStorage.getItem("business_state")),
       business_postal_code: localStorage.getItem("business_postal_code"),
-      marchant_id: e.merchant_id,
-      industry_no: e.industry,
+      // marchant_id: e.merchant_id,
+      industry_no: parseInt(e.industry),
       category_code: e.cat_code,
       website: e.bussiness_website,
       product_desc: e.Product_desc,
       upload_file: localStorage.getItem("file"),
+      merchant_pic: localStorage.getItem("merchant_pic"),
     };
     console.log(Data);
     const headers = {
@@ -93,6 +94,7 @@ const BusinessDetails = ({ clickNext }) => {
         localStorage.removeItem("business_state");
         localStorage.removeItem("business_postal_code");
         localStorage.removeItem("file");
+        localStorage.removeItem("merchant_pic");
       })
       .catch((error) => {
         console.error("There was an error!", error);

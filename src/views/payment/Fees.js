@@ -24,7 +24,7 @@ const Fees = () => {
       merchant_id: "5",
       merchant_passwd: "12345",
       order_id: "3",
-      order_amount: 2020,
+      order_amount: 2000,
       description: "Test",
     };
     console.log(data);
@@ -74,8 +74,9 @@ const Fees = () => {
           ></iframe>
         </CModalBody>
       </CModal> */}
-
-      <CButton onClick={addResponce}>ADD</CButton>
+      <CContainer>
+        <CButton onClick={addResponce}>ADD</CButton>
+      </CContainer>
     </>
   );
 };

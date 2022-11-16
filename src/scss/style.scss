@@ -39,12 +39,23 @@ $enable-rtl: true;
     border: none;
   }
 
+  .merchant_img{
+      height: 200px;
+    width: 200px;
+    margin-left: 22px;
+  }
+
+  .merchant_img img{
+    height: 200px;
+    width: 200px;
+  }
+
 // .payment_wrapper :hover{
 //     background-color:  rgb(235, 233, 233);
 // }
 
-.btn:hover{
-    border: 0;
-    background-color:  white!important;
-    border-color: rgb(235, 233, 233);
-}
+// .btn:hover{
+//     border: 0;
+//     background-color:  white!important;
+//     border-color: rgb(235, 233, 233);
+// }

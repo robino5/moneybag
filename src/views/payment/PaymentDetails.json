@@ -1,0 +1,12 @@
+ [
+  {
+    "paymode": "MASTER",
+    "currency": "USD",
+    "charge_amount": 5
+  },
+  {
+    "paymode": "VISA",
+    "currency": "USD",
+    "charge_amount": 8
+  }
+]
