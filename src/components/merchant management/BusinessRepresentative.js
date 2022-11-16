@@ -92,11 +92,22 @@ const BusinessRepresentative = ({ clickNext }) => {
   const uploadFile = (e) => {
     var data = new FormData();
     data.append("file", e.target.files[0]);
+    document.getElementById("preview-button").disabled=true
 
-    axios
+    if(e.target.files[0].size >5e6){
+      swal({
+        position: "top-end",
+        text: "Your File is too Large! Please provide the file below 5MB.",
+        icon: "warning",
+        button: false,
+        timer: 3000,
+      });
+          e.target.value=null;
+    }else{
+      axios
       .post(`${process.env.REACT_APP_API_URL}uploads/upload`, data)
       .then((response) => {
-        console.log(response), setImage(response.data.fileName);
+        console.log(response), setImage(response.data.fileName); document.getElementById("preview-button").disabled=false
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -108,6 +119,7 @@ const BusinessRepresentative = ({ clickNext }) => {
           timer: 1500,
         });
       });
+    }
   };
 
   const openFile = () => {
@@ -265,7 +277,7 @@ const BusinessRepresentative = ({ clickNext }) => {
             <CFormInput type="file" onChange={uploadFile} />
           </CCol>
           <CCol sm={1}>
-            <CButton onClick={openFile}>
+            <CButton id="preview-button" onClick={openFile}>
               <CIcon className="text-light" icon={cilLowVision} />
             </CButton>
           </CCol>
