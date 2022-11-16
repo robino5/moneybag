@@ -15,7 +15,7 @@ import {
   CModalFooter,
 } from "@coreui/react";
 
-const PaymetBank = () => {
+const Fees = () => {
   // const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
 
@@ -43,7 +43,7 @@ const PaymetBank = () => {
           button: false,
           timer: 1500,
         });
-        navigate("/payment-details", {
+        navigate("/payment", {
           state: response.data.session_id,
         });
       })
@@ -80,4 +80,4 @@ const PaymetBank = () => {
   );
 };
 
-export default PaymetBank;
+export default Fees;

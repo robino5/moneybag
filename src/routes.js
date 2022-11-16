@@ -195,11 +195,11 @@ const MerchantStoreUpdate = React.lazy(() =>
   import("./components/merchant management/merchant store/MerchantStoreUpdate")
 );
 
-const PaymetBank = React.lazy(() => import("./components/payment/PaymetBank"));
+// const Fees = React.lazy(() => import("./views/payment/Fees"));
 
-const PaymentDetail = React.lazy(() =>
-  import("./components/payment/PaymentDetail")
-);
+// const Payment = React.lazy(() =>
+//   import("./views/payment/Payment")
+// );
 
 const DefaultService = React.lazy(() =>
   import("./components/default-service/DefaultService")
@@ -470,16 +470,16 @@ const routes = [
     name: "merchant_management",
     element: BankDetailsUpdate,
   },
-  {
-    path: "/bank-payment",
-    name: "bank-payment",
-    element: PaymetBank,
-  },
-  {
-    path: "/payment-details",
-    name: "payment-details",
-    element: PaymentDetail,
-  },
+  // {
+  //   path: "/payment",
+  //   name: "payment",
+  //   element: Payment,
+  // },
+  // {
+  //   path: "/selected-Fees",
+  //   name: "selected-Fees",
+  //   element: Fees,
+  // },
   {
     path: "/merchant-store",
     name: "merchant-store",

@@ -15,3 +15,36 @@ $enable-rtl: true;
 
 // If you want to add custom CSS you can put it here.
 @import "custom";
+
+.payment_wrapper{
+    background: white;
+    border: #4c4848;
+    padding: 4px;
+}
+
+.payment_logo_wrapper{
+  border-radius: 0;
+  border-color: rgb(235, 233, 233);
+ 
+}
+
+.payment_logo_wrapper img{
+    border-radius: 0;
+    border-color: rgb(235, 233, 233);
+    
+}
+
+.payment_logo_wrapper :hover{
+    border-radius: 0;
+    border: none;
+  }
+
+// .payment_wrapper :hover{
+//     background-color:  rgb(235, 233, 233);
+// }
+
+.btn:hover{
+    border: 0;
+    background-color:  white!important;
+    border-color: rgb(235, 233, 233);
+}
