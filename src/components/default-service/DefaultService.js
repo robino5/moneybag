@@ -25,7 +25,7 @@ const DefaultService = () => {
   const {
     register,
     getFieldState,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, dirtyFields },
     handleSubmit,
     setValue,
     reset,
@@ -36,6 +36,8 @@ const DefaultService = () => {
   // const [serviceList, setServiceList] = useState();
   const [lookupList, setLooupList] = useState();
   const [defaultService, setdefaultService] = useState();
+
+  const isCheck = true;
 
   const getDefaultServiceList = async () => {
     const headers = {
@@ -83,6 +85,8 @@ const DefaultService = () => {
       });
   };
 
+  console.log("dirty", dirtyFields);
+
   const saveDefaultService = (e) => {
     const data = [];
     let duplicate = false;
@@ -95,7 +99,6 @@ const DefaultService = () => {
         return false;
       }
     });
-
     if (duplicate) {
       swal({
         position: "top-end",
@@ -145,77 +148,80 @@ const DefaultService = () => {
   const setDefaultcheck = (e) => {
     if (e === 1) {
       return true;
-    } else {
+    } else if (e === 0) {
       return false;
     }
   };
 
+  // setDefaultcheck(defaultService && defaultService.is_active);
+  // console.log(isCheck);
+
   const updateDefaultService = (e) => {
     console.log(e);
-    let duplicate = false;
-    defaultServiceList?.forEach((element) => {
-      if (
-        element.bank_no === parseInt(e.bank_no) &&
-        element.service_no === parseInt(e.service_no)
-      ) {
-        duplicate = true;
-        return false;
-      }
-    });
+    // let duplicate = false;
+    // defaultServiceList?.forEach((element) => {
+    //   if (
+    //     element.bank_no === parseInt(e.bank_no) &&
+    //     element.service_no === parseInt(e.service_no)
+    //   ) {
+    //     duplicate = true;
+    //     return false;
+    //   }
+    // });
 
-    if (duplicate) {
-      swal({
-        position: "top-end",
-        text: "You can't duplicate Service Entry!",
-        icon: "warning",
-        button: false,
-        timer: 3000,
-      });
-    } else {
-      let data = {
-        service_no:
-          e.service_no === ""
-            ? defaultService.service_no
-            : parseInt(e.service_no),
-        bank_no:
-          e.bank_no === "" ? defaultService.bank_no : parseInt(e.bank_no),
-        is_active: e.active ? 1 : 0,
-      };
-      console.log(data);
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      };
-      axios
-        .post(
-          `${process.env.REACT_APP_API_URL}default-services/update/${defaultService.id}`,
-          data,
-          {
-            headers,
-          }
-        )
-        .then((response) => {
-          console.log(response);
-          getDefaultServiceList();
-          reset();
-          swal({
-            position: "top-end",
-            text: "Store Created Successfull",
-            icon: "success",
-            button: false,
-            timer: 1500,
-          });
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-          swal({
-            position: "top-end",
-            text: error.response.data.detail,
-            icon: "error",
-            button: false,
-            timer: 1500,
-          });
-        });
-    }
+    // if (duplicate) {
+    //   swal({
+    //     position: "top-end",
+    //     text: "You can't duplicate Service Entry!",
+    //     icon: "warning",
+    //     button: false,
+    //     timer: 3000,
+    //   });
+    // } else {
+    //   let data = {
+    //     service_no:
+    //       e.service_no === ""
+    //         ? defaultService.service_no
+    //         : parseInt(e.service_no),
+    //     bank_no:
+    //       e.bank_no === "" ? defaultService.bank_no : parseInt(e.bank_no),
+    //     is_active: e.active ? 1 : 0,
+    //   };
+    //   console.log(data);
+    //   const headers = {
+    //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+    //   };
+    //   axios
+    //     .post(
+    //       `${process.env.REACT_APP_API_URL}default-services/update/${defaultService.id}`,
+    //       data,
+    //       {
+    //         headers,
+    //       }
+    //     )
+    //     .then((response) => {
+    //       console.log(response);
+    //       getDefaultServiceList();
+    //       reset();
+    //       swal({
+    //         position: "top-end",
+    //         text: "Store Created Successfull",
+    //         icon: "success",
+    //         button: false,
+    //         timer: 1500,
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       console.error("There was an error!", error);
+    //       swal({
+    //         position: "top-end",
+    //         text: error.response.data.detail,
+    //         icon: "error",
+    //         button: false,
+    //         timer: 1500,
+    //       });
+    //     });
+    // }
   };
 
   const getServiceOption = (e) => {
@@ -401,7 +407,8 @@ const DefaultService = () => {
                       <CFormCheck
                         label="Active"
                         defaultChecked={
-                          defaultService && defaultService.is_active == 1
+                          defaultService &&
+                          setDefaultcheck(defaultService.is_active)
                         }
                         {...register("active")}
                       />
