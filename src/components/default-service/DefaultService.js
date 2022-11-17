@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import swal from "sweetalert";
+import DataTable from "react-data-table-component";
 import axios from "axios";
 import CIcon from "@coreui/icons-react";
 import { cilPlus, cilMinus } from "@coreui/icons";
@@ -25,13 +26,30 @@ const DefaultService = () => {
     formState: { errors, isDirty },
     handleSubmit,
     setValue,
+    reset
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
+  const [defaultServiceList, setDefaultServiceList] = useState();
   const [organizationList, setOrganizationList] = useState();
   // const [serviceList, setServiceList] = useState();
   const [lookupList, setLooupList] = useState();
-  const [defaultService, setdefaultService] = useState([]);
+  const [defaultService, setdefaultService] = useState({});
 
+  const getDefaultServiceList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}default-services/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setDefaultServiceList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
   const getOrganization = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -63,50 +81,124 @@ const DefaultService = () => {
       });
   };
 
-  const saveDefaultServices = () => {
-    console.log("save", defaultService);
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}default-services/`,
-        defaultService,
-        {
-          headers,
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        swal({
-          position: "top-end",
-          text: "Store Created Successfull",
-          icon: "success",
-          button: false,
-          timer: 1500,
-        });
-        setdefaultService([]);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        swal({
-          position: "top-end",
-          text: error.response.data.detail,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
+  const saveDefaultService = (e) => {
+    const data = []
+    let duplicate = false
+    defaultServiceList?.forEach((element) => {
+      if (element.bank_no === parseInt(e.bank_name) && element.service_no === parseInt(e.service_name)) {
+        duplicate = true
+        return false
+      }
+    })
+
+    if (duplicate) {
+      swal({
+        position: "top-end",
+        text: "You can't duplicate Service Entry!",
+        icon: "warning",
+        button: false,
+        timer: 3000,
       });
+    }
+    else {
+      data.push({
+        service_no: parseInt(e.service_name),
+        bank_no: parseInt(e.bank_name),
+        is_active: e.status ? 1 : 0
+      })
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      };
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}default-services/`,
+          data,
+          {
+            headers,
+          }
+        )
+        .then((response) => {
+          console.log(response); getDefaultServiceList(); reset()
+          swal({
+            position: "top-end",
+            text: "Store Created Successfull",
+            icon: "success",
+            button: false,
+            timer: 1500,
+          });
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+          swal({
+            position: "top-end",
+            text: error.response.data.detail,
+            icon: "error",
+            button: false,
+            timer: 1500,
+          });
+        });
+    }
   };
 
-  const addDefaultService = (e) => {
-    console.log(e.service_name);
+  const updateDefaultService = (e) => {
+    console.log(e)
+    const data = []
+    let duplicate = false
+    defaultServiceList?.forEach((element) => {
+      if (element.bank_no === parseInt(e.bank_name) && element.service_no === parseInt(e.service_name)) {
+        duplicate = true
+        return false
+      }
+    })
 
-    defaultService.push({
-      service_no: parseInt(e.service_name),
-      bank_no: parseInt(e.bank_name),
-    });
-  };
+    if (duplicate) {
+      swal({
+        position: "top-end",
+        text: "You can't duplicate Service Entry!",
+        icon: "warning",
+        button: false,
+        timer: 3000,
+      });
+    }
+    else {
+      data.push({
+        service_no: parseInt(e.service_no),
+        bank_no: parseInt(e.bank_no),
+        is_active: e.status ? 1 : 0
+      })
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      };
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}default-services/`,
+          data,
+          {
+            headers,
+          }
+        )
+        .then((response) => {
+          console.log(response); getDefaultServiceList(); reset()
+          swal({
+            position: "top-end",
+            text: "Store Created Successfull",
+            icon: "success",
+            button: false,
+            timer: 1500,
+          });
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+          swal({
+            position: "top-end",
+            text: error.response.data.detail,
+            icon: "error",
+            button: false,
+            timer: 1500,
+          });
+        });
+    }
+  }
 
   const getServiceOption = (e) => {
     let Date = [];
@@ -116,12 +208,6 @@ const DefaultService = () => {
       }
     });
     return Date;
-  };
-
-  const removeDefaultService = (i) => {
-    let data = [...defaultService];
-    data.splice(i, 1);
-    setdefaultService(data);
   };
 
   const setBankName = (id) => {
@@ -149,9 +235,42 @@ const DefaultService = () => {
   console.log("push value:", defaultService);
 
   useEffect(() => {
+    getDefaultServiceList();
     getOrganization();
     getLookupList();
   }, []);
+
+  const comumn = [
+    {
+      name: "Service Name",
+      sortable: true,
+      selector: (row) => setServiceName(row.service_no),
+      minWidth: "100px",
+    },
+    {
+      name: "Bank Name",
+      selector: (row) => setBankName(row.bank_no),
+      minWidth: "250px",
+    },
+    {
+      name: "Status",
+      selector: (row) => (row.is_active == 1 ? "Active" : "Inactive"),
+    },
+    {
+      name: "Action",
+      selector: (row) => (
+        <div className="d-flex justify-content-center">
+          <CButton
+            className="btn btn-sm d-inline mx-1"
+            color="info"
+            onClick={() => { setdefaultService(row) }}
+          >
+            Update
+          </CButton>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row">
@@ -161,13 +280,11 @@ const DefaultService = () => {
             <h4 className="text-center">Assign Default Service for Moneybag</h4>
             <CCard className="p-4">
               <CCardBody>
-                <CForm onSubmit={handleSubmit(addDefaultService)}>
+                <CForm hidden={defaultService != null ? true : false} onSubmit={handleSubmit(saveDefaultService)}>
                   <CRow className="mb-3">
-                    <CCol sm={5}>
+                    <CCol sm={4}>
                       <CFormSelect
-                        {...register("service_name", {
-                          required: "Please Select Service",
-                        })}
+                        {...register("service_name")}
                         aria-label="Default select example"
                       >
                         <option>Select Service</option>
@@ -178,18 +295,13 @@ const DefaultService = () => {
                             </option>
                           ))}
                       </CFormSelect>
-                      <span className="text-danger">
-                        {errors.service_name?.message}
-                      </span>
                     </CCol>
                     <CCol sm={5}>
                       <CFormSelect
-                        {...register("bank_name", {
-                          required: "Please Select Bank",
-                        })}
+                        {...register("bank_name")}
                         aria-label="Default select example"
                       >
-                        <option>Select Bank</option>
+                        <option>Select Fintech</option>
                         {organizationList &&
                           organizationList.map((organization, index) => (
                             <option value={organization.id} key={index}>
@@ -197,12 +309,13 @@ const DefaultService = () => {
                             </option>
                           ))}
                       </CFormSelect>
-                      <span className="text-danger">
-                        {errors.bank_name?.message}
-                      </span>
+                    </CCol>
+                    <CCol sm={2}>
+                      <CFormCheck label="Active" {...register("status")} />
                     </CCol>
                     <CCol sm={1}>
                       <CButton
+
                         className="btn-sm"
                         disabled={!isDirty}
                         type="submit"
@@ -212,7 +325,61 @@ const DefaultService = () => {
                     </CCol>
                   </CRow>
                 </CForm>
-                {defaultService &&
+                <CForm hidden={defaultService == null ? true : false} onSubmit={handleSubmit(updateDefaultService)}>
+                  <CRow className="mb-3">
+                    <CCol sm={4}>
+                      <CFormSelect
+                        {...register("service_no")}
+                        aria-label="Default select example"
+                      >
+                        {lookupList &&
+                          getServiceOption(lookupList).map((servie, index) => (
+                            <option value={servie.id}
+                              selected={ defaultService&&defaultService.service_no === servie.id ? "selected" : ""}
+                              key={index}>
+                              {servie.name}
+                            </option>
+                          ))}
+                      </CFormSelect>
+                    </CCol>
+                    <CCol sm={5}>
+                      <CFormSelect
+                        {...register("bank_no")}
+                        aria-label="Default select example"
+                      >
+                        {organizationList &&
+                          organizationList.map((organization, index) => (
+                            <option value={organization.id}
+                              selected={defaultService && defaultService.bank_no === organization.id}
+                              key={index}>
+                              {organization.name}
+                            </option>
+                          ))}
+                      </CFormSelect>
+                    </CCol>
+                    <CCol sm={2}>
+                      <CFormCheck label="Active"
+                        defaultChecked={defaultService && defaultService.bank_no == 1?true:false}
+                        {...register("active")} />
+                    </CCol>
+                    <CCol sm={1}>
+                      <CButton
+                        className="btn-sm"
+                        type="submit"
+                      >
+                        Update
+                      </CButton>
+                    </CCol>
+                  </CRow>
+                </CForm>
+                <DataTable
+                  title="Default Service List"
+                  columns={comumn}
+                  data={defaultServiceList}
+                  pagination
+                  expandableCol
+                />
+                {/* {defaultService &&
                   defaultService.map((defaultservice, index) => {
                     return (
                       <div>
@@ -248,7 +415,7 @@ const DefaultService = () => {
                   <CButton onClick={saveDefaultServices} color="success">
                     Save
                   </CButton>
-                </div>
+                </div> */}
               </CCardBody>
             </CCard>
           </CCol>
