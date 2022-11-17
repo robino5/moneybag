@@ -47,8 +47,6 @@ const _nav = [
         to: "/branch",
       },
 
-    
-
       // {
       //   component: CNavItem,
       //   name: "Financial Organization",
@@ -90,7 +88,7 @@ const _nav = [
       {
         component: CNavItem,
         name: "Default Service",
-        to: "/default-service",
+        to: "/default-servic/add-default-service",
       },
     ],
   },

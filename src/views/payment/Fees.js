@@ -21,10 +21,10 @@ const Fees = () => {
 
   const addResponce = () => {
     const data = {
-      merchant_id: "5",
+      merchant_id: "000003",
       merchant_passwd: "12345",
-      order_id: "3",
-      order_amount: 2000,
+      order_id: "TXN01010102",
+      order_amount: 200,
       description: "Test",
     };
     console.log(data);

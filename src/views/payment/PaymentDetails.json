@@ -2,7 +2,7 @@
   {
     "paymode": "MASTER",
     "currency": "USD",
-    "charge_amount": 5
+    "charge_amount": 20
   },
   {
     "paymode": "VISA",

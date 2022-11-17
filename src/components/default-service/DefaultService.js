@@ -5,7 +5,7 @@ import swal from "sweetalert";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import CIcon from "@coreui/icons-react";
-import { cilPlus, cilMinus } from "@coreui/icons";
+import { cilPlus, cilPen } from "@coreui/icons";
 import {
   CCard,
   CCardBody,
@@ -19,21 +19,23 @@ import {
   CFormCheck,
   CButton,
 } from "@coreui/react";
+import { findAllByText } from "@testing-library/react";
 
 const DefaultService = () => {
   const {
     register,
+    getFieldState,
     formState: { errors, isDirty },
     handleSubmit,
     setValue,
-    reset
+    reset,
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
   const [defaultServiceList, setDefaultServiceList] = useState();
   const [organizationList, setOrganizationList] = useState();
   // const [serviceList, setServiceList] = useState();
   const [lookupList, setLooupList] = useState();
-  const [defaultService, setdefaultService] = useState({});
+  const [defaultService, setdefaultService] = useState();
 
   const getDefaultServiceList = async () => {
     const headers = {
@@ -82,14 +84,17 @@ const DefaultService = () => {
   };
 
   const saveDefaultService = (e) => {
-    const data = []
-    let duplicate = false
+    const data = [];
+    let duplicate = false;
     defaultServiceList?.forEach((element) => {
-      if (element.bank_no === parseInt(e.bank_name) && element.service_no === parseInt(e.service_name)) {
-        duplicate = true
-        return false
+      if (
+        element.bank_no === parseInt(e.bank_name) &&
+        element.service_no === parseInt(e.service_name)
+      ) {
+        duplicate = true;
+        return false;
       }
-    })
+    });
 
     if (duplicate) {
       swal({
@@ -99,26 +104,23 @@ const DefaultService = () => {
         button: false,
         timer: 3000,
       });
-    }
-    else {
+    } else {
       data.push({
         service_no: parseInt(e.service_name),
         bank_no: parseInt(e.bank_name),
-        is_active: e.status ? 1 : 0
-      })
+        is_active: e.status ? 1 : 0,
+      });
       const headers = {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       };
       axios
-        .post(
-          `${process.env.REACT_APP_API_URL}default-services/`,
-          data,
-          {
-            headers,
-          }
-        )
+        .post(`${process.env.REACT_APP_API_URL}default-services/`, data, {
+          headers,
+        })
         .then((response) => {
-          console.log(response); getDefaultServiceList(); reset()
+          console.log(response);
+          getDefaultServiceList();
+          reset();
           swal({
             position: "top-end",
             text: "Store Created Successfull",
@@ -140,16 +142,26 @@ const DefaultService = () => {
     }
   };
 
+  const setDefaultcheck = (e) => {
+    if (e === 1) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const updateDefaultService = (e) => {
-    console.log(e)
-    const data = []
-    let duplicate = false
+    console.log(e);
+    let duplicate = false;
     defaultServiceList?.forEach((element) => {
-      if (element.bank_no === parseInt(e.bank_name) && element.service_no === parseInt(e.service_name)) {
-        duplicate = true
-        return false
+      if (
+        element.bank_no === parseInt(e.bank_no) &&
+        element.service_no === parseInt(e.service_no)
+      ) {
+        duplicate = true;
+        return false;
       }
-    })
+    });
 
     if (duplicate) {
       swal({
@@ -159,26 +171,32 @@ const DefaultService = () => {
         button: false,
         timer: 3000,
       });
-    }
-    else {
-      data.push({
-        service_no: parseInt(e.service_no),
-        bank_no: parseInt(e.bank_no),
-        is_active: e.status ? 1 : 0
-      })
+    } else {
+      let data = {
+        service_no:
+          e.service_no === ""
+            ? defaultService.service_no
+            : parseInt(e.service_no),
+        bank_no:
+          e.bank_no === "" ? defaultService.bank_no : parseInt(e.bank_no),
+        is_active: e.active ? 1 : 0,
+      };
+      console.log(data);
       const headers = {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       };
       axios
         .post(
-          `${process.env.REACT_APP_API_URL}default-services/`,
+          `${process.env.REACT_APP_API_URL}default-services/update/${defaultService.id}`,
           data,
           {
             headers,
           }
         )
         .then((response) => {
-          console.log(response); getDefaultServiceList(); reset()
+          console.log(response);
+          getDefaultServiceList();
+          reset();
           swal({
             position: "top-end",
             text: "Store Created Successfull",
@@ -198,7 +216,7 @@ const DefaultService = () => {
           });
         });
     }
-  }
+  };
 
   const getServiceOption = (e) => {
     let Date = [];
@@ -245,12 +263,12 @@ const DefaultService = () => {
       name: "Service Name",
       sortable: true,
       selector: (row) => setServiceName(row.service_no),
-      minWidth: "100px",
+      minWidth: "150px",
     },
     {
       name: "Bank Name",
       selector: (row) => setBankName(row.bank_no),
-      minWidth: "250px",
+      minWidth: "200px",
     },
     {
       name: "Status",
@@ -263,7 +281,9 @@ const DefaultService = () => {
           <CButton
             className="btn btn-sm d-inline mx-1"
             color="info"
-            onClick={() => { setdefaultService(row) }}
+            onClick={() => {
+              setdefaultService(row);
+            }}
           >
             Update
           </CButton>
@@ -280,7 +300,10 @@ const DefaultService = () => {
             <h4 className="text-center">Assign Default Service for Moneybag</h4>
             <CCard className="p-4">
               <CCardBody>
-                <CForm hidden={defaultService != null ? true : false} onSubmit={handleSubmit(saveDefaultService)}>
+                <CForm
+                  hidden={defaultService != null ? true : false}
+                  onSubmit={handleSubmit(saveDefaultService)}
+                >
                   <CRow className="mb-3">
                     <CCol sm={4}>
                       <CFormSelect
@@ -315,17 +338,20 @@ const DefaultService = () => {
                     </CCol>
                     <CCol sm={1}>
                       <CButton
-
                         className="btn-sm"
                         disabled={!isDirty}
                         type="submit"
+                        color="success"
                       >
                         <CIcon icon={cilPlus} />
                       </CButton>
                     </CCol>
                   </CRow>
                 </CForm>
-                <CForm hidden={defaultService == null ? true : false} onSubmit={handleSubmit(updateDefaultService)}>
+                <CForm
+                  hidden={defaultService == null ? true : false}
+                  onSubmit={handleSubmit(updateDefaultService)}
+                >
                   <CRow className="mb-3">
                     <CCol sm={4}>
                       <CFormSelect
@@ -334,9 +360,16 @@ const DefaultService = () => {
                       >
                         {lookupList &&
                           getServiceOption(lookupList).map((servie, index) => (
-                            <option value={servie.id}
-                              selected={ defaultService&&defaultService.service_no === servie.id ? "selected" : ""}
-                              key={index}>
+                            <option
+                              value={servie.id}
+                              selected={
+                                defaultService &&
+                                defaultService.service_no === servie.id
+                                  ? "selected"
+                                  : ""
+                              }
+                              key={index}
+                            >
                               {servie.name}
                             </option>
                           ))}
@@ -349,25 +382,33 @@ const DefaultService = () => {
                       >
                         {organizationList &&
                           organizationList.map((organization, index) => (
-                            <option value={organization.id}
-                              selected={defaultService && defaultService.bank_no === organization.id}
-                              key={index}>
+                            <option
+                              value={organization.id}
+                              selected={
+                                defaultService &&
+                                defaultService.bank_no === organization.id
+                                  ? "selected"
+                                  : ""
+                              }
+                              key={index}
+                            >
                               {organization.name}
                             </option>
                           ))}
                       </CFormSelect>
                     </CCol>
                     <CCol sm={2}>
-                      <CFormCheck label="Active"
-                        defaultChecked={defaultService && defaultService.bank_no == 1?true:false}
-                        {...register("active")} />
+                      <CFormCheck
+                        label="Active"
+                        defaultChecked={
+                          defaultService && defaultService.is_active == 1
+                        }
+                        {...register("active")}
+                      />
                     </CCol>
                     <CCol sm={1}>
-                      <CButton
-                        className="btn-sm"
-                        type="submit"
-                      >
-                        Update
+                      <CButton color="info" className="btn-sm" type="submit">
+                        <CIcon icon={cilPen} />
                       </CButton>
                     </CCol>
                   </CRow>

@@ -27,6 +27,7 @@ const Payment = () => {
   const [paymentDetail, setPaymentDetail] = useState();
   const [chargeDetail, setChargeDetail] = useState();
   const location = useLocation();
+  const navigate = useNavigate();
   console.log(paymentDetail);
   console.log("charge", chargeDetail);
   const getPaymentList = () => {
@@ -55,11 +56,11 @@ const Payment = () => {
 
   const submitPayment = () => {
     const paymentData = {
-      merchant_id: paymentDetail.merchant_id,
-      order_amount: paymentDetail.order_amount,
-      charge_amount: chargeDetail.charge_amount,
-      order_id: paymentDetail.order_id,
-      currency: chargeDetail.currency,
+      merchant_id: "000003",
+      order_amount: "200",
+      charge_amount: "20",
+      order_id: "TXN01010102",
+      description: "A Test of Python 2",
       paymode: chargeDetail.paymode,
     };
     console.log(paymentData);
@@ -71,7 +72,8 @@ const Payment = () => {
         headers,
       })
       .then((response) => {
-        console.log(response);
+        console.log(response.data.redirectUrl);
+        window.open(response.data.redirectUrl);
       })
       .catch((error) => {
         console.error("There was an error!", error);
