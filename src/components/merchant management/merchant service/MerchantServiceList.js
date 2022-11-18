@@ -77,14 +77,17 @@ const StoreList = () => {
   };
 
   const selectMerchantId = (e) => {
-    let date;
-    MerchantService &&
-      MerchantService.map((element) => {
-        if (element.merchant_no == e) {
-          date = e;
+    let data = [];
+    e?.map((merchant) => {
+      for (let i = 0; i < MerchantService?.length; i++) {
+        if (MerchantService[i].merchant_no == merchant.id) {
+          data.push(merchant);
+          break;
         }
-      });
-    return date;
+      }
+    });
+    console.log("data", data);
+    return data;
   };
 
   const getMertchantDetail = (e, id) => {
@@ -126,45 +129,45 @@ const StoreList = () => {
     return bank_name;
   };
 
-  const deleteMercnantStore = (e) => {
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    swal({
-      title: "Are you sure?",
-      text: "Do you want to delete the data?",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        axios
-          .delete(`${process.env.REACT_APP_API_URL}merchant-stores/${e}`, {
-            headers,
-          })
-          .then((response) => {
-            console.log(response),
-              swal({
-                position: "top",
-                text: " Deleted Successfull",
-                icon: "success",
-                button: false,
-                timer: 1500,
-              });
-            getOrganization();
-          })
-          .catch((error) => {
-            console.log(error),
-              swal({
-                text: error.response.data.detail,
-                icon: "error",
-                button: false,
-                timer: 1500,
-              });
-          });
-      }
-    });
-  };
+  // const deleteMercnantStore = (e) => {
+  //   const headers = {
+  //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //   };
+  //   swal({
+  //     title: "Are you sure?",
+  //     text: "Do you want to delete the data?",
+  //     icon: "warning",
+  //     buttons: true,
+  //     dangerMode: true,
+  //   }).then((willDelete) => {
+  //     if (willDelete) {
+  //       axios
+  //         .delete(`${process.env.REACT_APP_API_URL}merchant-stores/${e}`, {
+  //           headers,
+  //         })
+  //         .then((response) => {
+  //           console.log(response),
+  //             swal({
+  //               position: "top",
+  //               text: " Deleted Successfull",
+  //               icon: "success",
+  //               button: false,
+  //               timer: 1500,
+  //             });
+  //           getOrganization();
+  //         })
+  //         .catch((error) => {
+  //           console.log(error),
+  //             swal({
+  //               text: error.response.data.detail,
+  //               icon: "error",
+  //               button: false,
+  //               timer: 1500,
+  //             });
+  //         });
+  //     }
+  //   });
+  // };
 
   useEffect(() => {
     const getAllData = async () => {
@@ -179,7 +182,7 @@ const StoreList = () => {
   const columns = [
     {
       name: "Store Name",
-      selector: (row) => getMerchantName(selectMerchantId(row.id)),
+      selector: (row) => getMerchantName(row.id),
     },
     {
       name: "Collection Account name ",
@@ -206,13 +209,13 @@ const StoreList = () => {
       name: "Action",
       selector: (row) => (
         <div className="d-flex justify-content-center">
-          <CButton
+          {/* <CButton
             className="btn btn-sm d-inline mr-1"
             color="danger"
             onClick={() => deleteMerchatService(selectMerchantId(row.id))}
           >
             Delete
-          </CButton>
+          </CButton> */}
           <CButton
             className="btn btn-sm d-inline mx-1"
             color="info"
@@ -241,7 +244,7 @@ const StoreList = () => {
             <DataTable
               title="Merchant Service"
               columns={columns}
-              data={merchantList}
+              data={selectMerchantId(merchantList)}
             />
           </CCol>
         </CRow>
