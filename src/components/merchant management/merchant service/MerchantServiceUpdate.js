@@ -17,6 +17,10 @@ import {
   CRow,
   CFormCheck,
   CButton,
+  CModal,
+  CModalHeader,
+  CModalBody,
+  CModalTitle,
 } from "@coreui/react";
 
 const MerchantServiceUpdate = () => {
@@ -25,6 +29,7 @@ const MerchantServiceUpdate = () => {
     formState: { errors, isDirty },
     handleSubmit,
     setValue,
+    reset,
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
   const location = useLocation();
@@ -33,22 +38,11 @@ const MerchantServiceUpdate = () => {
   const [lookupList, setLooupList] = useState();
   const [merchantService, setMerchantServicee] = useState();
   const [marchantDetailList, setMarchentDetailsList] = useState();
-  const [chargeType, setChargeType] = useState();
   const [servicevalue, setServiceValue] = useState({});
-  const [slabservice, setSlabServce] = useState({
-    mrservice_no: 0,
-    from_slab_amount: 0,
-    to_slab_amount: 0,
-    charge_ammount: 0,
-  });
-  const [combinationservice, setCombinationServce] = useState({
-    mrservice_no: 0,
-    from_amount: 0,
-    to_amount: 0,
-    discount_amount: 0,
-    start_date: "",
-    end_date: "",
-  });
+  const [slabServiceList, setSlabServiceList] = useState();
+  const [slabService, setSlabServices] = useState();
+  const [serviceId, setServiceId] = useState();
+  const [visible, setVisible] = useState(false);
 
   const getMertchant = async () => {
     const headers = {
@@ -124,6 +118,22 @@ const MerchantServiceUpdate = () => {
       })
       .then((responce) => {
         console.log(responce.data), setLooupList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const getSlabServiceList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}merchant-slabs/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setSlabServiceList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -238,103 +248,23 @@ const MerchantServiceUpdate = () => {
     return data;
   };
 
-  const addslabServices = (e) => {
-    setSlabServce({
-      from_slab_amount: e.from_slab_amount,
-      to_slab_amount: e.to_slab_amount,
-      charge_ammount: e.charge_ammount,
-    });
-  };
+  // const addslabServices = (e) => {
+  //   setSlabServce({
+  //     from_slab_amount: e.from_slab_amount,
+  //     to_slab_amount: e.to_slab_amount,
+  //     charge_ammount: e.charge_ammount,
+  //   });
+  // };
 
-  const addCombinationServices = (e) => {
-    setCombinationServce({
-      from_amount: e.from_amount,
-      to_amount: e.to_amount,
-      discount_amount: e.discount_amount,
-      start_date: e.start_date,
-      end_date: e.end_date,
-    });
-  };
-
-  const saveSlabService = (e) => {
-    console.log(e);
-    let data = [];
-    e &&
-      e.map((element) => {
-        if (element.service_charge_type === "S") {
-          data.push({
-            mrservice_no: element.id,
-            from_slab_amount: parseFloat(slabservice.from_slab_amount),
-            to_slab_amount: parseFloat(slabservice.to_slab_amount),
-            charge_ammount: parseFloat(slabservice.charge_ammount),
-          });
-        }
-      });
-    console.log("slab", data);
-    if (data) {
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      };
-      axios
-        .post(`${process.env.REACT_APP_API_URL}merchant-slabs/`, data, {
-          headers,
-        })
-        .then((response) => {
-          console.log("slab res", response);
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-          swal({
-            position: "top-end",
-            text: error.response.data.detail,
-            icon: "error",
-            button: false,
-            timer: 1500,
-          });
-        });
-    }
-  };
-
-  const saveConbinationService = (e) => {
-    console.log(e);
-    let data = [];
-    e &&
-      e.map((element) => {
-        if (element.service_charge_type === "C") {
-          data.push({
-            mrservice_no: element.id,
-            from_amount: parseFloat(combinationservice.from_amount),
-            to_amount: parseFloat(combinationservice.to_amount),
-            discount_amount: parseFloat(combinationservice.discount_amount),
-            start_date: combinationservice.start_date,
-            end_date: combinationservice.end_date,
-          });
-        }
-      });
-    console.log(data);
-    if (data != null) {
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      };
-      axios
-        .post(`${process.env.REACT_APP_API_URL}merchant-combinations/`, data, {
-          headers,
-        })
-        .then((response) => {
-          console.log("conbination", response);
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-          swal({
-            position: "top-end",
-            text: error.response.data.detail,
-            icon: "error",
-            button: false,
-            timer: 1500,
-          });
-        });
-    }
-  };
+  // const addCombinationServices = (e) => {
+  //   setCombinationServce({
+  //     from_amount: e.from_amount,
+  //     to_amount: e.to_amount,
+  //     discount_amount: e.discount_amount,
+  //     start_date: e.start_date,
+  //     end_date: e.end_date,
+  //   });
+  // };
 
   const updateMerchantService = (e) => {
     const mercharDate = {
@@ -377,6 +307,70 @@ const MerchantServiceUpdate = () => {
           text: error.response.data.detail,
           icon: "error",
           position: "top-end",
+          button: false,
+          timer: 1500,
+        });
+      });
+  };
+
+  const setSlabService = (e) => {
+    console.log(e);
+    slabServiceList?.map((element) => {
+      if (element.mrservice_no == e) {
+        setSlabServices(element);
+        setServiceId(e);
+      }
+    });
+  };
+
+  const updateSlabCharge = (e) => {
+    const data = {
+      mrservice_no: serviceId,
+      from_slab_amount:
+        e.from_slab_amount == ""
+          ? slabService?.from_slab_amount
+          : parseFloat(e.from_slab_amount),
+      to_slab_amount:
+        e.to_slab_amount == ""
+          ? slabService?.to_slab_amount
+          : parseFloat(e.to_slab_amount),
+      charge_ammount:
+        e.charge_ammount == ""
+          ? slabService?.charge_ammount
+          : parseFloat(e.charge_ammount),
+    };
+    console.log(data);
+    console.log(slabService);
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}merchant-slabs/update/${slabService?.id}`,
+        data,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        console.log("servive", response);
+        setSlabServices();
+        setVisible(false);
+        reset();
+        swal({
+          position: "top-end",
+          text: "slab Update Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: error.response.data.detail,
+          icon: "error",
           button: false,
           timer: 1500,
         });
@@ -467,6 +461,7 @@ const MerchantServiceUpdate = () => {
       await getMerchantService();
       await getBankList();
       await getLookupList();
+      await getSlabServiceList();
     };
     getAllData();
   }, []);
@@ -625,102 +620,6 @@ const MerchantServiceUpdate = () => {
                     </CCol>
                   </CRow>
                 </CForm>
-                <CForm
-                  hidden={
-                    chargeType !== "S" || slabservice.from_slab_amount !== 0
-                      ? true
-                      : false
-                  }
-                  onSubmit={handleSubmit(addslabServices)}
-                >
-                  <CRow className="mb-3">
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="text"
-                        {...register("from_slab_amount")}
-                        placeholder="From Amount"
-                      />
-                    </CCol>
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="text"
-                        {...register("to_slab_amount")}
-                        placeholder="To Amount"
-                      />
-                    </CCol>
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="text"
-                        {...register("charge_ammount")}
-                        placeholder="Charge Amount"
-                      />
-                    </CCol>
-                    <CCol sm={1}>
-                      <CButton
-                        className="btn-sm"
-                        disabled={!isDirty}
-                        type="submit"
-                      >
-                        Save
-                      </CButton>
-                    </CCol>
-                  </CRow>
-                </CForm>
-                <CForm
-                  hidden={
-                    chargeType !== "C" || combinationservice.from_amount !== 0
-                      ? true
-                      : false
-                  }
-                  onSubmit={handleSubmit(addCombinationServices)}
-                >
-                  <CRow className="mb-3">
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="text"
-                        {...register("from_amount")}
-                        placeholder="From Amount"
-                      />
-                    </CCol>
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="text"
-                        {...register("to_amount")}
-                        placeholder="To Amount"
-                      />
-                    </CCol>
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="text"
-                        {...register("discount_amount")}
-                        placeholder="Discount Amount"
-                      />
-                    </CCol>
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="datetime-local"
-                        {...register("start_date")}
-                        placeholder="Start Date"
-                      />
-                    </CCol>
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="datetime-local"
-                        {...register("end_date")}
-                        placeholder="End Date"
-                      />
-                    </CCol>
-                    <CCol sm={1}>
-                      <CButton
-                        className="btn-sm"
-                        disabled={!isDirty}
-                        type="submit"
-                      >
-                        Save
-                      </CButton>
-                    </CCol>
-                  </CRow>
-                </CForm>
                 {merchantList &&
                   selectMerchatServices(merchantService, location.state).map(
                     (element, index) => {
@@ -734,10 +633,24 @@ const MerchantServiceUpdate = () => {
                               <p>{getServiceName(element.service_no)}</p>
                             </CCol>
                             <CCol sm={2}>
-                              <p>{element.charge_ammount}</p>
+                              <p>
+                                {element.service_charge_type == "S"
+                                  ? 0
+                                  : element.charge_ammount}
+                              </p>
                             </CCol>
                             <CCol sm={2}>
-                              <p>
+                              <p
+                                className={
+                                  element.service_charge_type == "S"
+                                    ? "service_charge_type_wrapper"
+                                    : ""
+                                }
+                                onClick={() => {
+                                  setSlabService(element.id),
+                                    setVisible(!visible);
+                                }}
+                              >
                                 {getChargeType(element.service_charge_type)}
                               </p>
                             </CCol>
@@ -783,6 +696,58 @@ const MerchantServiceUpdate = () => {
           </CCol>
         </CRow>
       </CContainer>
+      <CModal visible={visible} onClose={() => setVisible(false)}>
+        <CModalHeader onClose={() => setVisible(false)}>
+          <CModalTitle>Update Slab Charge</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CForm onSubmit={handleSubmit(updateSlabCharge)}>
+            <CRow className="mb-3">
+              <CFormLabel className="col-sm-3 col-form-label">
+                From Slab Amount
+              </CFormLabel>
+              <CCol sm={9}>
+                <CFormInput
+                  type="text"
+                  defaultValue={slabService?.from_slab_amount}
+                  name="username"
+                  {...register("from_slab_amount")}
+                />
+              </CCol>
+            </CRow>
+            <CRow className="mb-3">
+              <CFormLabel className="col-sm-3 col-form-label">
+                To Slab Amount
+              </CFormLabel>
+              <CCol sm={9}>
+                <CFormInput
+                  type="text"
+                  defaultValue={slabService?.to_slab_amount}
+                  name="username"
+                  {...register("to_slab_amount")}
+                />
+              </CCol>
+            </CRow>
+            <CRow className="mb-3">
+              <CFormLabel className="col-sm-3 col-form-label">
+                Charge Amount
+              </CFormLabel>
+              <CCol sm={9}>
+                <CFormInput
+                  type="text"
+                  defaultValue={slabService?.charge_ammount}
+                  {...register("charge_ammount")}
+                />
+              </CCol>
+            </CRow>
+            <div className="text-center ">
+              <CButton type="submit" color="info">
+                Update
+              </CButton>
+            </div>
+          </CForm>
+        </CModalBody>
+      </CModal>
     </div>
   );
 };

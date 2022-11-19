@@ -105,8 +105,8 @@ const FintechUpdate = () => {
             organization_no: location.state.id,
             category_service_id: parseInt(element.category_service_id),
             service_type: parseInt(element.service_type),
-            end_point_url: element.end_point_url,
-            call_back_url: element.call_back_url,
+            end_point_url: "Test",
+            call_back_url: "Test",
             is_active: element.is_active ? 1 : 0,
           });
         });
@@ -142,8 +142,8 @@ const FintechUpdate = () => {
               organization_no: location.state.id,
               category_service_id: parseInt(element.category_service_id),
               service_type: parseInt(element.service_type),
-              end_point_url: element.end_point_url,
-              call_back_url: element.call_back_url,
+              end_point_url: "Test",
+              call_back_url: "Test",
               is_active: element.is_active ? 1 : 0,
             },
             {
@@ -494,18 +494,18 @@ const FintechUpdate = () => {
                     </CCol>
                   </CRow>
                   <CRow className="">
-                    <CCol sm={2}>
+                    <CCol sm={5}>
                       <p>Service Name</p>
                     </CCol>
-                    <CCol sm={2}>
+                    <CCol sm={5}>
                       <p>Service Category</p>
                     </CCol>
-                    <CCol sm={3}>
+                    {/* <CCol sm={3}>
                       <p>End Point Url</p>
                     </CCol>
                     <CCol sm={3}>
                       <p>Call Back Url</p>
-                    </CCol>
+                    </CCol> */}
                     <CCol sm={1}>
                       <p>Active?</p>
                     </CCol>
@@ -516,7 +516,7 @@ const FintechUpdate = () => {
                     getServices(serviceList).map((element, index) => {
                       return (
                         <CRow className="mb-3">
-                          <CCol sm={2}>
+                          <CCol sm={5}>
                             <CFormSelect
                               aria-label="Default select example"
                               type="number"
@@ -541,7 +541,7 @@ const FintechUpdate = () => {
                                 )}
                             </CFormSelect>
                           </CCol>
-                          <CCol sm={2}>
+                          <CCol sm={5}>
                             <CFormSelect
                               aria-label="Default select example"
                               type="number"
@@ -569,7 +569,7 @@ const FintechUpdate = () => {
                                 )}
                             </CFormSelect>
                           </CCol>
-                          <CCol sm={3}>
+                          {/* <CCol sm={3}>
                             <CFormInput
                               type="text"
                               defaultValue={element.end_point_url}
@@ -584,7 +584,7 @@ const FintechUpdate = () => {
                               {...register(`services.${index}.call_back_url`)}
                               placeholder="Call Back Url"
                             />
-                          </CCol>
+                          </CCol> */}
                           <CCol sm={1}>
                             <CFormCheck
                               name="status"
@@ -610,7 +610,7 @@ const FintechUpdate = () => {
                   {fields.map((service, index) => {
                     return (
                       <CRow className="mb-3" key={service.id}>
-                        <CCol sm={2}>
+                        <CCol sm={5}>
                           <CFormSelect
                             aria-label="Default select example"
                             type="number"
@@ -627,7 +627,7 @@ const FintechUpdate = () => {
                               )}
                           </CFormSelect>
                         </CCol>
-                        <CCol sm={2}>
+                        <CCol sm={5}>
                           <CFormSelect
                             aria-label="Default select example"
                             type="number"
@@ -646,7 +646,7 @@ const FintechUpdate = () => {
                               )}
                           </CFormSelect>
                         </CCol>
-                        <CCol sm={3}>
+                        {/* <CCol sm={3}>
                           <CFormInput
                             type="text"
                             {...register(`addServices.${index}.end_point_url`)}
@@ -659,7 +659,7 @@ const FintechUpdate = () => {
                             {...register(`addServices.${index}.call_back_url`)}
                             placeholder="Call Back Url"
                           />
-                        </CCol>
+                        </CCol> */}
                         <CCol sm={1}>
                           <CFormCheck
                             name="status"

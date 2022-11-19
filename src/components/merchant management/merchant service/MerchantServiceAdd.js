@@ -17,6 +17,10 @@ import {
   CRow,
   CFormCheck,
   CButton,
+  CModal,
+  CModalHeader,
+  CModalBody,
+  CModalTitle,
 } from "@coreui/react";
 
 const MerchantServiceAdd = () => {
@@ -33,23 +37,8 @@ const MerchantServiceAdd = () => {
   const [merchantService, setMerchantServicee] = useState([]);
   const [marchantDetailList, setMarchentDetailsList] = useState();
   const [marchantDetail, setMarchentDetail] = useState();
-  const [chargeType, setChargeType] = useState();
-  const [slabservice, setSlabServce] = useState({
-    mrservice_no: 0,
-    from_slab_amount: 0,
-    to_slab_amount: 0,
-    charge_ammount: 0,
-  });
-  const [combinationservice, setCombinationServce] = useState({
-    mrservice_no: 0,
-    from_amount: 0,
-    to_amount: 0,
-    discount_amount: 0,
-    start_date: "",
-    end_date: "",
-  });
-
-  console.log("Combination", combinationservice);
+  const [visible, setVisible] = useState(false);
+  const [slabId, setSlabId] = useState();
 
   const getMertchant = async () => {
     const headers = {
@@ -202,113 +191,31 @@ const MerchantServiceAdd = () => {
     return merchatname;
   };
 
-  const addslabServices = (e) => {
-    setSlabServce({
-      from_slab_amount: e.from_slab_amount,
-      to_slab_amount: e.to_slab_amount,
-      charge_ammount: e.charge_ammount,
-    });
-  };
-
-  const addCombinationServices = (e) => {
-    setCombinationServce({
-      from_amount: e.from_amount,
-      to_amount: e.to_amount,
-      discount_amount: e.discount_amount,
-      start_date: e.start_date,
-      end_date: e.end_date,
-    });
-  };
-
-  const saveSlabService = (e) => {
-    console.log(e);
-    let data = [];
-    e &&
-      e.map((element) => {
-        if (element.service_charge_type === "S") {
-          data.push({
-            mrservice_no: element.id,
-            from_slab_amount: parseFloat(slabservice.from_slab_amount),
-            to_slab_amount: parseFloat(slabservice.to_slab_amount),
-            charge_ammount: parseFloat(slabservice.charge_ammount),
-          });
-        }
-      });
-    console.log("slab", data);
-    if (data) {
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      };
-      axios
-        .post(`${process.env.REACT_APP_API_URL}merchant-slabs/`, data, {
-          headers,
-        })
-        .then((response) => {
-          console.log("slab res", response);
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-          swal({
-            position: "top-end",
-            text: error.response.data.detail,
-            icon: "error",
-            button: false,
-            timer: 1500,
-          });
-        });
-    }
-  };
-
-  const saveConbinationService = (e) => {
-    console.log(e);
-    let data = [];
-    e &&
-      e.map((element) => {
-        if (element.service_charge_type === "C") {
-          data.push({
-            mrservice_no: element.id,
-            from_amount: parseFloat(combinationservice.from_amount),
-            to_amount: parseFloat(combinationservice.to_amount),
-            discount_amount: parseFloat(combinationservice.discount_amount),
-            start_date: combinationservice.start_date,
-            end_date: combinationservice.end_date,
-          });
-        }
-      });
-    console.log(data);
-    if (data != null) {
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      };
-      axios
-        .post(`${process.env.REACT_APP_API_URL}merchant-combinations/`, data, {
-          headers,
-        })
-        .then((response) => {
-          console.log("conbination", response);
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-          swal({
-            position: "top-end",
-            text: error.response.data.detail,
-            icon: "error",
-            button: false,
-            timer: 1500,
-          });
-        });
-    }
-  };
-
   const addMerchantServices = (e) => {
-    const merchantServiceData = {
-      merchant_no: parseInt(e.merchant_name),
-      bank_no: parseInt(e.bank_name),
-      service_no: parseInt(e.service_name),
-      charge_ammount: e.percentage === "" ? 0 : parseFloat(e.percentage),
-      service_charge_type: e.service_charge_type,
-    };
-    merchantService.push(merchantServiceData);
+    let duplicate = false;
+    merchantService?.map((marchant) => {
+      if (marchant.service_no === parseInt(e.service_name)) {
+        duplicate = true;
+      }
+    });
+    if (duplicate) {
+      swal({
+        position: "top-end",
+        text: "You can't duplicate Service Entry!",
+        icon: "warning",
+        button: false,
+        timer: 3000,
+      });
+    } else {
+      const merchantServiceData = {
+        merchant_no: parseInt(e.merchant_name),
+        bank_no: parseInt(e.bank_name),
+        service_no: parseInt(e.service_name),
+        charge_ammount: e.percentage === "" ? 0 : parseFloat(e.percentage),
+        service_charge_type: e.service_charge_type,
+      };
+      merchantService.push(merchantServiceData);
+    }
   };
 
   const saveMerchantServices = () => {
@@ -325,8 +232,8 @@ const MerchantServiceAdd = () => {
       )
       .then((response) => {
         console.log("servive", response);
-        saveSlabService(response.data);
-        saveConbinationService(response.data);
+        setMerchantServicee(response.data);
+
         swal({
           position: "top-end",
           text: "Store Created Successfull",
@@ -334,7 +241,52 @@ const MerchantServiceAdd = () => {
           button: false,
           timer: 1500,
         });
-        navigate("/merchant-service");
+        // navigate("/merchant-service");
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: error.response.data.detail,
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
+      });
+  };
+
+  // const saveSlab = (e, id) => {
+  //   console.log(id), console.log(e);
+  // };
+
+  const SaveSlabCharge = (e) => {
+    console.log(slabId);
+    console.log(e);
+    let data = [];
+
+    data.push({
+      mrservice_no: slabId,
+      from_slab_amount: parseInt(e.from_slab_amount),
+      to_slab_amount: parseInt(e.to_slab_amount),
+      charge_ammount: parseInt(e.charge_ammount),
+    });
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .post(`${process.env.REACT_APP_API_URL}merchant-slabs/`, data, {
+        headers,
+      })
+      .then((response) => {
+        console.log("servive", response);
+        swal({
+          position: "top-end",
+          text: "Slab charge Created Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
+        setVisible(false);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -462,15 +414,12 @@ const MerchantServiceAdd = () => {
                         {...register("service_charge_type", {
                           required: "Please select service charge type",
                         })}
-                        onChange={(e) => {
-                          setChargeType(e.target.value);
-                        }}
                       >
                         <option>Select service charge type</option>
                         <option value={"F"}>Fixed</option>
                         <option value={"P"}>Percentage </option>
                         <option value={"S"}>Slab </option>
-                        <option value={"C"}>Combination </option>
+                        {/* <option value={"C"}>Combination </option> */}
                       </CFormSelect>
                     </CCol>
                     <CCol sm={1}>
@@ -480,102 +429,6 @@ const MerchantServiceAdd = () => {
                         type="submit"
                       >
                         <CIcon icon={cilPlus} />
-                      </CButton>
-                    </CCol>
-                  </CRow>
-                </CForm>
-                <CForm
-                  hidden={
-                    chargeType !== "S" || slabservice.from_slab_amount !== 0
-                      ? true
-                      : false
-                  }
-                  onSubmit={handleSubmit(addslabServices)}
-                >
-                  <CRow className="mb-3">
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="text"
-                        {...register("from_slab_amount")}
-                        placeholder="From Amount"
-                      />
-                    </CCol>
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="text"
-                        {...register("to_slab_amount")}
-                        placeholder="To Amount"
-                      />
-                    </CCol>
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="text"
-                        {...register("charge_ammount")}
-                        placeholder="Charge Amount"
-                      />
-                    </CCol>
-                    <CCol sm={1}>
-                      <CButton
-                        className="btn-sm"
-                        disabled={!isDirty}
-                        type="submit"
-                      >
-                        Save
-                      </CButton>
-                    </CCol>
-                  </CRow>
-                </CForm>
-                <CForm
-                  hidden={
-                    chargeType !== "C" || combinationservice.from_amount !== 0
-                      ? true
-                      : false
-                  }
-                  onSubmit={handleSubmit(addCombinationServices)}
-                >
-                  <CRow className="mb-3">
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="text"
-                        {...register("from_amount")}
-                        placeholder="From Amount"
-                      />
-                    </CCol>
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="text"
-                        {...register("to_amount")}
-                        placeholder="To Amount"
-                      />
-                    </CCol>
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="text"
-                        {...register("discount_amount")}
-                        placeholder="Discount Amount"
-                      />
-                    </CCol>
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="datetime-local"
-                        {...register("start_date")}
-                        placeholder="Start Date"
-                      />
-                    </CCol>
-                    <CCol sm={3}>
-                      <CFormInput
-                        type="datetime-local"
-                        {...register("end_date")}
-                        placeholder="End Date"
-                      />
-                    </CCol>
-                    <CCol sm={1}>
-                      <CButton
-                        className="btn-sm"
-                        disabled={!isDirty}
-                        type="submit"
-                      >
-                        Save
                       </CButton>
                     </CCol>
                   </CRow>
@@ -592,10 +445,25 @@ const MerchantServiceAdd = () => {
                             <p>{getServiceName(element.service_no)}</p>
                           </CCol>
                           <CCol sm={2}>
-                            <p>{element.charge_ammount}</p>
+                            <p>
+                              {element.service_charge_type == "S"
+                                ? 0
+                                : element.charge_ammount}
+                            </p>
                           </CCol>
                           <CCol sm={3}>
-                            <p>{getChargeType(element.service_charge_type)}</p>
+                            <p
+                              className={
+                                element.service_charge_type == "S"
+                                  ? "service_charge_type_wrapper"
+                                  : ""
+                              }
+                              onClick={() => {
+                                setSlabId(element.id), setVisible(!visible);
+                              }}
+                            >
+                              {getChargeType(element.service_charge_type)}
+                            </p>
                           </CCol>
                           <CCol sm={1}>
                             <CButton
@@ -627,6 +495,56 @@ const MerchantServiceAdd = () => {
           </CCol>
         </CRow>
       </CContainer>
+      <CModal visible={visible} onClose={() => setVisible(false)}>
+        <CModalHeader onClose={() => setVisible(false)}>
+          <CModalTitle>Add Slab Charge</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CForm onSubmit={handleSubmit(SaveSlabCharge)}>
+            <CRow className="mb-3">
+              <CFormLabel className="col-sm-3 col-form-label">
+                From Slab Amount
+              </CFormLabel>
+              <CCol sm={9}>
+                <CFormInput
+                  type="text"
+                  name="username"
+                  {...register("from_slab_amount")}
+                />
+              </CCol>
+            </CRow>
+            <CRow className="mb-3">
+              <CFormLabel className="col-sm-3 col-form-label">
+                To Slab Amount
+              </CFormLabel>
+              <CCol sm={9}>
+                <CFormInput
+                  type="text"
+                  name="username"
+                  {...register("to_slab_amount")}
+                />
+              </CCol>
+            </CRow>
+            <CRow className="mb-3">
+              <CFormLabel className="col-sm-3 col-form-label">
+                Charge Amount
+              </CFormLabel>
+              <CCol sm={9}>
+                <CFormInput
+                  type="text"
+                  name="username"
+                  {...register("charge_ammount")}
+                />
+              </CCol>
+            </CRow>
+            <div className="text-center ">
+              <CButton disabled={!isDirty} type="submit" color="success">
+                Save
+              </CButton>
+            </div>
+          </CForm>
+        </CModalBody>
+      </CModal>
     </div>
   );
 };
