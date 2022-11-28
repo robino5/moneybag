@@ -87,9 +87,37 @@ const MerchantUpdate = () => {
         return Date;
     };
 
-    const updateMerchat = (e) => {
-        console.log(e);
-    }
+    // const updateMerchat = (e) => {
+    //     const data ={
+    //         first_name: e.
+    //         last_name: 
+    //         email: 
+    //         address1: 
+    //         address2: 
+    //         city: 
+    //         state: 
+    //         postal_code: 
+    //         nid_number: 
+    //         country_no: parseInt(e.Reg_business_address),
+    //         business_type: parseInt(e.type_of_business),
+    //         business_name: e.business_name,
+    //         bin: e.business_no,
+    //         business_address1: e.b_address_line_1,
+    //         business_address2: e.b_address_line_2,
+    //         business_city: e.business_city,
+    //         business_state: 
+    //         business_postal_code: 
+    //         // marchant_id: e.merchant_id,
+    //         industry_no: parseInt(e.industry),
+    //         category_code: e.cat_code,
+    //         website: e.bussiness_website,
+    //         product_desc: e.Product_desc,
+    //         is_active: e.status ? 1 : 0,
+    //         upload_file: location.state.upload_file,
+    //         merchant_pic: 
+    //     }
+    //     console.log(e);
+    // }
 
     useEffect(() => {
         getLookupList();
