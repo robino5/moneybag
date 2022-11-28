@@ -43,9 +43,10 @@ const Fees = () => {
           button: false,
           timer: 1500,
         });
-        navigate("/payment", {
-          state: response.data.session_id,
-        });
+        window.open(`http://localhost/index/payment.php?sessionId=${response.data.session_id}`)
+        // navigate("/payment", {
+        //   state: response.data.session_id,
+        // });
       })
       .catch((error) => {
         console.error("There was an error!", error);

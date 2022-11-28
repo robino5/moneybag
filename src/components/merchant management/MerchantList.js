@@ -70,6 +70,11 @@ const MerchantList = () => {
 
   const comumn = [
     {
+      name: "Merchant Id",
+      sortable: true,
+      selector: (row) => row.marchant_id,
+    },
+    {
       name: "Merchant Name",
       sortable: true,
       selector: (row) => row.first_name + " " + row.last_name,
@@ -90,18 +95,18 @@ const MerchantList = () => {
       name: "Action",
       selector: (row) => (
         <div className="d-flex justify-content-center">
-          <CButton
+          {/* <CButton
             className="btn btn-sm d-inline mr-1"
             color="danger"
             // onClick={() => deleteOrganization(row.id)}
           >
             Delete
-          </CButton>
+          </CButton> */}
           <CButton
             className="btn btn-sm d-inline mx-1"
             color="info"
             onClick={() => {
-              //   navigate("/orgnization/update-orgnization", { state: row });
+                navigate("/merchant/update-merchant", { state: row });
             }}
           >
             Update

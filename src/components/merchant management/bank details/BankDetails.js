@@ -229,13 +229,13 @@ const BankDetails = ({ clickNext }) => {
       name: "Action",
       selector: (row) => (
         <div className="d-flex justify-content-center">
-          <CButton
+          {/* <CButton
             className="btn btn-sm d-inline mr-1"
             color="danger"
             // onClick={() => deleteOrganization(row.id)}
           >
             Delete
-          </CButton>
+          </CButton> */}
           <CButton
             className="btn btn-sm d-inline mx-1"
             color="info"

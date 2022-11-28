@@ -52,6 +52,7 @@ const BusinessDetails = ({ clickNext }) => {
       category_code: e.cat_code,
       website: e.bussiness_website,
       product_desc: e.Product_desc,
+      is_active: e.status ? 1 : 0,
       upload_file: localStorage.getItem("file"),
       merchant_pic: localStorage.getItem("merchant_pic"),
     };
@@ -167,7 +168,7 @@ const BusinessDetails = ({ clickNext }) => {
               })}
               type="number"
             >
-              <option>Select State</option>
+              <option>Select industry</option>
               {lookupList &&
                 getIndustryOption(lookupList).map((country, index) => (
                   <option value={country.id} key={index}>
@@ -211,6 +212,14 @@ const BusinessDetails = ({ clickNext }) => {
           </CFormLabel>
           <CCol sm={8}>
             <CFormTextarea type="text" {...register("Product_desc")} />
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            Status
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormCheck label="Active" {...register("status")} />
           </CCol>
         </CRow>
         <div className="text-center ">
