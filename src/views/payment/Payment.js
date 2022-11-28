@@ -56,12 +56,12 @@ const Payment = () => {
 
   const submitPayment = () => {
     const paymentData = {
-      merchant_id: "000003",
-      order_amount: "200",
-      charge_amount: "20",
-      order_id: "TXN01010102",
-      description: "A Test of Python 2",
-      paymode: chargeDetail.paymode,
+      merchant_id: "MK99333",
+      order_amount: "1",
+      charge_amount: "1",
+      order_id: "NAG00000001",
+      description: "A Test",
+      paymode: "NAGAD",
     };
     console.log(paymentData);
     const headers = {
