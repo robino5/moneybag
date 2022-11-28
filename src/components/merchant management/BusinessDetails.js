@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import {
   CCard,
   CCardBody,
+  CFormCheck,
   CFormSelect,
   CCol,
   CContainer,
@@ -215,9 +216,7 @@ const BusinessDetails = ({ clickNext }) => {
           </CCol>
         </CRow>
         <CRow className="mb-3">
-          <CFormLabel className="col-sm-4 col-form-label">
-            Status
-          </CFormLabel>
+          <CFormLabel className="col-sm-4 col-form-label">Status</CFormLabel>
           <CCol sm={8}>
             <CFormCheck label="Active" {...register("status")} />
           </CCol>
