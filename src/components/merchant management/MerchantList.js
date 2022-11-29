@@ -92,6 +92,10 @@ const MerchantList = () => {
       selector: (row) => row.website,
     },
     {
+      name: "Status",
+      selector: (row) => (row.is_active === 1 ? "Active" : "Inactive"),
+    },
+    {
       name: "Action",
       selector: (row) => (
         <div className="d-flex justify-content-center">

@@ -167,10 +167,10 @@ const SettelmentList = () => {
       name: "Account Name",
       selector: (row) => row.account_name,
     },
-    {
-      name: "Service Name",
-      selector: (row) => setservice(row),
-    },
+    // {
+    //   name: "Service Name",
+    //   selector: (row) => setservice(row),
+    // },
     {
       name: "Bank",
       selector: (row) => setBankName(row),

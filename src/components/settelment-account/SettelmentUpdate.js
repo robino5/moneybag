@@ -66,9 +66,7 @@ const SettelmentAdd = () => {
         e.select_branch_name === ""
           ? location.state.branch_id
           : parseInt(e.select_branch_name),
-      service_name: !service
-        ? location.state.service_name
-        : JSON.stringify(service),
+      service_name: "test",
       account_name: e.account_name,
       account_id: e.account_id,
       note: e.note,
@@ -325,12 +323,12 @@ const SettelmentAdd = () => {
                       </CFormSelect>
                     </CCol>
                   </CRow>
-                  <CRow className="mb-3">
+                  {/* <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Service Name
                     </CFormLabel>
                     <CCol sm={9}>
-                      {/* <CFormSelect
+                      <CFormSelect
                         aria-label="Default select example"
                         {...register("select_service_name")}
                       >
@@ -340,7 +338,7 @@ const SettelmentAdd = () => {
                               {service.service_name}
                             </option>
                           ))}
-                      </CFormSelect> */}
+                      </CFormSelect>
                       <Select
                         options={services}
                         isMulti
@@ -348,7 +346,7 @@ const SettelmentAdd = () => {
                         onChange={multipleInsert}
                       />
                     </CCol>
-                  </CRow>
+                  </CRow> */}
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Account Name
