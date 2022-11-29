@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import swal from "sweetalert";
 import axios from "axios";
+import Api from "../sheare/Api";
 import {
   CCard,
   CCardBody,
@@ -72,6 +73,7 @@ const OrganizationAdd = () => {
         });
       });
   };
+  Api.handleSubmit();
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row">
