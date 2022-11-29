@@ -27,6 +27,7 @@ const MerchantUpdate = () => {
     setValue,
   } = useForm({ mode: "all" });
   const location = useLocation();
+  const navigate = useNavigate();
   const [lookupList, setLooupList] = useState();
 
   console.log(location);
@@ -95,20 +96,20 @@ const MerchantUpdate = () => {
       address1: e.address_line_1,
       address2: e.address_line_2,
       city: e.city,
-      state: e.state,
+      state: e.state === "" ? location.state.state : parseInt(e.state),
       postal_code: e.postal_code,
       nid_number: e.national_id,
-      country_no: parseInt(e.Reg_business_address),
-      business_type: parseInt(e.type_of_business),
+      country_no: e.Reg_business_address === "" ? location.state.country_no : parseInt(e.Reg_business_address),
+      business_type: e.type_of_business === "" ? location.state.business_type : parseInt(e.type_of_business),
       business_name: e.business_name,
       bin: e.business_no,
       business_address1: e.b_address_line_1,
       business_address2: e.b_address_line_2,
-      business_city: e.business_city,
-      business_state: e.b_state,
+      business_city: e.b_city,
+      business_state: e.b_state === "" ? location.state.business_state : parseInt(e.b_state),
       business_postal_code: e.b_postel_code,
       // marchant_id: e.merchant_id,
-      industry_no: parseInt(e.industry),
+      industry_no:e.industry==="" ?location.state.industry_no:parseInt(e.industry),
       category_code: e.cat_code,
       website: e.bussiness_website,
       product_desc: e.Product_desc,
@@ -117,6 +118,38 @@ const MerchantUpdate = () => {
       merchant_pic: location.state.merchant_pic,
     };
     console.log(data);
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}marchants/update/${location.state.id}`,
+        data ,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        swal({
+          text: "Organization Updated Successfull",
+          icon: "success",
+          position: "top-end",
+          button: false,
+          timer: 1500,
+        });
+        navigate("/merchant");
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          text: error.response.data.detail,
+          icon: "error",
+          position: "top-end",
+          button: false,
+          timer: 1500,
+        });
+      });
   };
 
   useEffect(() => {
@@ -157,7 +190,6 @@ const MerchantUpdate = () => {
                             type="number"
                             {...register("Reg_business_address")}
                           >
-                            <option>Select Country</option>
                             {lookupList &&
                               getCountryOption(lookupList).map(
                                 (country, index) => (
@@ -187,7 +219,6 @@ const MerchantUpdate = () => {
                             type="number"
                             {...register("type_of_business")}
                           >
-                            <option>Type of Business</option>
                             {lookupList &&
                               getBusinessOption(lookupList).map(
                                 (country, index) => (
@@ -195,7 +226,7 @@ const MerchantUpdate = () => {
                                     value={country.id}
                                     selected={
                                       country.id ===
-                                      location.state.business_type
+                                        location.state.business_type
                                         ? "selected"
                                         : ""
                                     }
@@ -281,7 +312,6 @@ const MerchantUpdate = () => {
                             {...register("b_state")}
                             type="number"
                           >
-                            <option>Select State</option>
                             {lookupList &&
                               getStateOption(lookupList).map(
                                 (country, index) => (
@@ -289,7 +319,7 @@ const MerchantUpdate = () => {
                                     value={country.id}
                                     selected={
                                       country.id ==
-                                      location.state.business_state
+                                        location.state.business_state
                                         ? "selected"
                                         : ""
                                     }
@@ -353,7 +383,7 @@ const MerchantUpdate = () => {
                             label="Active"
                             {...register("status")}
                             defaultChecked={
-                              location.state.status == 1 ? true : false
+                              location.state.is_active== 1 ? true : false
                             }
                           />
                         </CCol>
@@ -441,8 +471,8 @@ const MerchantUpdate = () => {
                           <CFormInput
                             type="text"
                             defaultValue={location.state.address2}
-                            {...register("address_line_1")}
-                            placeholder="Address Line 1"
+                            {...register("address_line_2")}
+                            placeholder="Address Line 2"
                           />
                         </CCol>
                       </CRow>
@@ -456,7 +486,6 @@ const MerchantUpdate = () => {
                             {...register("state")}
                             type="number"
                           >
-                            <option>Select State</option>
                             {lookupList &&
                               getStateOption(lookupList).map(
                                 (country, index) => (
@@ -512,7 +541,6 @@ const MerchantUpdate = () => {
                             {...register("industry")}
                             type="number"
                           >
-                            <option>Select industry</option>
                             {lookupList &&
                               getIndustryOption(lookupList).map(
                                 (country, index) => (
@@ -547,10 +575,12 @@ const MerchantUpdate = () => {
                     </CCol>
                   </CRow>
                   <div className="text-center">
+                    <Link to="/merchant">
+                      <CButton color="danger">Cancle</CButton>
+                    </Link>
                     <CButton color="info" type="submit" className="mx-3">
                       Updata
                     </CButton>
-                    <CButton color="danger">Cancle</CButton>
                   </div>
                 </CForm>
               </CCardBody>

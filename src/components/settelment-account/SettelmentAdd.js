@@ -44,14 +44,13 @@ const SettelmentAdd = () => {
       org_no: parseInt(e.select_fintech),
       bank_id: parseInt(e.select_bank_name),
       branch_id: parseInt(e.select_branch_name),
-      service_name: JSON.stringify(service),
+      service_name: "tet",
       account_name: e.account_name,
       account_id: e.account_id,
       note: e.note,
       is_active: e.status ? 1 : 0,
     };
     console.log(sattelementAccount);
-    if (service) {
       const headers = {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       };
@@ -84,16 +83,7 @@ const SettelmentAdd = () => {
             timer: 1500,
           });
         });
-    } else {
-      swal({
-        position: "top-end",
-        text: "Please Select services",
-        icon: "warning",
-        button: false,
-        timer: 1500,
-      });
-    }
-  };
+    } 
 
   const getOrganization = () => {
     const headers = {
@@ -253,16 +243,16 @@ const SettelmentAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Bank Name
+                    Settelment Bank
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormSelect
                         aria-label="Default select example"
                         {...register("select_bank_name", {
-                          required: "Please Select Bank",
+                          required: "Please Settelment Bank",
                         })}
                       >
-                        <option>select Bank</option>
+                        <option>Settelment Bank</option>
                         {getBankOption(bankbranchList) &&
                           getBankOption(bankbranchList).map((bank, index) => (
                             <option value={bank.id} key={index}>
@@ -293,12 +283,12 @@ const SettelmentAdd = () => {
                       </CFormSelect>
                     </CCol>
                   </CRow>
-                  <CRow className="mb-3">
+                  {/* <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Service Name
                     </CFormLabel>
                     <CCol sm={9}>
-                      {/* <CFormSelect
+                      <CFormSelect
                         aria-label="Default select example"
                         {...register("select_service_name", {
                           required: "Please Select service",
@@ -311,7 +301,7 @@ const SettelmentAdd = () => {
                               {service.label}
                             </option>
                           ))}
-                      </CFormSelect> */}
+                      </CFormSelect>
                       <Select
                         options={services}
                         isMulti
@@ -319,7 +309,7 @@ const SettelmentAdd = () => {
                         onChange={multipleInsert}
                       />
                     </CCol>
-                  </CRow>
+                  </CRow> */}
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Account Name
