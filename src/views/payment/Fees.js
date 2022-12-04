@@ -21,9 +21,10 @@ const Fees = () => {
 
   const addResponce = () => {
     const data = {
-      merchant_id: "MK99333",
-      merchant_passwd: "12345",
+      merchant_id: "M0001",
+      merchant_passwd: "cgj2mcftxy",
       order_id: "NAG00000001",
+      currency: "050",
       order_amount: 200,
       description: "Test",
     };
@@ -44,7 +45,7 @@ const Fees = () => {
           timer: 1500,
         });
         window.open(
-          `http://localhost/index/payment.php?sessionId=${response.data.session_id}`
+          `http://182.160.101.86:2223/moneybag-landing?sessionId=${response.data.session_id}`
         );
         // navigate("https://www.w3schools.com/");
         // navigate("/payment", {

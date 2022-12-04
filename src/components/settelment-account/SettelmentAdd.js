@@ -51,39 +51,39 @@ const SettelmentAdd = () => {
       is_active: e.status ? 1 : 0,
     };
     console.log(sattelementAccount);
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      };
-      axios
-        .post(
-          `${process.env.REACT_APP_API_URL}account-settlements/`,
-          sattelementAccount,
-          {
-            headers,
-          }
-        )
-        .then((response) => {
-          console.log(response);
-          swal({
-            position: "top-end",
-            text: "Store Created Successfull",
-            icon: "success",
-            button: false,
-            timer: 1500,
-          });
-          navigate("/settelment");
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-          swal({
-            position: "top-end",
-            text: error.response.data.detail,
-            icon: "error",
-            button: false,
-            timer: 1500,
-          });
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}account-settlements/`,
+        sattelementAccount,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        swal({
+          position: "top-end",
+          text: "Store Created Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
         });
-    } 
+        navigate("/settelment");
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: error.response.data.detail,
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
+      });
+  };
 
   const getOrganization = () => {
     const headers = {
@@ -229,7 +229,7 @@ const SettelmentAdd = () => {
                           );
                         }}
                       >
-                        <option>select Bank</option>
+                        <option>select Fintech</option>
                         {getOrganizationOption(organizationList) &&
                           getOrganizationOption(organizationList).map(
                             (org, index) => (
@@ -243,7 +243,7 @@ const SettelmentAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                    Settelment Bank
+                      Settelment Bank
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormSelect

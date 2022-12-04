@@ -99,17 +99,25 @@ const MerchantUpdate = () => {
       state: e.state === "" ? location.state.state : parseInt(e.state),
       postal_code: e.postal_code,
       nid_number: e.national_id,
-      country_no: e.Reg_business_address === "" ? location.state.country_no : parseInt(e.Reg_business_address),
-      business_type: e.type_of_business === "" ? location.state.business_type : parseInt(e.type_of_business),
+      country_no:
+        e.Reg_business_address === ""
+          ? location.state.country_no
+          : parseInt(e.Reg_business_address),
+      business_type:
+        e.type_of_business === ""
+          ? location.state.business_type
+          : parseInt(e.type_of_business),
       business_name: e.business_name,
       bin: e.business_no,
       business_address1: e.b_address_line_1,
       business_address2: e.b_address_line_2,
       business_city: e.b_city,
-      business_state: e.b_state === "" ? location.state.business_state : parseInt(e.b_state),
+      business_state:
+        e.b_state === "" ? location.state.business_state : parseInt(e.b_state),
       business_postal_code: e.b_postel_code,
-      // marchant_id: e.merchant_id,
-      industry_no:e.industry==="" ?location.state.industry_no:parseInt(e.industry),
+      marchant_id: location.state.marchant_id,
+      industry_no:
+        e.industry === "" ? location.state.industry_no : parseInt(e.industry),
       category_code: e.cat_code,
       website: e.bussiness_website,
       product_desc: e.Product_desc,
@@ -124,7 +132,7 @@ const MerchantUpdate = () => {
     axios
       .post(
         `${process.env.REACT_APP_API_URL}marchants/update/${location.state.id}`,
-        data ,
+        data,
         {
           headers,
         }
@@ -226,7 +234,7 @@ const MerchantUpdate = () => {
                                     value={country.id}
                                     selected={
                                       country.id ===
-                                        location.state.business_type
+                                      location.state.business_type
                                         ? "selected"
                                         : ""
                                     }
@@ -319,7 +327,7 @@ const MerchantUpdate = () => {
                                     value={country.id}
                                     selected={
                                       country.id ==
-                                        location.state.business_state
+                                      location.state.business_state
                                         ? "selected"
                                         : ""
                                     }
@@ -383,7 +391,7 @@ const MerchantUpdate = () => {
                             label="Active"
                             {...register("status")}
                             defaultChecked={
-                              location.state.is_active== 1 ? true : false
+                              location.state.is_active == 1 ? true : false
                             }
                           />
                         </CCol>

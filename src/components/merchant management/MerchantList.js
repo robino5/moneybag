@@ -76,12 +76,12 @@ const MerchantList = () => {
     },
     {
       name: "Merchant Name",
-      sortable: true,
-      selector: (row) => row.first_name + " " + row.last_name,
+      selector: (row) => row.business_name,
     },
     {
-      name: "Busissnes Name",
-      selector: (row) => row.business_name,
+      name: "Person Name",
+      sortable: true,
+      selector: (row) => row.first_name + " " + row.last_name,
     },
     {
       name: "Email",
@@ -110,7 +110,7 @@ const MerchantList = () => {
             className="btn btn-sm d-inline mx-1"
             color="info"
             onClick={() => {
-                navigate("/merchant/update-merchant", { state: row });
+              navigate("/merchant/update-merchant", { state: row });
             }}
           >
             Update

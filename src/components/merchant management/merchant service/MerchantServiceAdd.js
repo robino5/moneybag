@@ -185,7 +185,7 @@ const MerchantServiceAdd = () => {
     merchantList &&
       merchantList.map((element) => {
         if (element.id === e) {
-          merchatname = element.first_name + " " + element.last_name;
+          merchatname = element.business_name;
         }
       });
     return merchatname;
@@ -342,7 +342,7 @@ const MerchantServiceAdd = () => {
                         {merchantList &&
                           merchantList.map((merchant, index) => (
                             <option value={merchant.id} key={index}>
-                              {merchant.first_name + " " + merchant.last_name}
+                              {merchant.business_name}
                             </option>
                           ))}
                       </CFormSelect>

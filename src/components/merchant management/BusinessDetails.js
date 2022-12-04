@@ -48,7 +48,7 @@ const BusinessDetails = ({ clickNext }) => {
       business_city: localStorage.getItem("business_city"),
       business_state: parseInt(localStorage.getItem("business_state")),
       business_postal_code: localStorage.getItem("business_postal_code"),
-      // marchant_id: e.merchant_id,
+      marchant_id: e.merchant_id,
       industry_no: parseInt(e.industry),
       category_code: e.cat_code,
       website: e.bussiness_website,
@@ -97,6 +97,7 @@ const BusinessDetails = ({ clickNext }) => {
         localStorage.removeItem("business_postal_code");
         localStorage.removeItem("file");
         localStorage.removeItem("merchant_pic");
+        clickNext(1);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -225,9 +226,9 @@ const BusinessDetails = ({ clickNext }) => {
           <CButton type="submit" color="success" className="mx-3">
             Save
           </CButton>
-          <CButton color="primary" onClick={() => clickNext(1)}>
+          {/* <CButton color="primary" onClick={() => clickNext(1)}>
             Next
-          </CButton>
+          </CButton> */}
         </div>
       </CForm>
     </div>

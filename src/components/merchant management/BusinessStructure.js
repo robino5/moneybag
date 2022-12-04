@@ -49,6 +49,7 @@ const BusinessStructure = ({ clickNext }) => {
       localStorage.setItem("business_postal_code", e.b_postel_code);
       localStorage.setItem("file", file);
       reset();
+      clickNext(1);
     } else {
       swal({
         position: "top-end",
@@ -216,7 +217,7 @@ const BusinessStructure = ({ clickNext }) => {
               {...register("business_no", {
                 required: "Please provide Business no",
               })}
-              placeholder="Business Name"
+              placeholder="Business no"
             />
             <span className="text-danger">{errors.business_no?.message}</span>
           </CCol>
@@ -310,9 +311,9 @@ const BusinessStructure = ({ clickNext }) => {
           <CButton color="success" type="submit" className="mx-3">
             Save
           </CButton>
-          <CButton color="primary" onClick={() => clickNext(1)}>
+          {/* <CButton color="primary" onClick={() => clickNext(1)}>
             Next
-          </CButton>
+          </CButton> */}
         </div>
       </CForm>
     </div>

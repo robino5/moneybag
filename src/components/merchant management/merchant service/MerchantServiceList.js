@@ -112,7 +112,7 @@ const StoreList = () => {
     merchantList &&
       merchantList.map((element) => {
         if (element.id === e) {
-          merchatname = element.first_name + " " + element.last_name;
+          merchatname = element.business_name;
         }
       });
     return merchatname;

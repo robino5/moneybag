@@ -28,8 +28,39 @@ const BusinessRepresentative = ({ clickNext }) => {
   } = useForm({ mode: "all" });
   const [lookupList, setLooupList] = useState();
   const [image, setImage] = useState("");
+  const [nid, seNid] = useState();
+  const [dob, seDob] = useState();
 
-  console.log("image", image);
+  const handleNidNumber = (e) => {
+    seNid(e.target.value);
+  };
+  const handleDOB = (e) => {
+    seDob(e.target.value);
+  };
+
+  const searchNid = async (e) => {
+    e.preventDefault();
+    const data = {
+      nidNumber: nid,
+      dateOfBirth: dob,
+    };
+    console.log(data);
+
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}poricoy/get-poricoy`, {
+        data,
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
 
   const saveBusinessRepresentative = (e) => {
     if (e) {
@@ -52,6 +83,7 @@ const BusinessRepresentative = ({ clickNext }) => {
       localStorage.setItem("nid_number", e.national_id);
       localStorage.setItem("merchant_pic", image);
       reset();
+      clickNext(1);
     } else {
       swal({
         position: "top-end",
@@ -136,6 +168,31 @@ const BusinessRepresentative = ({ clickNext }) => {
       <CForm onSubmit={handleSubmit(saveBusinessRepresentative)}>
         <CRow>
           <CCol sm={8}>
+            <CRow className="mb-3">
+              <CFormLabel className="col-sm-4 col-form-label">
+                Nid Number
+              </CFormLabel>
+              <CCol sm={8}>
+                <CFormInput
+                  type="text"
+                  placeholder="NID Number"
+                  onChange={handleNidNumber}
+                />
+              </CCol>
+            </CRow>
+            <CRow className="mb-3">
+              <CFormLabel className="col-sm-4 col-form-label">
+                Date of Birth
+              </CFormLabel>
+              <CCol sm={8}>
+                <CFormInput
+                  type="date"
+                  placeholder=" Date of Birth"
+                  onChange={handleDOB}
+                />
+              </CCol>
+            </CRow>
+            <CButton onClick={searchNid}>Search</CButton>
             <CRow className="mb-3">
               <CFormLabel className="col-sm-4 col-form-label">
                 Legal Name Of Person
@@ -291,7 +348,7 @@ const BusinessRepresentative = ({ clickNext }) => {
             <span className="text-danger">{errors.postal_code?.message}</span>
           </CCol>
         </CRow>
-        <CRow className="mb-3">
+        {/* <CRow className="mb-3">
           <CFormLabel className="col-sm-2 col-form-label">
             National Id
           </CFormLabel>
@@ -303,7 +360,7 @@ const BusinessRepresentative = ({ clickNext }) => {
               placeholder="Nationnal Id"
             />
           </CCol>
-        </CRow>
+        </CRow> */}
 
         <CRow className="mb-3">
           <CFormLabel className="col-sm-2 col-form-label"></CFormLabel>
@@ -320,9 +377,9 @@ const BusinessRepresentative = ({ clickNext }) => {
           <CButton color="success" type="submit" className="mx-3">
             Save
           </CButton>
-          <CButton color="primary" onClick={() => clickNext(1)}>
+          {/* <CButton color="primary" onClick={() => clickNext(1)}>
             Next
-          </CButton>
+          </CButton> */}
         </div>
       </CForm>
     </div>

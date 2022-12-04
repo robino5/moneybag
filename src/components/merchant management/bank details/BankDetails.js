@@ -64,6 +64,7 @@ const BankDetails = ({ clickNext }) => {
         });
         localStorage.setItem("isBankDetailDate", 1);
         reset();
+        clickNext(1);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -150,11 +151,7 @@ const BankDetails = ({ clickNext }) => {
     let date = [];
     e &&
       e.map((element) => {
-        if (
-          element.bank_flag === 0 &&
-          element.is_active === 1 &&
-          element.root_bank === 0
-        ) {
+        if (element.bank_flag === 0 && element.is_active === 1) {
           date.push({ id: element.id, branch_name: element.branch_name });
         }
       });
@@ -385,14 +382,14 @@ const BankDetails = ({ clickNext }) => {
             <CButton color="success" type="submit" className="mx-3">
               Save
             </CButton>
-            <CButton
+            {/* <CButton
               color="primary"
               onClick={() =>
-                clickNext(1, window.history.replaceState({}, document.title))
+                clickNext(1)
               }
             >
               Next
-            </CButton>
+            </CButton> */}
           </div>
         </CForm>
       </div>
