@@ -29,87 +29,116 @@ const BusinessDetails = ({ clickNext }) => {
   const [lookupList, setLooupList] = useState();
 
   const saveBusinessDetails = (e) => {
-    const Data = {
-      first_name: localStorage.getItem("first_name"),
-      last_name: localStorage.getItem("last_name"),
-      email: localStorage.getItem("email"),
-      address1: localStorage.getItem("address1"),
-      address2: localStorage.getItem("address2"),
-      city: localStorage.getItem("city"),
-      state: parseInt(localStorage.getItem("state")),
-      postal_code: localStorage.getItem("postal_code"),
-      nid_number: localStorage.getItem("nid_number"),
-      country_no: parseInt(localStorage.getItem("country_no")),
-      business_type: parseInt(localStorage.getItem("business_type")),
-      business_name: localStorage.getItem("business_name"),
-      bin: localStorage.getItem("business_no"),
-      business_address1: localStorage.getItem("business_address1"),
-      business_address2: localStorage.getItem("business_address2"),
-      business_city: localStorage.getItem("business_city"),
-      business_state: parseInt(localStorage.getItem("business_state")),
-      business_postal_code: localStorage.getItem("business_postal_code"),
-      marchant_id: e.merchant_id,
-      industry_no: parseInt(e.industry),
-      category_code: e.cat_code,
-      website: e.bussiness_website,
-      product_desc: e.Product_desc,
-      is_active: e.status ? 1 : 0,
-      upload_file: localStorage.getItem("file"),
-      merchant_pic: localStorage.getItem("merchant_pic"),
-    };
-    console.log(Data);
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .post(`${process.env.REACT_APP_API_URL}marchants/`, Data, {
-        headers,
-      })
-      .then((response) => {
-        console.log(response);
-        localStorage.setItem("merchant_id", response.data.id);
-        swal({
-          position: "top-end",
-          text: "Save Successfull",
-          icon: "success",
-          button: false,
-          timer: 1500,
-        });
-        reset();
-        localStorage.setItem("isSubmitBusiness", 1);
-        localStorage.removeItem("first_name");
-        localStorage.removeItem("last_name");
-        localStorage.removeItem("email");
-        localStorage.removeItem("address1");
-        localStorage.removeItem("address2");
-        localStorage.removeItem("city");
-        localStorage.removeItem("state");
-        localStorage.removeItem("postal_code");
-        localStorage.removeItem("nid_number");
-        localStorage.removeItem("country_no");
-        localStorage.removeItem("business_type");
-        localStorage.removeItem("business_name");
-        localStorage.removeItem("business_no");
-        localStorage.removeItem("business_address1");
-        localStorage.removeItem("business_address2"),
-          localStorage.removeItem("business_city");
-        localStorage.removeItem("business_state");
-        localStorage.removeItem("business_postal_code");
-        localStorage.removeItem("file");
-        localStorage.removeItem("merchant_pic");
-        clickNext(1);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        swal({
-          position: "top-end",
-          text: error.response.data.detail,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
+    if (e) {
+      swal({
+        position: "top-end",
+        text: "Category Service Created Successfull",
+        icon: "success",
+        button: false,
+        timer: 1500,
       });
-  };
+      localStorage.setItem("merchant_id", e.merchant_id);
+      localStorage.setItem("indeustry", e.industry);
+      localStorage.setItem("category_code", e.cat_code);
+      localStorage.setItem("business_website", e.bussiness_website);
+      localStorage.setItem("description", e.Product_desc);
+      localStorage.setItem("status", e.status?1:0);
+      reset();
+      clickNext(1);
+    } else {
+      swal({
+        position: "top-end",
+        text: "Faild",
+        icon: "error",
+        button: false,
+        timer: 1500,
+      });
+    }
+  }
+    
+
+    // const Data = {
+    //   first_name: localStorage.getItem("first_name"),
+    //   last_name: localStorage.getItem("last_name"),
+    //   email: localStorage.getItem("email"),
+    //   address1: localStorage.getItem("address1"),
+    //   address2: localStorage.getItem("address2"),
+    //   city: localStorage.getItem("city"),
+    //   state: parseInt(localStorage.getItem("state")),
+    //   postal_code: localStorage.getItem("postal_code"),
+    //   nid_number: localStorage.getItem("nid_number"),
+    //   country_no: parseInt(localStorage.getItem("country_no")),
+    //   business_type: parseInt(localStorage.getItem("business_type")),
+    //   business_name: localStorage.getItem("business_name"),
+    //   bin: localStorage.getItem("business_no"),
+    //   business_address1: localStorage.getItem("business_address1"),
+    //   business_address2: localStorage.getItem("business_address2"),
+    //   business_city: localStorage.getItem("business_city"),
+    //   business_state: parseInt(localStorage.getItem("business_state")),
+    //   business_postal_code: localStorage.getItem("business_postal_code"),
+    //   marchant_id: e.merchant_id,
+    //   industry_no: parseInt(e.industry),
+    //   category_code: e.cat_code,
+    //   website: e.bussiness_website,
+    //   product_desc: e.Product_desc,
+    //   is_active: e.status ? 1 : 0,
+    //   upload_file: localStorage.getItem("file"),
+    //   merchant_pic: localStorage.getItem("merchant_pic"),
+    // };
+
+
+    // console.log(Data);
+    // const headers = {
+    //   Authorization: `Bearer ${localStorage.getItem("token")}`,
+    // };
+    // axios
+    //   .post(`${process.env.REACT_APP_API_URL}marchants/`, Data, {
+    //     headers,
+    //   })
+    //   .then((response) => {
+    //     console.log(response);
+    //     localStorage.setItem("merchant_id", response.data.id);
+    //     swal({
+    //       position: "top-end",
+    //       text: "Save Successfull",
+    //       icon: "success",
+    //       button: false,
+    //       timer: 1500,
+    //     });
+    //     reset();
+    //     localStorage.setItem("isSubmitBusiness", 1);
+    //     localStorage.removeItem("first_name");
+    //     localStorage.removeItem("last_name");
+    //     localStorage.removeItem("email");
+    //     localStorage.removeItem("address1");
+    //     localStorage.removeItem("address2");
+    //     localStorage.removeItem("city");
+    //     localStorage.removeItem("state");
+    //     localStorage.removeItem("postal_code");
+    //     localStorage.removeItem("nid_number");
+    //     localStorage.removeItem("country_no");
+    //     localStorage.removeItem("business_type");
+    //     localStorage.removeItem("business_name");
+    //     localStorage.removeItem("business_no");
+    //     localStorage.removeItem("business_address1");
+    //     localStorage.removeItem("business_address2"),
+    //       localStorage.removeItem("business_city");
+    //     localStorage.removeItem("business_state");
+    //     localStorage.removeItem("business_postal_code");
+    //     localStorage.removeItem("file");
+    //     localStorage.removeItem("merchant_pic");
+    //     clickNext(1);
+    //   })
+    //   .catch((error) => {
+    //     console.error("There was an error!", error);
+    //     swal({
+    //       position: "top-end",
+    //       text: error.response.data.detail,
+    //       icon: "error",
+    //       button: false,
+    //       timer: 1500,
+    //     });
+    //   });
 
   const getLookupList = () => {
     const headers = {

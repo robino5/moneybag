@@ -16,6 +16,7 @@ import {
   CFormLabel,
   CRow,
   CButton,
+  CFormTextarea
 } from "@coreui/react";
 
 const BusinessRepresentative = ({ clickNext }) => {
@@ -30,6 +31,9 @@ const BusinessRepresentative = ({ clickNext }) => {
   const [image, setImage] = useState("");
   const [nid, seNid] = useState();
   const [dob, seDob] = useState();
+  const [nidInfo, setNidInfo] = useState()
+
+  console.log(nidInfo);
 
   const handleNidNumber = (e) => {
     seNid(e.target.value);
@@ -47,14 +51,14 @@ const BusinessRepresentative = ({ clickNext }) => {
     console.log(data);
 
     const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      'Authorization': `Bearer ${localStorage.getItem("token")}`,
+      'Content-Type': 'application/json',
+      'cors': 'no-cors'
     };
     await axios
-      .get(`${process.env.REACT_APP_API_URL}poricoy/get-poricoy`, {
-        data,
-        headers,
-      })
+      .post(`${process.env.REACT_APP_API_URL}poricoy/get-poricoy`, data, { headers })
       .then((responce) => {
+        setNidInfo(responce.data.data.nid);
         console.log(responce);
       })
       .catch((error) => {
@@ -64,6 +68,7 @@ const BusinessRepresentative = ({ clickNext }) => {
 
   const saveBusinessRepresentative = (e) => {
     if (e) {
+      console.log("element",e)
       swal({
         position: "top-end",
         text: "Category Service Created Successfull",
@@ -71,19 +76,20 @@ const BusinessRepresentative = ({ clickNext }) => {
         button: false,
         timer: 1500,
       });
-      localStorage.setItem("first_name", e.first_name);
+      localStorage.setItem("first_name", nidInfo?.fullNameEN);
       localStorage.setItem("last_name", e.last_name);
       localStorage.setItem("email", e.email);
       localStorage.setItem("dob", e.dob);
-      localStorage.setItem("address1", e.address_line_1);
-      localStorage.setItem("address2", e.address_line_2);
+      localStorage.setItem("address1", nidInfo?.presentAddressEN);
+      localStorage.setItem("address2", nidInfo?.permenantAddressEN);
       localStorage.setItem("city", e.city);
       localStorage.setItem("state", e.state);
       localStorage.setItem("postal_code", parseInt(e.postal_code));
-      localStorage.setItem("nid_number", e.national_id);
+      localStorage.setItem("nid_number", nid);
+      localStorage.setItem("dob", dob);
       localStorage.setItem("merchant_pic", image);
       reset();
-      clickNext(1);
+      // clickNext(1);
     } else {
       swal({
         position: "top-end",
@@ -184,15 +190,17 @@ const BusinessRepresentative = ({ clickNext }) => {
               <CFormLabel className="col-sm-4 col-form-label">
                 Date of Birth
               </CFormLabel>
-              <CCol sm={8}>
+              <CCol sm={6}>
                 <CFormInput
                   type="date"
                   placeholder=" Date of Birth"
                   onChange={handleDOB}
                 />
               </CCol>
+              <CCol sm={2}>
+                <CButton onClick={searchNid}>Search</CButton>
+              </CCol>
             </CRow>
-            <CButton onClick={searchNid}>Search</CButton>
             <CRow className="mb-3">
               <CFormLabel className="col-sm-4 col-form-label">
                 Legal Name Of Person
@@ -200,27 +208,11 @@ const BusinessRepresentative = ({ clickNext }) => {
               <CCol sm={8}>
                 <CFormInput
                   type="text"
-                  {...register("first_name", {
-                    required: "Please provide Business Name",
-                  })}
-                  placeholder="First Name"
+                  readOnly
+                  defaultValue={nidInfo?.fullNameEN}
+                  {...register("first_name")}
+                  placeholder="Full Name"
                 />
-                <span className="text-danger">
-                  {errors.first_name?.message}
-                </span>
-              </CCol>
-            </CRow>
-            <CRow className="mb-3">
-              <CFormLabel className="col-sm-4 col-form-label"></CFormLabel>
-              <CCol sm={8}>
-                <CFormInput
-                  type="text"
-                  {...register("last_name", {
-                    required: "Please provide Business Name",
-                  })}
-                  placeholder="Last Name"
-                />
-                <span className="text-danger">{errors.last_name?.message}</span>
               </CCol>
             </CRow>
             <CRow className="mb-3">
@@ -235,7 +227,7 @@ const BusinessRepresentative = ({ clickNext }) => {
                 />
               </CCol>
             </CRow>
-            <CRow className="mb-3">
+            {/* <CRow className="mb-3">
               <CFormLabel className="col-sm-4 col-form-label">
                 Date of Birth
               </CFormLabel>
@@ -246,7 +238,7 @@ const BusinessRepresentative = ({ clickNext }) => {
                   placeholder=" Date of Birth"
                 />
               </CCol>
-            </CRow>
+            </CRow> */}
             <CRow className="mb-3">
               <CFormLabel className="col-sm-4 col-form-label">City</CFormLabel>
               <CCol sm={8}>
@@ -260,10 +252,51 @@ const BusinessRepresentative = ({ clickNext }) => {
                 <span className="text-danger">{errors.city?.message}</span>
               </CCol>
             </CRow>
+            <CRow className="mb-3">
+              <CFormLabel className="col-sm-4 col-form-label">State</CFormLabel>
+              <CCol sm={8}>
+                <CFormSelect
+                  aria-label="Default select example"
+                  {...register("state")}
+                  type="number"
+                >
+                  <option>Select State</option>
+                  {lookupList &&
+                    getStateOption(lookupList).map((country, index) => (
+                      <option value={country.id} key={index}>
+                        {country.name}
+                      </option>
+                    ))}
+                </CFormSelect>
+                <span className="text-danger">{errors.state?.message}</span>
+              </CCol>
+            </CRow>
+            <CRow className="mb-3">
+              <CFormLabel className="col-sm-4 col-form-label">
+                Postal Code
+              </CFormLabel>
+              <CCol sm={8}>
+                <CFormInput
+                  type="text"
+                  {...register("postal_code", {
+                    required: "Please Provide Postal Code",
+                  })}
+                  placeholder="Postal Code"
+                />
+                <span className="text-danger">{errors.postal_code?.message}</span>
+              </CCol>
+            </CRow>
           </CCol>
           <CCol md={4}>
             <CRow className="mb-3">
               <CFormLabel className="col-sm-4 col-form-label"></CFormLabel>
+              <CCol sm={12} className="mb-2">
+                <div className="merchant_img text-center">
+                  <img
+                    src={nidInfo?.photoUrl}
+                  />
+                </div>
+              </CCol>
               <CCol sm={12}>
                 <div className="merchant_img text-center">
                   <img
@@ -286,66 +319,29 @@ const BusinessRepresentative = ({ clickNext }) => {
         </CRow>
 
         <CRow className="mb-3">
-          <CFormLabel className="col-sm-2 col-form-label">Address</CFormLabel>
+          <CFormLabel className="col-sm-2 col-form-label">Present Address</CFormLabel>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <CCol sm={9}>
-            <CFormInput
+            <CFormTextarea
               type="text"
-              {...register("address_line_1", {
-                required: "Please provide Address line 1",
-              })}
+              readOnly
+              defaultValue={nidInfo?.presentAddressEN}
+              {...register("address_line_1")}
               placeholder="Address Line 1"
             />
-            <span className="text-danger">
-              {errors.address_line_1?.message}
-            </span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
-          <CFormLabel className="col-sm-2 col-form-label"></CFormLabel>
+          <CFormLabel className="col-sm-2 col-form-label">Permanent Address</CFormLabel>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <CCol sm={9}>
-            <CFormInput
+            <CFormTextarea
               type="text"
+              readOnly
+              defaultValue={nidInfo?.permenantAddressEN}
               {...register("address_line_2")}
               placeholder="Address Line 2"
             />
-          </CCol>
-        </CRow>
-        <CRow className="mb-3">
-          <CFormLabel className="col-sm-2 col-form-label">State</CFormLabel>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <CCol sm={9}>
-            <CFormSelect
-              aria-label="Default select example"
-              {...register("state")}
-              type="number"
-            >
-              <option>Select State</option>
-              {lookupList &&
-                getStateOption(lookupList).map((country, index) => (
-                  <option value={country.id} key={index}>
-                    {country.name}
-                  </option>
-                ))}
-            </CFormSelect>
-            <span className="text-danger">{errors.state?.message}</span>
-          </CCol>
-        </CRow>
-        <CRow className="mb-3">
-          <CFormLabel className="col-sm-2 col-form-label">
-            Postal Code
-          </CFormLabel>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <CCol sm={9}>
-            <CFormInput
-              type="text"
-              {...register("postal_code", {
-                required: "Please Select Postal Code",
-              })}
-              placeholder="Postal Code"
-            />
-            <span className="text-danger">{errors.postal_code?.message}</span>
           </CCol>
         </CRow>
         {/* <CRow className="mb-3">

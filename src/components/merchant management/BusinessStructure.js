@@ -30,35 +30,67 @@ const BusinessStructure = ({ clickNext }) => {
   const [file, setFile] = useState("");
 
   const saveBusinessStructure = (e) => {
-    if (e) {
-      swal({
-        position: "top-end",
-        text: "Category Service Created Successfull",
-        icon: "success",
-        button: false,
-        timer: 1500,
-      });
-      localStorage.setItem("country_no", parseInt(e.Reg_business_address));
-      localStorage.setItem("business_type", parseInt(e.type_of_business));
-      localStorage.setItem("business_name", e.business_name);
-      localStorage.setItem("business_no", e.business_no);
-      localStorage.setItem("business_address1", e.b_address_line_1);
-      localStorage.setItem("business_address2", e.b_address_line_2);
-      localStorage.setItem("business_city", e.b_city);
-      localStorage.setItem("business_state", parseInt(e.b_state));
-      localStorage.setItem("business_postal_code", e.b_postel_code);
-      localStorage.setItem("file", file);
-      reset();
-      clickNext(1);
-    } else {
-      swal({
-        position: "top-end",
-        text: "faild",
-        icon: "error",
-        button: false,
-        timer: 1500,
-      });
-    }
+    const data = {
+      first_name: localStorage.getItem("first_name"),
+      last_name: localStorage.getItem("last_name"),
+      email: localStorage.getItem("email"),
+      address1: localStorage.getItem("address1"),
+      address2: localStorage.getItem("address2"),
+      city: localStorage.getItem("city"),
+      state: parseInt(localStorage.getItem("state")),
+      postal_code: localStorage.getItem("postal_code"),
+      nid_number: localStorage.getItem("nid_number"),
+      dob: localStorage.getItem("dob"),
+      marchant_id: localStorage.getItem("merchant_id"),
+      industry_no: localStorage.getItem("indeustry"),
+      category_code: localStorage.getItem("category_code"),
+      website: localStorage.getItem("business_website"),
+      product_desc: localStorage.getItem("description"),
+      is_active: localStorage.getItem("status"),
+      country_no: parseInt(e.Reg_business_address),
+      business_type: parseInt(e.type_of_business),
+      business_name: e.business_name,
+      bin:  e.business_no,
+      business_address1: e.b_address_line_1,
+      business_address2: e.b_address_line_2,
+      business_city: e.b_city,
+      business_state: parseInt(e.b_state),
+      business_postal_code:  e.b_postel_code,
+      upload_file: file,
+      merchant_pic: localStorage.getItem("merchant_pic"),
+    };
+
+    console.log(data)
+
+    // if (e) {
+    //   swal({
+    //     position: "top-end",
+    //     text: "Category Service Created Successfull",
+    //     icon: "success",
+    //     button: false,
+    //     timer: 1500,
+    //   });
+    //   localStorage.setItem("country_no", parseInt(e.Reg_business_address));
+    //   localStorage.setItem("business_type", parseInt(e.type_of_business));
+    //   localStorage.setItem("business_name", e.business_name);
+    //   localStorage.setItem("business_no", e.business_no);
+    //   localStorage.setItem("business_address1", e.b_address_line_1);
+    //   localStorage.setItem("business_address2", e.b_address_line_2);
+    //   localStorage.setItem("business_city", e.b_city);
+    //   localStorage.setItem("business_state", parseInt(e.b_state));
+    //   localStorage.setItem("business_postal_code", e.b_postel_code);
+    //   localStorage.setItem("file", file);
+    //   reset();
+    //   clickNext(1);
+    // } else {
+    //   swal({
+    //     position: "top-end",
+    //     text: "faild",
+    //     icon: "error",
+    //     button: false,
+    //     timer: 1500,
+    //   });
+    // }
   };
 
   const getLookupList = () => {

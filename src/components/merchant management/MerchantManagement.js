@@ -99,13 +99,14 @@ const MerchantManagement = () => {
               </CCardHeader>
               <CCardBody>
                 <div hidden={active !== 1 ? true : false}>
-                  <BusinessStructure clickNext={clickNext} />
+                  <BusinessDetails clickNext={clickNext} />
+
                 </div>
                 <div hidden={active !== 2 ? true : false}>
                   <BusinessRepresentative clickNext={clickNext} />
                 </div>
                 <div hidden={active !== 3 ? true : false}>
-                  <BusinessDetails clickNext={clickNext} />
+                  <BusinessStructure clickNext={clickNext} />
                 </div>
                 <div hidden={active !== 4 ? true : false}>
                   <BankDetails clickNext={clickNext} />
