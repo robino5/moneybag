@@ -16,7 +16,7 @@ import {
   CFormLabel,
   CRow,
   CButton,
-  CFormTextarea
+  CFormTextarea,
 } from "@coreui/react";
 
 const BusinessRepresentative = ({ clickNext }) => {
@@ -31,7 +31,7 @@ const BusinessRepresentative = ({ clickNext }) => {
   const [image, setImage] = useState("");
   const [nid, seNid] = useState();
   const [dob, seDob] = useState();
-  const [nidInfo, setNidInfo] = useState()
+  const [nidInfo, setNidInfo] = useState();
 
   console.log(nidInfo?.json_log.nid);
 
@@ -51,12 +51,14 @@ const BusinessRepresentative = ({ clickNext }) => {
     console.log(data);
 
     const headers = {
-      'Authorization': `Bearer ${localStorage.getItem("token")}`,
-      'Content-Type': 'application/json',
-      'cors': 'no-cors'
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+      cors: "no-cors",
     };
     await axios
-      .post(`${process.env.REACT_APP_API_URL}poricoy/verify`, data, { headers })
+      .post(`${process.env.REACT_APP_API_URL}poricoy/get-poricoy`, data, {
+        headers,
+      })
       .then((responce) => {
         setNidInfo(responce.data);
         console.log(responce);
@@ -68,7 +70,7 @@ const BusinessRepresentative = ({ clickNext }) => {
 
   const saveBusinessRepresentative = (e) => {
     if (e) {
-      console.log("element",e)
+      console.log("element", e);
       swal({
         position: "top-end",
         text: "Category Service Created Successfull",
@@ -76,12 +78,21 @@ const BusinessRepresentative = ({ clickNext }) => {
         button: false,
         timer: 1500,
       });
-      localStorage.setItem("first_name", nidInfo?.fullNameEN);
+      localStorage.setItem(
+        "first_name",
+        e.first_name == "" ? nidInfo?.fullNameEN : e.first_name
+      );
       localStorage.setItem("last_name", e.last_name);
       localStorage.setItem("email", e.email);
       localStorage.setItem("dob", e.dob);
-      localStorage.setItem("address1", nidInfo?.presentAddressEN);
-      localStorage.setItem("address2", nidInfo?.permenantAddressEN);
+      localStorage.setItem(
+        "address1",
+        e.address_line_1 == "" ? nidInfo?.presentAddressEN : e.address_line_1
+      );
+      localStorage.setItem(
+        "address2",
+        e.address_line_2 == "" ? nidInfo?.permenantAddressEN : e.address_line_2
+      );
       localStorage.setItem("city", e.city);
       localStorage.setItem("state", e.state);
       localStorage.setItem("postal_code", parseInt(e.postal_code));
@@ -208,10 +219,21 @@ const BusinessRepresentative = ({ clickNext }) => {
               <CCol sm={8}>
                 <CFormInput
                   type="text"
-                  readOnly
                   defaultValue={nidInfo?.json_log.nid.fullNameEN}
                   {...register("first_name")}
-                  placeholder="Full Name"
+                  placeholder="Fist Name"
+                />
+              </CCol>
+            </CRow>
+            <CRow className="mb-3">
+              <CFormLabel className="col-sm-4 col-form-label"></CFormLabel>
+              <CCol sm={8}>
+                <CFormInput
+                  type="text"
+                  {...register("last_name", {
+                    required: "Please provide last Name",
+                  })}
+                  placeholder="Last Name"
                 />
               </CCol>
             </CRow>
@@ -283,7 +305,9 @@ const BusinessRepresentative = ({ clickNext }) => {
                   })}
                   placeholder="Postal Code"
                 />
-                <span className="text-danger">{errors.postal_code?.message}</span>
+                <span className="text-danger">
+                  {errors.postal_code?.message}
+                </span>
               </CCol>
             </CRow>
           </CCol>
@@ -304,11 +328,6 @@ const BusinessRepresentative = ({ clickNext }) => {
                   />
                 </div>
               </CCol>
-              {/* <CCol sm={1}>
-            <CButton id="preview-button" onClick={openFile}>
-              <CIcon className="text-light" icon={cilLowVision} />
-            </CButton>
-          </CCol> */}
             </CRow>
             <CRow className="mb-3">
               <CCol sm={12}>
@@ -319,12 +338,13 @@ const BusinessRepresentative = ({ clickNext }) => {
         </CRow>
 
         <CRow className="mb-3">
-          <CFormLabel className="col-sm-2 col-form-label">Present Address</CFormLabel>
+          <CFormLabel className="col-sm-2 col-form-label">
+            Present Address
+          </CFormLabel>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <CCol sm={9}>
             <CFormTextarea
               type="text"
-              readOnly
               defaultValue={nidInfo?.json_log.nid?.presentAddressEN}
               {...register("address_line_1")}
               placeholder="Address Line 1"
@@ -332,12 +352,13 @@ const BusinessRepresentative = ({ clickNext }) => {
           </CCol>
         </CRow>
         <CRow className="mb-3">
-          <CFormLabel className="col-sm-2 col-form-label">Permanent Address</CFormLabel>
+          <CFormLabel className="col-sm-2 col-form-label">
+            Permanent Address
+          </CFormLabel>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <CCol sm={9}>
             <CFormTextarea
               type="text"
-              readOnly
               defaultValue={nidInfo?.json_log.nid?.permenantAddressEN}
               {...register("address_line_2")}
               placeholder="Address Line 2"
