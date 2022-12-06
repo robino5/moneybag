@@ -33,7 +33,7 @@ const BusinessRepresentative = ({ clickNext }) => {
   const [dob, seDob] = useState();
   const [nidInfo, setNidInfo] = useState()
 
-  console.log(nidInfo);
+  console.log(nidInfo?.json_log.nid);
 
   const handleNidNumber = (e) => {
     seNid(e.target.value);
@@ -56,9 +56,9 @@ const BusinessRepresentative = ({ clickNext }) => {
       'cors': 'no-cors'
     };
     await axios
-      .post(`${process.env.REACT_APP_API_URL}poricoy/get-poricoy`, data, { headers })
+      .post(`${process.env.REACT_APP_API_URL}poricoy/verify`, data, { headers })
       .then((responce) => {
-        setNidInfo(responce.data.data.nid);
+        setNidInfo(responce.data);
         console.log(responce);
       })
       .catch((error) => {
@@ -209,7 +209,7 @@ const BusinessRepresentative = ({ clickNext }) => {
                 <CFormInput
                   type="text"
                   readOnly
-                  defaultValue={nidInfo?.fullNameEN}
+                  defaultValue={nidInfo?.json_log.nid.fullNameEN}
                   {...register("first_name")}
                   placeholder="Full Name"
                 />
@@ -293,7 +293,7 @@ const BusinessRepresentative = ({ clickNext }) => {
               <CCol sm={12} className="mb-2">
                 <div className="merchant_img text-center">
                   <img
-                    src={nidInfo?.photoUrl}
+                    src={`${process.env.REACT_APP_API_URL}poricoy/image/${nidInfo?.image_path}`}
                   />
                 </div>
               </CCol>
@@ -325,7 +325,7 @@ const BusinessRepresentative = ({ clickNext }) => {
             <CFormTextarea
               type="text"
               readOnly
-              defaultValue={nidInfo?.presentAddressEN}
+              defaultValue={nidInfo?.json_log.nid?.presentAddressEN}
               {...register("address_line_1")}
               placeholder="Address Line 1"
             />
@@ -338,7 +338,7 @@ const BusinessRepresentative = ({ clickNext }) => {
             <CFormTextarea
               type="text"
               readOnly
-              defaultValue={nidInfo?.permenantAddressEN}
+              defaultValue={nidInfo?.json_log.nid?.permenantAddressEN}
               {...register("address_line_2")}
               placeholder="Address Line 2"
             />

@@ -18,6 +18,7 @@ const Page404 = React.lazy(() => import("./views/pages/page404/Page404"));
 const Page500 = React.lazy(() => import("./views/pages/page500/Page500"));
 const Fees = React.lazy(() => import("./views/payment/Fees"));
 const Payment = React.lazy(() => import("./views/payment/Payment"));
+const Statement = React.lazy(() => import("./components/statement/Statement"));
 
 // const OrganozationAdd = React.lazy(() => import('./views/pages/f-organization/OrganozationAdd'))
 
@@ -39,6 +40,7 @@ class App extends Component {
             <Route path="*" name="Home" element={<DefaultLayout />} />
             <Route exact path="/selected-fee" name="Page 500" element={<Fees />} />
             <Route exact path="/payment" name="Page 500" element={<Payment />} />
+            <Route exact path="/statement" name="Page 500" element={<Statement />} />
 
             {/* <Route exact path="/add-orgnization" name="add orgnization" element={<OrganozationAdd />} /> */}
           </Routes>

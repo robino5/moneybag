@@ -126,6 +126,20 @@ const _nav = [
     ],
   },
 
+    {
+    component: CNavGroup,
+    name: "Statement",
+    to: "/statement",
+    items: [
+      {
+        component: CNavItem,
+        name: "Statement",
+        to: "/statement",
+      },
+    ],
+  },
+  
+
   // {
   //   component: CNavGroup,
   //   name: "Setup",
