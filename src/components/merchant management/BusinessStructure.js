@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import swal from "sweetalert";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import CIcon from "@coreui/icons-react";
-import { cilLowVision } from "@coreui/icons";
+import { cilFile } from "@coreui/icons";
 import {
   CCard,
   CCardBody,
@@ -27,7 +27,7 @@ const BusinessStructure = ({ clickNext }) => {
     reset,
   } = useForm({ mode: "all" });
   const [lookupList, setLooupList] = useState();
-  const [file, setFile] = useState("");
+  const [multifile, setFile] = useState();
 
   const saveBusinessStructure = (e) => {
     const data = {
@@ -40,7 +40,7 @@ const BusinessStructure = ({ clickNext }) => {
       state: parseInt(localStorage.getItem("state")),
       postal_code: localStorage.getItem("postal_code"),
       nid_number: localStorage.getItem("nid_number"),
-      dob: localStorage.getItem("dob"),
+      date_of_birth: localStorage.getItem("dob"),
       marchant_id: localStorage.getItem("merchant_id"),
       industry_no: localStorage.getItem("indeustry"),
       category_code: localStorage.getItem("category_code"),
@@ -50,47 +50,65 @@ const BusinessStructure = ({ clickNext }) => {
       country_no: parseInt(e.Reg_business_address),
       business_type: parseInt(e.type_of_business),
       business_name: e.business_name,
-      bin:  e.business_no,
+      bin: e.business_no,
       business_address1: e.b_address_line_1,
       business_address2: e.b_address_line_2,
       business_city: e.b_city,
       business_state: parseInt(e.b_state),
-      business_postal_code:  e.b_postel_code,
-      upload_file: file,
+      business_postal_code: e.b_postel_code,
       merchant_pic: localStorage.getItem("merchant_pic"),
     };
 
-    console.log(data)
+    console.log(data);
 
-    // if (e) {
-    //   swal({
-    //     position: "top-end",
-    //     text: "Category Service Created Successfull",
-    //     icon: "success",
-    //     button: false,
-    //     timer: 1500,
-    //   });
-    //   localStorage.setItem("country_no", parseInt(e.Reg_business_address));
-    //   localStorage.setItem("business_type", parseInt(e.type_of_business));
-    //   localStorage.setItem("business_name", e.business_name);
-    //   localStorage.setItem("business_no", e.business_no);
-    //   localStorage.setItem("business_address1", e.b_address_line_1);
-    //   localStorage.setItem("business_address2", e.b_address_line_2);
-    //   localStorage.setItem("business_city", e.b_city);
-    //   localStorage.setItem("business_state", parseInt(e.b_state));
-    //   localStorage.setItem("business_postal_code", e.b_postel_code);
-    //   localStorage.setItem("file", file);
-    //   reset();
-    //   clickNext(1);
-    // } else {
-    //   swal({
-    //     position: "top-end",
-    //     text: "faild",
-    //     icon: "error",
-    //     button: false,
-    //     timer: 1500,
-    //   });
-    // }
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .post(`${process.env.REACT_APP_API_URL}marchants/`, data, {
+        headers,
+      })
+      .then((response) => {
+        console.log(response);
+        localStorage.setItem("merchant_id", response.data.id);
+        swal({
+          position: "top-end",
+          text: "Save Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
+        reset();
+        localStorage.setItem("isSubmitBusiness", 1);
+        localStorage.removeItem("first_name");
+        localStorage.removeItem("last_name");
+        localStorage.removeItem("email");
+        localStorage.removeItem("address1");
+        localStorage.removeItem("address2");
+        localStorage.removeItem("city");
+        localStorage.removeItem("state");
+        localStorage.removeItem("postal_code");
+        localStorage.removeItem("nid_number");
+        localStorage.removeItem("dob");
+        localStorage.removeItem("merchant_id");
+        localStorage.removeItem("indeustry");
+        localStorage.removeItem("category_code");
+        localStorage.removeItem("business_website");
+        localStorage.removeItem("description"),
+          localStorage.removeItem("status"),
+          localStorage.removeItem("merchant_pic");
+        // clickNext(1);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: error.response.data.detail,
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
+      });
   };
 
   const getLookupList = () => {
@@ -141,40 +159,40 @@ const BusinessStructure = ({ clickNext }) => {
 
   const uploadFile = (e) => {
     var data = new FormData();
-    data.append("file", e.target.files[0]);
-    document.getElementById("preview-button").disabled = true;
-
-    if (e.target.files[0].size > 5e6) {
-      swal({
-        position: "top-end",
-        text: "Your File is too Large! Please provide the file below 5MB.",
-        icon: "warning",
-        button: false,
-        timer: 3000,
-      });
-      e.target.value = null;
-    } else {
-      axios
-        .post(`${process.env.REACT_APP_API_URL}uploads/upload`, data)
-        .then((response) => {
-          console.log(response), setFile(response.data.fileName);
-          document.getElementById("preview-button").disabled = false;
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-          swal({
-            position: "top-end",
-            text: "File Upload Failed",
-            icon: "error",
-            button: false,
-            timer: 1500,
-          });
+    const uplodedfile = e.target.files;
+    console.log("file", uplodedfile);
+    const files = Object.values(uplodedfile);
+    console.log("object-file", files);
+    files.forEach((file) => {
+      data.append("files", file);
+      console.log("new File", file);
+    });
+    axios
+      .post(`${process.env.REACT_APP_API_URL}uploads/multiplefiles`, data, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        setFile(response.data.files);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: "File Upload Failed",
+          icon: "error",
+          button: false,
+          timer: 1500,
         });
-    }
+      });
   };
 
-  const openFile = () => {
-    window.open(`${process.env.REACT_APP_API_URL}uploads/uploads/get/${file}`);
+  const openFile = (e) => {
+    console.log(e);
+    window.open(`${process.env.REACT_APP_API_URL}uploads/uploads/get/${e}`);
   };
 
   useEffect(() => {
@@ -330,14 +348,35 @@ const BusinessStructure = ({ clickNext }) => {
           <CFormLabel className="col-sm-4 col-form-label">
             File Upload
           </CFormLabel>
-          <CCol sm={7}>
-            <CFormInput type="file" onChange={uploadFile} />
+          <CCol sm={8}>
+            <CFormInput
+              multiple={true}
+              type="file"
+              name="files"
+              onChange={uploadFile}
+            />
           </CCol>
-          <CCol sm={1}>
-            <CButton id="preview-button" onClick={openFile}>
-              <CIcon className="text-light" icon={cilLowVision} />
-            </CButton>
-          </CCol>
+        </CRow>
+        <CRow>
+          <div className="text-center">
+            <CRow>
+              {multifile?.map((file) => {
+                return (
+                  <CCol md={1}>
+                    <CButton
+                      color="secondary"
+                      className="my-2"
+                      onClick={() => {
+                        openFile(file);
+                      }}
+                    >
+                      <CIcon icon={cilFile}></CIcon>
+                    </CButton>
+                  </CCol>
+                );
+              })}
+            </CRow>
+          </div>
         </CRow>
         <div className="text-center ">
           <CButton color="success" type="submit" className="mx-3">

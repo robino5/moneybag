@@ -32,8 +32,7 @@ const BusinessRepresentative = ({ clickNext }) => {
   const [nid, seNid] = useState();
   const [dob, seDob] = useState();
   const [nidInfo, setNidInfo] = useState();
-
-  console.log(nidInfo?.json_log.nid);
+  console.log();
 
   const handleNidNumber = (e) => {
     seNid(e.target.value);
@@ -56,7 +55,7 @@ const BusinessRepresentative = ({ clickNext }) => {
       cors: "no-cors",
     };
     await axios
-      .post(`${process.env.REACT_APP_API_URL}poricoy/get-poricoy`, data, {
+      .post(`${process.env.REACT_APP_API_URL}poricoy/verify`, data, {
         headers,
       })
       .then((responce) => {
@@ -80,18 +79,22 @@ const BusinessRepresentative = ({ clickNext }) => {
       });
       localStorage.setItem(
         "first_name",
-        e.first_name == "" ? nidInfo?.fullNameEN : e.first_name
+        e.first_name == "" ? nidInfo?.json_log.nid.fullNameEN : e.first_name
       );
       localStorage.setItem("last_name", e.last_name);
       localStorage.setItem("email", e.email);
       localStorage.setItem("dob", e.dob);
       localStorage.setItem(
         "address1",
-        e.address_line_1 == "" ? nidInfo?.presentAddressEN : e.address_line_1
+        e.address_line_1 == ""
+          ? nidInfo?.json_log.nid.presentAddressEN
+          : e.address_line_1
       );
       localStorage.setItem(
         "address2",
-        e.address_line_2 == "" ? nidInfo?.permenantAddressEN : e.address_line_2
+        e.address_line_2 == ""
+          ? nidInfo?.json_log.nid.permenantAddressEN
+          : e.address_line_2
       );
       localStorage.setItem("city", e.city);
       localStorage.setItem("state", e.state);
@@ -100,7 +103,7 @@ const BusinessRepresentative = ({ clickNext }) => {
       localStorage.setItem("dob", dob);
       localStorage.setItem("merchant_pic", image);
       reset();
-      // clickNext(1);
+      clickNext(1);
     } else {
       swal({
         position: "top-end",
@@ -141,7 +144,6 @@ const BusinessRepresentative = ({ clickNext }) => {
   const uploadFile = (e) => {
     var data = new FormData();
     data.append("file", e.target.files[0]);
-    document.getElementById("preview-button").disabled = true;
 
     if (e.target.files[0].size > 5e6) {
       swal({
@@ -157,7 +159,6 @@ const BusinessRepresentative = ({ clickNext }) => {
         .post(`${process.env.REACT_APP_API_URL}uploads/upload`, data)
         .then((response) => {
           console.log(response), setImage(response.data.fileName);
-          document.getElementById("preview-button").disabled = false;
         })
         .catch((error) => {
           console.error("There was an error!", error);
