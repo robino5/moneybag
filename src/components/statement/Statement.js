@@ -1,23 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
+import Description from "./Description";
 import {
-    CCard,
-    CCardBody,
-    CFormSelect,
-    CCol,
-    CContainer,
-    CForm,
-    CFormInput,
-    CFormLabel,
-    CRow,
-    CButton,
-    CFormTextarea
-  } from "@coreui/react";
+  CCard,
+  CCardBody,
+  CFormSelect,
+  CCol,
+  CContainer,
+  CForm,
+  CFormInput,
+  CFormLabel,
+  CRow,
+  CButton,
+  CModal,
+  CModalBody,
+  CModalTitle,
+  CModalHeader,
+} from "@coreui/react";
+import { render } from "@testing-library/react";
 
 const Statement = () => {
   const navigate = useNavigate();
+  const [merchantList, setMerchantList] = useState();
   const [orderAmount, setOrderAmount] = useState("");
   const [periodFrom, setPeriodFrom] = useState("");
   const [periodTo, setPeriodTo] = useState("");
@@ -27,6 +33,32 @@ const Statement = () => {
   const [amontTo, setAmountTo] = useState("");
   const [orderby, setOrderBy] = useState("");
   const [statement, setStatement] = useState();
+
+  const getMerchantList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}marchants/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setMerchantList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const getMerchantName = (e) => {
+    let name;
+    merchantList?.map((mercant) => {
+      if (mercant.marchant_id == e) {
+        name = mercant.business_name;
+      }
+    });
+    return name;
+  };
 
   const handleOrderNumber = (e) => {
     setOrderAmount(e.target.value);
@@ -81,7 +113,7 @@ const Statement = () => {
     if (!staus) {
       delete data.status;
     }
-    if (!currency||currency=="ALL") {
+    if (!currency || currency == "ALL") {
       delete data.currency;
     }
     if (!amontFrom) {
@@ -102,13 +134,14 @@ const Statement = () => {
     console.log(encodeDataToURL(data));
 
     const headers = {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      };
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
     axios
       .get(
         `${process.env.REACT_APP_API_URL}txn-statements?${encodeDataToURL(
           data
-        )}`,{headers}
+        )}`,
+        { headers }
       )
       .then((response) => {
         console.log(response);
@@ -121,15 +154,16 @@ const Statement = () => {
     // console.log(data);
   };
 
-  const onCancel=()=>{
-    navigate("/deshbord")
-  }
+  const onCancel = () => {
+    navigate("/deshbord");
+  };
 
   const column = [
     {
       name: "Merchant ID",
       sortable: true,
-      selector: (row) => row.merchant_id,
+      selector: (row) =>
+        getMerchantName(row.merchant_id) + "(" + row.merchant_id + ")",
     },
     {
       name: "Creation date",
@@ -140,13 +174,25 @@ const Statement = () => {
       selector: (row) => row.merchant_order_amount,
     },
     {
+      name: "ReFund Amount",
+      selector: (row) => 0,
+    },
+    {
+      name: "Total Amount",
+      selector: (row) => row.merchant_order_amount + row.merchant_charge_amount,
+    },
+    {
       name: "Order Status",
       selector: (row) => row.gw_order_status,
     },
     {
-        name: "Description",
-        selector: (row) => row.merchant_description,
-      },
+      name: "TXN No",
+      selector: (row) => row.merchant_tran_id,
+    },
+    {
+      name: "Description",
+      selector: (row) => row.merchant_description,
+    },
     {
       name: "Action",
       selector: (row) => (
@@ -154,9 +200,18 @@ const Statement = () => {
           <CButton
             className="btn btn-sm d-inline mx-1"
             CColor="info"
-            // onClick={() => {
-            //   navigate("/dispute", { state: row });
-            // }}
+            onClick={() => {
+              render(
+                <CModal visible size="lg">
+                  <CModalHeader>
+                    <CModalTitle>Transection Details</CModalTitle>
+                  </CModalHeader>
+                  <CModalBody>
+                    <Description data={row} />
+                  </CModalBody>
+                </CModal>
+              );
+            }}
           >
             Detail
           </CButton>
@@ -164,6 +219,10 @@ const Statement = () => {
       ),
     },
   ];
+
+  useEffect(() => {
+    getMerchantList();
+  }, []);
 
   return (
     <div className="">
@@ -179,17 +238,9 @@ const Statement = () => {
                   onChange={handleOrderNumber}
                 />
                 <CFormLabel className="mt-2">Period from</CFormLabel>
-                <CFormInput
-                  size="sm"
-                  type="date"
-                  onChange={handlePeriodFrom}
-                />
+                <CFormInput size="sm" type="date" onChange={handlePeriodFrom} />
                 <CFormLabel className="mt-2">Period To</CFormLabel>
-                <CFormInput
-                  size="sm"
-                  type="date"
-                  onChange={handlePeriodTo}
-                />
+                <CFormInput size="sm" type="date" onChange={handlePeriodTo} />
                 <CFormLabel className="mt-2">Status</CFormLabel>
                 <CFormSelect size="sm" onChange={handleStatus}>
                   <option>APPROVED</option>
@@ -202,11 +253,7 @@ const Statement = () => {
                   <option>BDT</option>
                 </CFormSelect>
                 <CFormLabel className="mt-2">Amount from</CFormLabel>
-                <CFormInput
-                  size="sm"
-                  type="text"
-                  onChange={handleAmountFrom}
-                />
+                <CFormInput size="sm" type="text" onChange={handleAmountFrom} />
                 <CFormLabel className="mt-2">Amount To</CFormLabel>
                 <CFormInput size="sm" type="text" onChange={handleAmountTo} />
                 <CFormLabel className="mt-2">Order by</CFormLabel>
@@ -237,7 +284,7 @@ const Statement = () => {
             title="Statement List"
             columns={column}
             data={statement}
-            pagination
+            paginatio={20}
             expandableCCol
           />
         </CCol>

@@ -32,7 +32,6 @@ const BusinessRepresentative = ({ clickNext }) => {
   const [nid, seNid] = useState();
   const [dob, seDob] = useState();
   const [nidInfo, setNidInfo] = useState();
-  console.log();
 
   const handleNidNumber = (e) => {
     seNid(e.target.value);
@@ -68,50 +67,138 @@ const BusinessRepresentative = ({ clickNext }) => {
   };
 
   const saveBusinessRepresentative = (e) => {
-    if (e) {
-      console.log("element", e);
-      swal({
-        position: "top-end",
-        text: "Category Service Created Successfull",
-        icon: "success",
-        button: false,
-        timer: 1500,
-      });
-      localStorage.setItem(
-        "first_name",
-        e.first_name == "" ? nidInfo?.json_log.nid.fullNameEN : e.first_name
-      );
-      localStorage.setItem("last_name", e.last_name);
-      localStorage.setItem("email", e.email);
-      localStorage.setItem("dob", e.dob);
-      localStorage.setItem(
-        "address1",
+    const data = {
+      first_name:
+        e.first_name == "" ? nidInfo?.json_log.nid.fullNameEN : e.first_name,
+      last_name: e.last_name,
+      email: e.email,
+      address1:
         e.address_line_1 == ""
           ? nidInfo?.json_log.nid.presentAddressEN
-          : e.address_line_1
-      );
-      localStorage.setItem(
-        "address2",
+          : e.address_line_1,
+      address2:
         e.address_line_2 == ""
           ? nidInfo?.json_log.nid.permenantAddressEN
-          : e.address_line_2
-      );
-      localStorage.setItem("city", e.city);
-      localStorage.setItem("state", e.state);
-      localStorage.setItem("postal_code", parseInt(e.postal_code));
-      localStorage.setItem("nid_number", nid);
-      localStorage.setItem("dob", dob);
-      localStorage.setItem("merchant_pic", image);
-      reset();
-      clickNext(1);
-    } else {
-      swal({
-        position: "top-end",
-        text: "Faild",
-        icon: "error",
-        button: false,
-        timer: 1500,
+          : e.address_line_2,
+      city: e.city,
+      state: e.state,
+      postal_code: parseInt(e.postal_code),
+      nid_number: nid,
+      date_of_birth: dob,
+      merchant_pic: image,
+      marchant_id: localStorage.getItem("merchant_id"),
+      industry_no: localStorage.getItem("indeustry"),
+      category_code: localStorage.getItem("category_code"),
+      website: localStorage.getItem("business_website"),
+      product_desc: localStorage.getItem("description"),
+      is_active: parseInt(localStorage.getItem("status")),
+      country_no: parseInt(localStorage.getItem("country_no")),
+      business_type: parseInt(localStorage.getItem("business_type")),
+      business_name: localStorage.getItem("business_name"),
+      bin: localStorage.getItem("bin"),
+      business_address1: localStorage.getItem("business_address1"),
+      business_address2: localStorage.getItem("business_address2"),
+      business_city: localStorage.getItem("business_city"),
+      business_state: parseInt(localStorage.getItem("business_state")),
+      business_postal_code: localStorage.getItem("business_postal_code"),
+      merchant_phone: localStorage.getItem("business_Phone"),
+      merchant_email: localStorage.getItem("business_email"),
+    };
+
+    console.log(data);
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+
+    axios
+      .post(`${process.env.REACT_APP_API_URL}marchants/`, data, {
+        headers,
+      })
+      .then((response) => {
+        console.log(response);
+        saveFiles(response.data.id);
+        localStorage.setItem("merchant_id", response.data.id);
+        swal({
+          position: "top-end",
+          text: "Save Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
+        reset();
+        localStorage.setItem("isSubmitBusiness", 1);
+        localStorage.removeItem("country_no");
+        localStorage.removeItem("business_type");
+        localStorage.removeItem("business_name");
+        localStorage.removeItem("bin");
+        localStorage.removeItem("business_address1");
+        localStorage.removeItem("business_address2");
+        localStorage.removeItem("business_city");
+        localStorage.removeItem("business_state");
+        localStorage.removeItem("business_postal_code");
+        localStorage.removeItem("business_Phone");
+        localStorage.removeItem("business_email");
+        localStorage.removeItem("merchant_id");
+        localStorage.removeItem("indeustry");
+        localStorage.removeItem("category_code");
+        localStorage.removeItem("business_website");
+        localStorage.removeItem("description"),
+          localStorage.removeItem("status");
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: error.response.data.detail,
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
       });
+  };
+
+  const saveFiles = (e) => {
+    if (localStorage.getItem("multiFile")) {
+      let data = [];
+      JSON.parse(localStorage.getItem("multiFile"))?.map((file) => {
+        data.push({ merchant_no: e, file_name: file, file_type: 2 });
+      });
+      console.log(data);
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      };
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}attachments/merchant-attachments`,
+          data,
+          {
+            headers,
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          clickNext(1);
+          localStorage.removeItem("multiFile"),
+            swal({
+              position: "top-end",
+              text: "Organization Created Successfull",
+              icon: "success",
+              button: false,
+              timer: 1500,
+            });
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+          swal({
+            position: "top-end",
+            text: error.response.data.detail,
+            icon: "error",
+            button: false,
+            timer: 1500,
+          });
+        });
+    } else {
+      clickNext(1);
     }
   };
 

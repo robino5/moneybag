@@ -68,7 +68,7 @@ const MerchantManagement = () => {
                       className={`nav-link ${active == 2 ? "active" : ""}`}
                       onClick={() => handleNext(2)}
                     >
-                      Business Representative
+                      Business Details
                     </button>
                   </li>
                   <li className="nav-item" role="presentation">
@@ -76,7 +76,7 @@ const MerchantManagement = () => {
                       className={`nav-link ${active == 3 ? "active" : ""}`}
                       onClick={() => handleNext(3)}
                     >
-                      Business Details
+                      Business Representative
                     </button>
                   </li>
                   <li className="nav-item" role="presentation">
@@ -100,13 +100,12 @@ const MerchantManagement = () => {
               <CCardBody>
                 <div hidden={active !== 1 ? true : false}>
                   <BusinessDetails clickNext={clickNext} />
-
                 </div>
                 <div hidden={active !== 2 ? true : false}>
-                  <BusinessRepresentative clickNext={clickNext} />
+                  <BusinessStructure clickNext={clickNext} />
                 </div>
                 <div hidden={active !== 3 ? true : false}>
-                  <BusinessStructure clickNext={clickNext} />
+                  <BusinessRepresentative clickNext={clickNext} />
                 </div>
                 <div hidden={active !== 4 ? true : false}>
                   <BankDetails clickNext={clickNext} />
