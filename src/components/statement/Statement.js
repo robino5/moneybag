@@ -24,6 +24,7 @@ import { render } from "@testing-library/react";
 const Statement = () => {
   const navigate = useNavigate();
   const [merchantList, setMerchantList] = useState();
+  const [visible, setVisible] = useState(false);
   const [orderAmount, setOrderAmount] = useState("");
   const [periodFrom, setPeriodFrom] = useState("");
   const [periodTo, setPeriodTo] = useState("");
@@ -33,6 +34,7 @@ const Statement = () => {
   const [amontTo, setAmountTo] = useState("");
   const [orderby, setOrderBy] = useState("");
   const [statement, setStatement] = useState();
+  const [statementdetails, setStatementDetails] = useState();
 
   const getMerchantList = async () => {
     const headers = {
@@ -58,6 +60,11 @@ const Statement = () => {
       }
     });
     return name;
+  };
+
+  const openDetails = async (e) => {
+    setStatementDetails(e);
+    setVisible(!visible);
   };
 
   const handleOrderNumber = (e) => {
@@ -201,16 +208,7 @@ const Statement = () => {
             className="btn btn-sm d-inline mx-1"
             CColor="info"
             onClick={() => {
-              render(
-                <CModal visible size="lg">
-                  <CModalHeader>
-                    <CModalTitle>Transection Details</CModalTitle>
-                  </CModalHeader>
-                  <CModalBody>
-                    <Description data={row} />
-                  </CModalBody>
-                </CModal>
-              );
+              openDetails(row);
             }}
           >
             Detail
@@ -289,6 +287,16 @@ const Statement = () => {
           />
         </CCol>
       </CRow>
+      <div>
+        <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
+          <CModalHeader onClose={() => setVisible(false)}>
+            <CModalTitle>Transection Details</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <Description data={statementdetails} />
+          </CModalBody>
+        </CModal>
+      </div>
     </div>
   );
 };

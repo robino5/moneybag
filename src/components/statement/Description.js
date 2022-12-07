@@ -82,7 +82,7 @@ const Description = (props) => {
           <tr>
             <td>Amount</td>
             <td>:</td>
-            <td>{props.data.merchant_charge_amount}</td>
+            <td>{props.data.merchant_order_amount}</td>
           </tr>
           <tr>
             <td>Charge</td>
@@ -93,7 +93,7 @@ const Description = (props) => {
             <td>Total Amount</td>
             <td>:</td>
             <td>
-              {props.data.merchant_charge_amount +
+              {props.data.merchant_order_amount +
                 props.data.merchant_charge_amount}
             </td>
           </tr>
