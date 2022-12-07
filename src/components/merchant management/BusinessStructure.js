@@ -46,7 +46,7 @@ const BusinessStructure = ({ clickNext }) => {
       category_code: localStorage.getItem("category_code"),
       website: localStorage.getItem("business_website"),
       product_desc: localStorage.getItem("description"),
-      is_active: localStorage.getItem("status"),
+      is_active: parseInt(localStorage.getItem("status")),
       country_no: parseInt(e.Reg_business_address),
       business_type: parseInt(e.type_of_business),
       business_name: e.business_name,
@@ -70,6 +70,7 @@ const BusinessStructure = ({ clickNext }) => {
       })
       .then((response) => {
         console.log(response);
+        saveFiles(response.data.id)
         localStorage.setItem("merchant_id", response.data.id);
         swal({
           position: "top-end",
@@ -97,7 +98,6 @@ const BusinessStructure = ({ clickNext }) => {
         localStorage.removeItem("description"),
           localStorage.removeItem("status"),
           localStorage.removeItem("merchant_pic");
-        // clickNext(1);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -110,6 +110,52 @@ const BusinessStructure = ({ clickNext }) => {
         });
       });
   };
+
+  const saveFiles = (e) => {
+    if(multifile){
+      let data = [];
+      multifile?.map((file) => {
+        data.push({ merchant_no: e, file_name: file })
+      })
+      console.log(data)
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      };
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}attachments/merchant-attachments`,
+          data,
+          {
+            headers,
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          clickNext(1);
+          swal({
+            position: "top-end",
+            text: "Organization Created Successfull",
+            icon: "success",
+            button: false,
+            timer: 1500,
+          });
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+          swal({
+            position: "top-end",
+            text: error.response.data.detail,
+            icon: "error",
+            button: false,
+            timer: 1500,
+          });
+        })
+    }
+    else{
+      clickNext(1);
+    }
+    
+  }
 
   const getLookupList = () => {
     const headers = {
