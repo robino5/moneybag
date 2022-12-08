@@ -363,7 +363,9 @@ const BusinessRepresentative = ({ clickNext }) => {
               </CCol>
             </CRow>
             <CRow className="mb-3">
-              <CFormLabel className="col-sm-4 col-form-label">District</CFormLabel>
+              <CFormLabel className="col-sm-4 col-form-label">
+                District
+              </CFormLabel>
               <CCol sm={8}>
                 <CFormSelect
                   aria-label="Default select example"

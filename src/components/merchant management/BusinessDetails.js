@@ -27,7 +27,18 @@ const BusinessDetails = ({ clickNext }) => {
     reset,
   } = useForm({ mode: "all" });
   const [lookupList, setLooupList] = useState();
+  const [businessType, setBusinessType] = useState();
+  console.log(businessType);
 
+  const getCetagoryCode = (e) => {
+    if (e == 4001001) {
+      return 5542;
+    } else if (e == 4001002) {
+      return 8398;
+    } else if (e == 4001003) {
+      return 7080;
+    }
+  };
   const saveBusinessDetails = (e) => {
     if (e) {
       swal({
@@ -39,7 +50,7 @@ const BusinessDetails = ({ clickNext }) => {
       });
       localStorage.setItem("merchant_id", e.merchant_id);
       localStorage.setItem("indeustry", e.industry);
-      localStorage.setItem("category_code", e.cat_code);
+      localStorage.setItem("category_code", getCetagoryCode(businessType));
       localStorage.setItem("business_website", e.bussiness_website);
       localStorage.setItem("description", e.Product_desc);
       localStorage.setItem("status", e.status ? 1 : 0);
@@ -145,6 +156,9 @@ const BusinessDetails = ({ clickNext }) => {
                 required: "Please select Industry",
               })}
               type="number"
+              onChange={(e) => {
+                setBusinessType(e.target.value);
+              }}
             >
               <option>Select industry</option>
               {lookupList &&
@@ -164,9 +178,8 @@ const BusinessDetails = ({ clickNext }) => {
           <CCol sm={8}>
             <CFormInput
               type="text"
-              {...register("cat_code", {
-                required: "Please select cetagory code",
-              })}
+              value={getCetagoryCode(businessType)}
+              {...register("cat_code")}
               placeholder="Merchant cetagory code"
             />
             <span className="text-danger">{errors.cat_code?.message}</span>

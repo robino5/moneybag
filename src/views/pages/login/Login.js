@@ -54,7 +54,7 @@ const Login = () => {
         console.error("There was an error!", error);
         swal({
           position: "top-end",
-          text: "Login Failed",
+          text: error.response.data.detail,
           icon: "error",
           button: false,
           timer: 1500,

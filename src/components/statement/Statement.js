@@ -36,7 +36,6 @@ const Statement = () => {
   const [orderby, setOrderBy] = useState("");
   const [statement, setStatement] = useState();
   const [statementdetails, setStatementDetails] = useState();
-  const [serial, setSerial] = useState(0);
 
   const getMerchantList = async () => {
     const headers = {
