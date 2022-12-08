@@ -58,7 +58,7 @@ const Description = (props) => {
           <tr>
             <td>TXN No</td>
             <td>:</td>
-            <td>{props.data.merchant_tran_id}</td>
+            <td>{props.data.txn_id}</td>
           </tr>
           <tr>
             <td>Session ID</td>
@@ -73,12 +73,20 @@ const Description = (props) => {
           <tr>
             <td>Creation date</td>
             <td>:</td>
-            <td>{ DateTime.fromISO(props.data.created_at, {zone: 'Asia/Dhaka'}).toLocaleString(DateTime.DATETIME_MED)}</td>
+            <td>
+              {DateTime.fromISO(props.data.created_at, {
+                zone: "Asia/Dhaka",
+              }).toLocaleString(DateTime.DATETIME_MED)}
+            </td>
           </tr>
           <tr>
             <td>Last update date</td>
             <td>:</td>
-            <td>{DateTime.fromISO(props.data.updated_at, {zone: 'Asia/Dhaka'}).toLocaleString(DateTime.DATETIME_MED)}</td>
+            <td>
+              {DateTime.fromISO(props.data.updated_at, {
+                zone: "Asia/Dhaka",
+              }).toLocaleString(DateTime.DATETIME_MED)}
+            </td>
           </tr>
           <tr>
             <td>Amount</td>

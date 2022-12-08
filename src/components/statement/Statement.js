@@ -36,6 +36,7 @@ const Statement = () => {
   const [orderby, setOrderBy] = useState("");
   const [statement, setStatement] = useState();
   const [statementdetails, setStatementDetails] = useState();
+  const [serial, setSerial] = useState(0);
 
   const getMerchantList = async () => {
     const headers = {
@@ -77,6 +78,11 @@ const Statement = () => {
       }
     });
     return name;
+  };
+
+  const getSerial = (e) => {
+    setSerial(serial + e);
+    return serial;
   };
 
   const openDetails = async (e) => {
@@ -184,38 +190,49 @@ const Statement = () => {
 
   const column = [
     {
+      name: "SL",
+      selector: (row, index) => index + 1,
+      maxWidth: "15px",
+    },
+    {
+      name: "Order ID",
+      selector: (row) => row.gw_order_id,
+    },
+    {
+      name: "Transection ID",
+      selector: (row) => row.txn_id,
+    },
+    {
       name: "Merchant ID",
       sortable: true,
-      grow:2,
+      grow: 2,
       selector: (row) =>
         getMerchantName(row.merchant_id) + "(" + row.merchant_id + ")",
-        
     },
-    
+
     {
       name: "Creation date",
-      grow:2,
-      selector: (row) => DateTime.fromISO(row.created_at, {zone: 'Asia/Dhaka'}).toLocaleString(DateTime.DATETIME_MED) ,
+      grow: 2,
+      selector: (row) =>
+        DateTime.fromISO(row.created_at, { zone: "Asia/Dhaka" }).toLocaleString(
+          DateTime.DATETIME_MED
+        ),
     },
     {
       name: "Amount",
       selector: (row) => row.merchant_order_amount,
     },
     {
-      name: "ReFund Amount",
+      name: "Refund Amount",
       selector: (row) => 0,
     },
     {
-      name: "Total Amount",
+      name: "Final Amountt",
       selector: (row) => row.merchant_order_amount + row.merchant_charge_amount,
     },
     {
       name: "Order Status",
       selector: (row) => row.gw_order_status,
-    },
-    {
-      name: "TXN No",
-      selector: (row) => row.merchant_tran_id,
     },
     {
       name: "Description",
@@ -241,7 +258,7 @@ const Statement = () => {
 
   useEffect(() => {
     getMerchantList();
-    getStatementList()
+    getStatementList();
   }, []);
 
   return (
@@ -305,7 +322,6 @@ const Statement = () => {
             columns={column}
             data={statement}
             paginatio={20}
-            
           />
         </CCol>
       </CRow>
