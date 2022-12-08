@@ -427,7 +427,7 @@ const FintechUpdate = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      State
+                    District
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormSelect

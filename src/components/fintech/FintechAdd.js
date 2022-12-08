@@ -316,7 +316,7 @@ const FintechAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      State
+                    District
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormSelect
@@ -324,7 +324,7 @@ const FintechAdd = () => {
                         {...register("state")}
                         type="number"
                       >
-                        <option>Select State</option>
+                        <option>Select District</option>
                         {lookupList &&
                           getStateOption(lookupList).map((country, index) => (
                             <option value={country.id} key={index}>

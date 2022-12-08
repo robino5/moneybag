@@ -3,6 +3,7 @@ import axios from "axios";
 import DataTable from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
 import Description from "./Description";
+import { DateTime } from "luxon";
 import {
   CCard,
   CCardBody,
@@ -46,6 +47,22 @@ const Statement = () => {
       })
       .then((responce) => {
         console.log(responce.data), setMerchantList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const getStatementList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}txn-statements/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setStatement(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -169,12 +186,16 @@ const Statement = () => {
     {
       name: "Merchant ID",
       sortable: true,
+      grow:2,
       selector: (row) =>
         getMerchantName(row.merchant_id) + "(" + row.merchant_id + ")",
+        
     },
+    
     {
       name: "Creation date",
-      selector: (row) => row.created_at,
+      grow:2,
+      selector: (row) => DateTime.fromISO(row.created_at, {zone: 'Asia/Dhaka'}).toLocaleString(DateTime.DATETIME_MED) ,
     },
     {
       name: "Amount",
@@ -220,6 +241,7 @@ const Statement = () => {
 
   useEffect(() => {
     getMerchantList();
+    getStatementList()
   }, []);
 
   return (
@@ -283,7 +305,7 @@ const Statement = () => {
             columns={column}
             data={statement}
             paginatio={20}
-            expandableCCol
+            
           />
         </CCol>
       </CRow>

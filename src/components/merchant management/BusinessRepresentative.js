@@ -363,14 +363,14 @@ const BusinessRepresentative = ({ clickNext }) => {
               </CCol>
             </CRow>
             <CRow className="mb-3">
-              <CFormLabel className="col-sm-4 col-form-label">State</CFormLabel>
+              <CFormLabel className="col-sm-4 col-form-label">District</CFormLabel>
               <CCol sm={8}>
                 <CFormSelect
                   aria-label="Default select example"
                   {...register("state")}
                   type="number"
                 >
-                  <option>Select State</option>
+                  <option>Select District</option>
                   {lookupList &&
                     getStateOption(lookupList).map((country, index) => (
                       <option value={country.id} key={index}>

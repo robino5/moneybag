@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { CTable } from "@coreui/react";
+import { DateTime } from "luxon";
 
 const Description = (props) => {
   const [merchantList, setMerchantList] = useState();
@@ -72,12 +73,12 @@ const Description = (props) => {
           <tr>
             <td>Creation date</td>
             <td>:</td>
-            <td>{props.data.created_at}</td>
+            <td>{ DateTime.fromISO(props.data.created_at, {zone: 'Asia/Dhaka'}).toLocaleString(DateTime.DATETIME_MED)}</td>
           </tr>
           <tr>
             <td>Last update date</td>
             <td>:</td>
-            <td>{props.data.updated_at}</td>
+            <td>{DateTime.fromISO(props.data.updated_at, {zone: 'Asia/Dhaka'}).toLocaleString(DateTime.DATETIME_MED)}</td>
           </tr>
           <tr>
             <td>Amount</td>

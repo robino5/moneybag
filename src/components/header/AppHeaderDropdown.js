@@ -36,7 +36,8 @@ const AppHeaderDropdown = () => {
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CAvatar src={avatar8} size="md" />
+      <CIcon icon={cilUser} className="me-2" />
+        {/* <CAvatar src={avatar8} size="md" /> */}
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="fw-semibold py-2">
@@ -44,7 +45,7 @@ const AppHeaderDropdown = () => {
             <strong>{localStorage.getItem("username")}</strong>
           </p>
         </CDropdownHeader>
-        <CDropdownItem href="#">
+        {/* <CDropdownItem href="#">
           <CIcon icon={cilBell} className="me-2" />
           Updates
           <CBadge color="info" className="ms-2">
@@ -96,7 +97,7 @@ const AppHeaderDropdown = () => {
           <CBadge color="primary" className="ms-2">
             42
           </CBadge>
-        </CDropdownItem>
+        </CDropdownItem> */}
         <CDropdownDivider />
 
         <CButton color="justify-content-center w-100" onClick={Logout}>

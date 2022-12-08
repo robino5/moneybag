@@ -419,7 +419,7 @@ const BusinessStructure = ({ clickNext }) => {
         </CRow>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label text-right">
-            State
+            District
           </CFormLabel>
           <CCol sm={8}>
             <CFormSelect
@@ -429,7 +429,7 @@ const BusinessStructure = ({ clickNext }) => {
               })}
               type="number"
             >
-              <option>Select State</option>
+              <option>Select District</option>
               {lookupList &&
                 getStateOption(lookupList).map((country, index) => (
                   <option value={country.id} key={index}>

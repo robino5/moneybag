@@ -43,25 +43,25 @@ const AppHeader = () => {
           <CNavItem>
             <CNavLink href="#">Users</CNavLink>
           </CNavItem>
-          <CNavItem>
+          {/* <CNavItem>
             <CNavLink href="#">Settings</CNavLink>
-          </CNavItem>
+          </CNavItem> */}
         </CHeaderNav>
         <CHeaderNav>
           <CNavItem>
-            <CNavLink href="#">
+            {/* <CNavLink href="#">
               <CIcon icon={cilBell} size="lg" />
-            </CNavLink>
+            </CNavLink> */}
           </CNavItem>
           <CNavItem>
-            <CNavLink href="#">
+            {/* <CNavLink href="#">
               <CIcon icon={cilList} size="lg" />
-            </CNavLink>
+            </CNavLink> */}
           </CNavItem>
           <CNavItem>
-            <CNavLink href="#">
+            {/* <CNavLink href="#">
               <CIcon icon={cilEnvelopeOpen} size="lg" />
-            </CNavLink>
+            </CNavLink> */}
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav className="ms-3">

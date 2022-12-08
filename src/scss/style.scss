@@ -56,6 +56,12 @@ $enable-rtl: true;
      
   }
 
+  .image-wrapper{
+    width: 100%;
+    object-fit: contain;
+    backdrop-filter: blur(1px);
+  }
+
 // .payment_wrapper :hover{
 //     background-color:  rgb(235, 233, 233);
 // }
