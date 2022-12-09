@@ -42,6 +42,7 @@ const MerchantServiceUpdate = () => {
   const [slabServiceList, setSlabServiceList] = useState();
   const [slabService, setSlabServices] = useState();
   const [serviceId, setServiceId] = useState();
+  const [slabList, setslabList] = useState();
   const [visible, setVisible] = useState(false);
 
   const getMertchant = async () => {
@@ -138,6 +139,42 @@ const MerchantServiceUpdate = () => {
       .catch((error) => {
         console.error("There was an error!", error);
       });
+  };
+
+  const getSlabList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}merchant-slabs/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setslabList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const getSlabAmount = (e) => {
+    let amount;
+    console.log(slabList, e);
+    slabList?.map((slab) => {
+      if (slab.mrservice_no == e) {
+        amount =
+          "(" +
+          slab.from_slab_amount +
+          "-" +
+          slab.to_slab_amount +
+          ")/" +
+          slab.charge_ammount;
+      } else {
+        amount = 0;
+      }
+    });
+    console.log(amount);
+    return amount;
   };
 
   const getServiceOption = (e) => {
@@ -462,6 +499,7 @@ const MerchantServiceUpdate = () => {
       await getBankList();
       await getLookupList();
       await getSlabServiceList();
+      await getSlabList();
     };
     getAllData();
   }, []);
@@ -635,7 +673,7 @@ const MerchantServiceUpdate = () => {
                             <CCol sm={2}>
                               <p>
                                 {element.service_charge_type == "S"
-                                  ? 0
+                                  ? getSlabAmount(element.id)
                                   : element.charge_ammount}
                               </p>
                             </CCol>

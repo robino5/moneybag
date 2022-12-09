@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import swal from "sweetalert";
 import axios from "axios";
 import CIcon from "@coreui/icons-react";
+import SlabAdd from "src/components/slab/SlabAdd";
 import { cilPlus, cilMinus } from "@coreui/icons";
 import {
   CCard,
@@ -34,11 +35,16 @@ const MerchantServiceAdd = () => {
   const [merchantList, setmerchantList] = useState();
   const [bankList, setBankList] = useState();
   const [lookupList, setLooupList] = useState();
-  const [merchantService, setMerchantServicee] = useState([]);
+  const [merchantService, setMerchantServicee] = useState();
   const [marchantDetailList, setMarchentDetailsList] = useState();
   const [marchantDetail, setMarchentDetail] = useState();
+  const [marchantId, setMarchentId] = useState();
+  const [slabList, setslabList] = useState();
   const [visible, setVisible] = useState(false);
+
   const [slabId, setSlabId] = useState();
+
+  console.log("MerchnetList", merchantService);
 
   const getMertchant = async () => {
     const headers = {
@@ -66,6 +72,22 @@ const MerchantServiceAdd = () => {
       })
       .then((responce) => {
         console.log(responce.data), setBankList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const getMerchantService = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}merchant-services/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setMerchantServicee(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -102,6 +124,42 @@ const MerchantServiceAdd = () => {
       .catch((error) => {
         console.error("There was an error!", error);
       });
+  };
+
+  const getSlabList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}merchant-slabs/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setslabList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const getSlabAmount = (e) => {
+    let amount;
+    console.log(slabList, e);
+    slabList?.map((slab) => {
+      if (slab.mrservice_no == e) {
+        amount =
+          "(" +
+          slab.from_slab_amount +
+          "-" +
+          slab.to_slab_amount +
+          ")/" +
+          slab.charge_ammount;
+      } else {
+        amount = 0;
+      }
+    });
+    console.log(amount);
+    return amount;
   };
 
   const getServiceOption = (e) => {
@@ -159,12 +217,6 @@ const MerchantServiceAdd = () => {
     }
   };
 
-  const removemerchantService = (i) => {
-    let data = [...merchantService];
-    data.splice(i, 1);
-    setMerchantServicee(data);
-  };
-
   const getMertchantDetail = (e, id) => {
     let date = [];
     e &&
@@ -191,6 +243,16 @@ const MerchantServiceAdd = () => {
     return merchatname;
   };
 
+  const setSlabService = (e) => {
+    setSlabId(e);
+    setVisible(!visible);
+  };
+
+  const closeModal = () => {
+    getMerchantService(), getSlabList();
+    setVisible(false);
+  };
+
   const addMerchantServices = (e) => {
     let duplicate = false;
     merchantService?.map((marchant) => {
@@ -207,97 +269,67 @@ const MerchantServiceAdd = () => {
         timer: 3000,
       });
     } else {
-      const merchantServiceData = {
-        merchant_no: parseInt(e.merchant_name),
-        bank_no: parseInt(e.bank_name),
-        service_no: parseInt(e.service_name),
-        charge_ammount: e.percentage === "" ? 0 : parseFloat(e.percentage),
-        service_charge_type: e.service_charge_type,
+      const merchantServiceData = [
+        {
+          merchant_no: parseInt(e.merchant_name),
+          bank_no: parseInt(e.bank_name),
+          service_no: parseInt(e.service_name),
+          charge_ammount: e.percentage === "" ? 0 : parseFloat(e.percentage),
+          service_charge_type: e.service_charge_type,
+        },
+      ];
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       };
-      merchantService.push(merchantServiceData);
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}merchant-services/`,
+          merchantServiceData,
+          {
+            headers,
+          }
+        )
+        .then((response) => {
+          console.log("servive", response);
+          swal({
+            position: "top-end",
+            text: "Store Created Successfull",
+            icon: "success",
+            button: false,
+            timer: 1500,
+          });
+          getMerchantService();
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+          swal({
+            position: "top-end",
+            text: error.response.data.detail,
+            icon: "error",
+            button: false,
+            timer: 1500,
+          });
+        });
     }
   };
 
-  const saveMerchantServices = () => {
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}merchant-services/`,
-        merchantService,
-        {
-          headers,
-        }
-      )
-      .then((response) => {
-        console.log("servive", response);
-        setMerchantServicee(response.data);
-
-        swal({
-          position: "top-end",
-          text: "Store Created Successfull",
-          icon: "success",
-          button: false,
-          timer: 1500,
-        });
-        // navigate("/merchant-service");
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        swal({
-          position: "top-end",
-          text: error.response.data.detail,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
-      });
-  };
-
-  // const saveSlab = (e, id) => {
-  //   console.log(id), console.log(e);
-  // };
-
-  const SaveSlabCharge = (e) => {
-    console.log(slabId);
-    console.log(e);
+  const selectMerchatServices = (e, id) => {
+    console.log(e, id);
     let data = [];
-
-    data.push({
-      mrservice_no: slabId,
-      from_slab_amount: parseInt(e.from_slab_amount),
-      to_slab_amount: parseInt(e.to_slab_amount),
-      charge_ammount: parseInt(e.charge_ammount),
-    });
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .post(`${process.env.REACT_APP_API_URL}merchant-slabs/`, data, {
-        headers,
-      })
-      .then((response) => {
-        console.log("servive", response);
-        swal({
-          position: "top-end",
-          text: "Slab charge Created Successfull",
-          icon: "success",
-          button: false,
-          timer: 1500,
-        });
-        setVisible(false);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        swal({
-          position: "top-end",
-          text: error.response.data.detail,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
+    e &&
+      e.map((element) => {
+        if (element.merchant_no == id) {
+          data.push({
+            id: element.id,
+            bank_no: element.bank_no,
+            service_no: element.service_no,
+            service_charge_type: element.service_charge_type,
+            charge_ammount: element.charge_ammount,
+          });
+        }
       });
+    console.log(data);
+    return data;
   };
 
   useEffect(() => {
@@ -305,7 +337,9 @@ const MerchantServiceAdd = () => {
       await getMertchant();
       await getBankList();
       await getLookupList();
+      await getMerchantService();
       await getMertchantDetailList();
+      await getSlabList();
     };
     getAllData();
   }, []);
@@ -330,6 +364,7 @@ const MerchantServiceAdd = () => {
                           required: "Please select Merchant Name",
                         })}
                         onChange={(e) => {
+                          setMarchentId(e.target.value);
                           setMarchentDetail(
                             getMertchantDetail(
                               marchantDetailList,
@@ -434,117 +469,90 @@ const MerchantServiceAdd = () => {
                   </CRow>
                 </CForm>
                 {merchantService &&
-                  merchantService.map((element, index) => {
-                    return (
-                      <div>
-                        <CRow className="mb-3">
-                          <CCol sm={3}>
-                            <p>{getBankName(element.bank_no)}</p>
-                          </CCol>
-                          <CCol sm={3}>
-                            <p>{getServiceName(element.service_no)}</p>
-                          </CCol>
-                          <CCol sm={2}>
-                            <p>
-                              {element.service_charge_type == "S"
-                                ? 0
-                                : element.charge_ammount}
-                            </p>
-                          </CCol>
-                          <CCol sm={3}>
-                            <p
-                              className={
-                                element.service_charge_type == "S"
-                                  ? "service_charge_type_wrapper"
-                                  : ""
-                              }
-                              onClick={() => {
-                                setSlabId(element.id), setVisible(!visible);
-                              }}
-                            >
-                              {getChargeType(element.service_charge_type)}
-                            </p>
-                          </CCol>
-                          <CCol sm={1}>
-                            <CButton
-                              className="btn-sm"
-                              color="danger"
-                              onClick={(e) => {
-                                removemerchantService(index);
-                              }}
-                            >
-                              <CIcon icon={cilMinus} />
-                            </CButton>
-                          </CCol>
-                        </CRow>
-                      </div>
-                    );
-                  })}
+                  selectMerchatServices(merchantService, marchantId).map(
+                    (element, index) => {
+                      return (
+                        <div>
+                          <CRow className="mb-3">
+                            <CCol sm={3}>
+                              <p>{getBankName(element.bank_no)}</p>
+                            </CCol>
+                            <CCol sm={3}>
+                              <p>{getServiceName(element.service_no)}</p>
+                            </CCol>
+                            <CCol sm={2}>
+                              <p>
+                                {element.service_charge_type == "S"
+                                  ? getSlabAmount(element.id)
+                                  : element.charge_ammount}
+                              </p>
+                            </CCol>
+                            <CCol sm={2}>
+                              <p
+                                className={
+                                  element.service_charge_type == "S"
+                                    ? "service_charge_type_wrapper"
+                                    : ""
+                                }
+                                onClick={() => {
+                                  setSlabService(element.id);
+                                }}
+                              >
+                                {getChargeType(element.service_charge_type)}
+                              </p>
+                            </CCol>
+                            {/* <CCol sm={1}>
+                              <CButton
+                                onClick={(e) => {
+                                  setService(element);
+                                }}
+                                className="btn-sm"
+                                color="info"
+                              >
+                                <CIcon icon={cilPen} />
+                              </CButton>
+                            </CCol> */}
+                            {/* <CCol sm={1}>
+                              <CButton
+                                className="btn-sm"
+                                color="danger"
+                                onClick={(e) => {
+                                  removemerchantService(element.id);
+                                }}
+                              >
+                                <CIcon icon={cilMinus} />
+                              </CButton>
+                            </CCol> */}
+                          </CRow>
+                        </div>
+                      );
+                    }
+                  )}
                 <div className="text-center ">
                   <Link to="/merchant-service">
                     <CButton color="danger" className="mx-3">
                       Cancle
                     </CButton>
                   </Link>
-                  <CButton onClick={saveMerchantServices} color="success">
+                  {/* <CButton onClick={saveMerchantServices} color="success">
                     Save
-                  </CButton>
+                  </CButton> */}
                 </div>
               </CCardBody>
             </CCard>
           </CCol>
         </CRow>
       </CContainer>
-      <CModal visible={visible} onClose={() => setVisible(false)}>
-        <CModalHeader onClose={() => setVisible(false)}>
-          <CModalTitle>Add Slab Charge</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CForm onSubmit={handleSubmit(SaveSlabCharge)}>
-            <CRow className="mb-3">
-              <CFormLabel className="col-sm-3 col-form-label">
-                From Slab Amount
-              </CFormLabel>
-              <CCol sm={9}>
-                <CFormInput
-                  type="text"
-                  name="username"
-                  {...register("from_slab_amount")}
-                />
-              </CCol>
-            </CRow>
-            <CRow className="mb-3">
-              <CFormLabel className="col-sm-3 col-form-label">
-                To Slab Amount
-              </CFormLabel>
-              <CCol sm={9}>
-                <CFormInput
-                  type="text"
-                  name="username"
-                  {...register("to_slab_amount")}
-                />
-              </CCol>
-            </CRow>
-            <CRow className="mb-3">
-              <CFormLabel className="col-sm-3 col-form-label">
-                Charge Amount
-              </CFormLabel>
-              <CCol sm={9}>
-                <CFormInput
-                  type="text"
-                  name="username"
-                  {...register("charge_ammount")}
-                />
-              </CCol>
-            </CRow>
-            <div className="text-center ">
-              <CButton disabled={!isDirty} type="submit" color="success">
-                Save
-              </CButton>
-            </div>
-          </CForm>
-        </CModalBody>
-      </CModal>
+      <div>
+        <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
+          <CModalHeader onClose={() => closeModal()}>
+            <CModalTitle>Add slab Amount</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <SlabAdd data={slabId} />
+          </CModalBody>
+        </CModal>
+      </div>
     </div>
   );
 };
