@@ -27,6 +27,7 @@ const Statement = () => {
   const [merchantList, setMerchantList] = useState();
   const [visible, setVisible] = useState(false);
   const [orderAmount, setOrderAmount] = useState("");
+  const [merchnatName, setMerchantName] = useState("");
   const [periodFrom, setPeriodFrom] = useState("");
   const [periodTo, setPeriodTo] = useState("");
   const [staus, setStatus] = useState("");
@@ -92,6 +93,9 @@ const Statement = () => {
   const handleOrderNumber = (e) => {
     setOrderAmount(e.target.value);
   };
+  const handleMerchnatName = (e) => {
+    setMerchantName(e.target.value);
+  };
   const handlePeriodFrom = (e) => {
     setPeriodFrom(e.target.value);
   };
@@ -122,6 +126,7 @@ const Statement = () => {
 
     const data = {
       order_id: orderAmount,
+      merchant_name: merchnatName,
       period_from: `${periodFrom}T00:00:00`,
       period_to: `${periodTo}T23:59:59`,
       status: staus,
@@ -132,6 +137,9 @@ const Statement = () => {
     };
     if (!orderAmount) {
       delete data.order_id;
+    }
+    if (!merchnatName) {
+      delete data.merchant_name;
     }
     if (!periodFrom) {
       delete data.period_from;
@@ -272,6 +280,12 @@ const Statement = () => {
                   size="sm"
                   type="text"
                   onChange={handleOrderNumber}
+                />
+                <CFormLabel>Merchant Name</CFormLabel>
+                <CFormInput
+                  size="sm"
+                  type="text"
+                  onChange={handleMerchnatName}
                 />
                 <CFormLabel className="mt-2">Period from</CFormLabel>
                 <CFormInput size="sm" type="date" onChange={handlePeriodFrom} />
