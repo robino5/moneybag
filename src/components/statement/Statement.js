@@ -203,7 +203,7 @@ const Statement = () => {
     },
     {
       name: "Order ID",
-      selector: (row) => row.gw_order_id,
+      selector: (row) => row.merchant_tran_id,
     },
     {
       name: "Transection ID",
