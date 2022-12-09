@@ -296,6 +296,7 @@ const Statement = () => {
                   <option>APPROVED</option>
                   <option>PENDING</option>
                   <option>REJECTED</option>
+                  <option>CANCELED</option>
                 </CFormSelect>
                 <CFormLabel className="mt-2">Currency</CFormLabel>
                 <CFormSelect size="sm" onChange={handleCurrency}>
