@@ -93,6 +93,8 @@ const FintechAdd = () => {
           service_type: parseInt(element.service_type),
           end_point_url: "Test",
           call_back_url: "Test",
+          rate: parseInt(element.rate),
+          rate_type: element.rate_type,
           is_active: element.is_active ? 1 : 0,
         });
       });
@@ -316,7 +318,7 @@ const FintechAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                    District
+                      District
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormSelect
@@ -371,11 +373,17 @@ const FintechAdd = () => {
                     </CCol>
                   </CRow>
                   <CRow className="">
-                    <CCol sm={5}>
+                    <CCol sm={3}>
+                      <p>Service Category</p>
+                    </CCol>
+                    <CCol sm={3}>
                       <p>Service Name</p>
                     </CCol>
-                    <CCol sm={5}>
-                      <p>Service Category</p>
+                    <CCol sm={2}>
+                      <p>Rate</p>
+                    </CCol>
+                    <CCol sm={2}>
+                      <p>Rate Type</p>
                     </CCol>
                     {/* <CCol sm={3}>
                       <p>End Point Url</p>
@@ -391,24 +399,7 @@ const FintechAdd = () => {
                   {fields.map((service, index) => {
                     return (
                       <CRow className="mb-3" key={service.id}>
-                        <CCol sm={5}>
-                          <CFormSelect
-                            aria-label="Default select example"
-                            type="number"
-                            {...register(`services.${index}.service_type`)}
-                          >
-                            <option>Service Name</option>
-                            {lookupList &&
-                              getServiceOption(lookupList).map(
-                                (country, index) => (
-                                  <option value={country.id} key={index}>
-                                    {country.name}
-                                  </option>
-                                )
-                              )}
-                          </CFormSelect>
-                        </CCol>
-                        <CCol sm={5}>
+                        <CCol sm={3}>
                           <CFormSelect
                             aria-label="Default select example"
                             type="number"
@@ -425,6 +416,42 @@ const FintechAdd = () => {
                                   </option>
                                 )
                               )}
+                          </CFormSelect>
+                        </CCol>
+                        <CCol sm={3}>
+                          <CFormSelect
+                            aria-label="Default select example"
+                            type="number"
+                            {...register(`services.${index}.service_type`)}
+                          >
+                            <option>Service Name</option>
+                            {lookupList &&
+                              getServiceOption(lookupList).map(
+                                (country, index) => (
+                                  <option value={country.id} key={index}>
+                                    {country.name}
+                                  </option>
+                                )
+                              )}
+                          </CFormSelect>
+                        </CCol>
+                        <CCol sm={2}>
+                          <CFormInput
+                            type="text"
+                            {...register(`services.${index}.rate`)}
+                            placeholder="Rate"
+                          />
+                        </CCol>
+                        <CCol sm={2}>
+                          <CFormSelect
+                            aria-label="Default select example"
+                            type="number"
+                            {...register(`services.${index}.rate_type`)}
+                          >
+                            <option>Select Rate Type</option>
+                            <option value={"F"}>Fixed</option>
+                            <option value={"P"}>Percentage </option>
+                            <option value={"S"}>Slab </option>
                           </CFormSelect>
                         </CCol>
                         {/* <CCol sm={3}>

@@ -598,12 +598,12 @@ const MerchantServiceUpdate = () => {
                         >
                           Slab{" "}
                         </option>
-                        <option
+                        {/* <option
                           selected={servicevalue.service_charge_type == "C"}
                           value={"C"}
                         >
                           Combination{" "}
-                        </option>
+                        </option> */}
                       </CFormSelect>
                     </CCol>
                     <CCol sm={1}>
@@ -691,7 +691,7 @@ const MerchantServiceUpdate = () => {
       <div>
         <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
           <CModalHeader onClose={() => closeModal()}>
-            <CModalTitle>Add slab Amount</CModalTitle>
+            <CModalTitle>Update slab Amount</CModalTitle>
           </CModalHeader>
           <CModalBody>
             <SlabUpdate data={slabService} />
