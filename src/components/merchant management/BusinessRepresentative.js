@@ -32,6 +32,7 @@ const BusinessRepresentative = ({ clickNext }) => {
   const [nid, seNid] = useState();
   const [dob, seDob] = useState();
   const [nidInfo, setNidInfo] = useState();
+  const [nidCopy, setNidCopy] = useState();
 
   const handleNidNumber = (e) => {
     seNid(e.target.value);
@@ -86,15 +87,17 @@ const BusinessRepresentative = ({ clickNext }) => {
       nid_number: nid,
       date_of_birth: dob,
       merchant_pic: image,
+      nid_picture: nidCopy,
       marchant_id: localStorage.getItem("merchant_id"),
       industry_no: localStorage.getItem("indeustry"),
       category_code: localStorage.getItem("category_code"),
       website: localStorage.getItem("business_website"),
       product_desc: localStorage.getItem("description"),
       is_active: parseInt(localStorage.getItem("status")),
-      country_no: parseInt(localStorage.getItem("country_no")),
+      country_no: 1001001,
       business_type: parseInt(localStorage.getItem("business_type")),
       business_name: localStorage.getItem("business_name"),
+      short_name: localStorage.getItem("business_short_name"),
       bin: localStorage.getItem("bin"),
       business_address1: localStorage.getItem("business_address1"),
       business_address2: localStorage.getItem("business_address2"),
@@ -103,6 +106,8 @@ const BusinessRepresentative = ({ clickNext }) => {
       business_postal_code: localStorage.getItem("business_postal_code"),
       merchant_phone: localStorage.getItem("business_Phone"),
       merchant_email: localStorage.getItem("business_email"),
+      file_1: localStorage.getItem("file1"),
+      file_2: localStorage.getItem("file2"),
     };
 
     console.log(data);
@@ -116,7 +121,6 @@ const BusinessRepresentative = ({ clickNext }) => {
       })
       .then((response) => {
         console.log(response);
-        saveFiles(response.data.id);
         localStorage.setItem("merchant_id", response.data.id);
         swal({
           position: "top-end",
@@ -143,7 +147,10 @@ const BusinessRepresentative = ({ clickNext }) => {
         localStorage.removeItem("category_code");
         localStorage.removeItem("business_website");
         localStorage.removeItem("description"),
-          localStorage.removeItem("status");
+          localStorage.removeItem("business_short_name");
+        localStorage.removeItem("file1");
+        localStorage.removeItem("file2");
+        clickNext(1);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -155,51 +162,6 @@ const BusinessRepresentative = ({ clickNext }) => {
           timer: 1500,
         });
       });
-  };
-
-  const saveFiles = (e) => {
-    if (localStorage.getItem("multiFile")) {
-      let data = [];
-      JSON.parse(localStorage.getItem("multiFile"))?.map((file) => {
-        data.push({ merchant_no: e, file_name: file, file_type: 2 });
-      });
-      console.log(data);
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      };
-      axios
-        .post(
-          `${process.env.REACT_APP_API_URL}attachments/merchant-attachments`,
-          data,
-          {
-            headers,
-          }
-        )
-        .then((response) => {
-          console.log(response);
-          clickNext(1);
-          localStorage.removeItem("multiFile"),
-            swal({
-              position: "top-end",
-              text: "Organization Created Successfull",
-              icon: "success",
-              button: false,
-              timer: 1500,
-            });
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-          swal({
-            position: "top-end",
-            text: error.response.data.detail,
-            icon: "error",
-            button: false,
-            timer: 1500,
-          });
-        });
-    } else {
-      clickNext(1);
-    }
   };
 
   const getLookupList = () => {
@@ -227,8 +189,7 @@ const BusinessRepresentative = ({ clickNext }) => {
     });
     return Date;
   };
-
-  const uploadFile = (e) => {
+  const uploadphoto = (e) => {
     var data = new FormData();
     data.append("file", e.target.files[0]);
 
@@ -260,8 +221,42 @@ const BusinessRepresentative = ({ clickNext }) => {
     }
   };
 
+  const uploadFile = (e) => {
+    var data = new FormData();
+    data.append("file", e.target.files[0]);
+
+    if (e.target.files[0].size > 5e6) {
+      swal({
+        position: "top-end",
+        text: "Your File is too Large! Please provide the file below 5MB.",
+        icon: "warning",
+        button: false,
+        timer: 3000,
+      });
+      e.target.value = null;
+    } else {
+      axios
+        .post(`${process.env.REACT_APP_API_URL}uploads/upload`, data)
+        .then((response) => {
+          console.log(response), setNidCopy(response.data.fileName);
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+          swal({
+            position: "top-end",
+            text: "File Upload Failed",
+            icon: "error",
+            button: false,
+            timer: 1500,
+          });
+        });
+    }
+  };
+
   const openFile = () => {
-    window.open(`${process.env.REACT_APP_API_URL}uploads/uploads/get/${image}`);
+    window.open(
+      `${process.env.REACT_APP_API_URL}uploads/uploads/get/${nidCopy}`
+    );
   };
 
   useEffect(() => {
@@ -421,7 +416,7 @@ const BusinessRepresentative = ({ clickNext }) => {
             </CRow>
             <CRow className="mb-3">
               <CCol sm={12}>
-                <CFormInput type="file" onChange={uploadFile} />
+                <CFormInput type="file" onChange={uploadphoto} />
               </CCol>
             </CRow>
           </CCol>
@@ -453,6 +448,23 @@ const BusinessRepresentative = ({ clickNext }) => {
               {...register("address_line_2")}
               placeholder="Address Line 2"
             />
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-2 col-form-label">Nid Copy</CFormLabel>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <CCol sm={4}>
+            <CFormInput type="file" onChange={uploadFile} />
+          </CCol>
+          <CCol md={1}>
+            <CButton
+              color="secondary"
+              onClick={() => {
+                openFile();
+              }}
+            >
+              <CIcon icon={cilLowVision}></CIcon>
+            </CButton>
           </CCol>
         </CRow>
         {/* <CRow className="mb-3">

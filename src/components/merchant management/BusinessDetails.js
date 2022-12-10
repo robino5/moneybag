@@ -32,11 +32,29 @@ const BusinessDetails = ({ clickNext }) => {
 
   const getCetagoryCode = (e) => {
     if (e == 4001001) {
-      return 5542;
+      return 8299;
     } else if (e == 4001002) {
       return 8398;
     } else if (e == 4001003) {
-      return 7080;
+      return 7801;
+    } else if (e == 4001003) {
+      return 7801;
+    } else if (e == 4001004) {
+      return 7801;
+    } else if (e == 4001005) {
+      return 5137;
+    } else if (e == 4001006) {
+      return 9802;
+    } else if (e == 4001007) {
+      return 9985;
+    } else if (e == 4001008) {
+      return 3531;
+    } else if (e == 4001009) {
+      return 8099;
+    } else if (e == 4001010) {
+      return 9985;
+    } else if (e == 4001007) {
+      return 9997;
     }
   };
   const saveBusinessDetails = (e) => {
@@ -49,9 +67,9 @@ const BusinessDetails = ({ clickNext }) => {
         timer: 1500,
       });
       localStorage.setItem("merchant_id", e.merchant_id);
+      localStorage.setItem("business_type", parseInt(e.type_of_business));
       localStorage.setItem("indeustry", e.industry);
       localStorage.setItem("category_code", getCetagoryCode(businessType));
-      localStorage.setItem("business_website", e.bussiness_website);
       localStorage.setItem("description", e.Product_desc);
       localStorage.setItem("status", e.status ? 1 : 0);
       reset();
@@ -124,6 +142,16 @@ const BusinessDetails = ({ clickNext }) => {
     return Date;
   };
 
+  const getBusinessOption = (e) => {
+    let Date = [];
+    e.forEach((element) => {
+      if (element.lov_id === 2001 && element.is_active === 1) {
+        Date.push({ id: element.id, name: element.name });
+      }
+    });
+    return Date;
+  };
+
   useEffect(() => {
     getLookupList();
     localStorage.setItem("isSubmitBusiness", 0);
@@ -148,7 +176,29 @@ const BusinessDetails = ({ clickNext }) => {
           </CCol>
         </CRow>
         <CRow className="mb-3">
-          <CFormLabel className="col-sm-4 col-form-label">Industry</CFormLabel>
+          <CFormLabel className="col-sm-4 col-form-label text-right">
+            Legal Identity of Company
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormSelect
+              aria-label="Default select example"
+              type="number"
+              {...register("type_of_business")}
+            >
+              <option>Select One</option>
+              {lookupList &&
+                getBusinessOption(lookupList).map((country, index) => (
+                  <option value={country.id} key={index}>
+                    {country.name}
+                  </option>
+                ))}
+            </CFormSelect>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            Industry/Business Type
+          </CFormLabel>
           <CCol sm={8}>
             <CFormSelect
               aria-label="Default select example"
@@ -160,7 +210,7 @@ const BusinessDetails = ({ clickNext }) => {
                 setBusinessType(e.target.value);
               }}
             >
-              <option>Select industry</option>
+              <option>Select Industry/Business</option>
               {lookupList &&
                 getIndustryOption(lookupList).map((country, index) => (
                   <option value={country.id} key={index}>
@@ -183,18 +233,6 @@ const BusinessDetails = ({ clickNext }) => {
               placeholder="Merchant cetagory code"
             />
             <span className="text-danger">{errors.cat_code?.message}</span>
-          </CCol>
-        </CRow>
-        <CRow className="mb-3">
-          <CFormLabel className="col-sm-4 col-form-label">
-            Business website
-          </CFormLabel>
-          <CCol sm={8}>
-            <CFormInput
-              type="text"
-              {...register("bussiness_website")}
-              placeholder="Business website"
-            />
           </CCol>
         </CRow>
         <CRow className="mb-3">

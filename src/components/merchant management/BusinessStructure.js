@@ -4,7 +4,7 @@ import axios from "axios";
 import swal from "sweetalert";
 import { useForm, useFieldArray } from "react-hook-form";
 import CIcon from "@coreui/icons-react";
-import { cilFile } from "@coreui/icons";
+import { cilLowVision } from "@coreui/icons";
 import {
   CCard,
   CCardBody,
@@ -27,9 +27,8 @@ const BusinessStructure = ({ clickNext }) => {
     reset,
   } = useForm({ mode: "all" });
   const [lookupList, setLooupList] = useState();
-  const [multifile, setFile] = useState();
-
-  console.log(multifile);
+  const [file1, setFile1] = useState();
+  const [file2, setFile2] = useState();
 
   const saveBusinessStructure = (e) => {
     if (e) {
@@ -40,18 +39,22 @@ const BusinessStructure = ({ clickNext }) => {
         button: false,
         timer: 1500,
       });
-      localStorage.setItem("country_no", parseInt(e.Reg_business_address));
-      localStorage.setItem("business_type", parseInt(e.type_of_business));
       localStorage.setItem("business_name", e.business_name);
+      localStorage.setItem("business_short_name", e.business_short_name);
       localStorage.setItem("bin", e.business_no);
       localStorage.setItem("business_address1", e.b_address_line_1);
       localStorage.setItem("business_address2", e.b_address_line_2);
-      localStorage.setItem("business_city", e.b_cit);
+      localStorage.setItem("business_city", e.b_city);
+      localStorage.setItem("business_website", e.bussiness_website);
       localStorage.setItem("business_state", parseInt(e.b_state));
       localStorage.setItem("business_postal_code", e.b_postel_code);
       localStorage.setItem("business_Phone", parseInt(e.b_phone));
       localStorage.setItem("business_email", e.b_email);
-      localStorage.setItem("multiFile", JSON.stringify(multifile));
+      localStorage.setItem("file1", file1);
+      if (file2) {
+        localStorage.setItem("file2", file2);
+      }
+
       reset();
       clickNext(1);
     } else {
@@ -144,51 +147,6 @@ const BusinessStructure = ({ clickNext }) => {
     //     });
     //   });
   };
-
-  const saveFiles = (e) => {
-    if (multifile) {
-      let data = [];
-      multifile?.map((file) => {
-        data.push({ merchant_no: e, file_name: file });
-      });
-      console.log(data);
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      };
-      axios
-        .post(
-          `${process.env.REACT_APP_API_URL}attachments/merchant-attachments`,
-          data,
-          {
-            headers,
-          }
-        )
-        .then((response) => {
-          console.log(response);
-          clickNext(1);
-          swal({
-            position: "top-end",
-            text: "Organization Created Successfull",
-            icon: "success",
-            button: false,
-            timer: 1500,
-          });
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-          swal({
-            position: "top-end",
-            text: error.response.data.detail,
-            icon: "error",
-            button: false,
-            timer: 1500,
-          });
-        });
-    } else {
-      clickNext(1);
-    }
-  };
-
   const getLookupList = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -205,25 +163,25 @@ const BusinessStructure = ({ clickNext }) => {
       });
   };
 
-  const getCountryOption = (e) => {
-    let Date = [];
-    e.forEach((element) => {
-      if (element.lov_id === 1001 && element.is_active === 1) {
-        Date.push({ id: element.id, name: element.name });
-      }
-    });
-    return Date;
+  const getFileLebel = (e) => {
+    if (e == 2001001) {
+      return "EIIN File:";
+    } else if (e == 2001002 || e == 2001006) {
+      return "N Corporation File";
+    } else {
+      return "Trade License";
+    }
   };
 
-  const getBusinessOption = (e) => {
-    let Date = [];
-    e.forEach((element) => {
-      if (element.lov_id === 2001 && element.is_active === 1) {
-        Date.push({ id: element.id, name: element.name });
-      }
-    });
-    return Date;
-  };
+  // const getCountryOption = (e) => {
+  //   let Date = [];
+  //   e.forEach((element) => {
+  //     if (element.lov_id === 1001 && element.is_active === 1) {
+  //       Date.push({ id: element.id, name: element.name });
+  //     }
+  //   });
+  //   return Date;
+  // };
 
   const getStateOption = (e) => {
     let Date = [];
@@ -235,41 +193,71 @@ const BusinessStructure = ({ clickNext }) => {
     return Date;
   };
 
-  const uploadFile = (e) => {
+  const uploadFile1 = (e) => {
     var data = new FormData();
-    const uplodedfile = e.target.files;
-    console.log("file", uplodedfile);
-    const files = Object.values(uplodedfile);
-    console.log("object-file", files);
-    files.forEach((file) => {
-      data.append("files", file);
-      console.log("new File", file);
-    });
-    axios
-      .post(`${process.env.REACT_APP_API_URL}uploads/multiplefiles`, data, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        setFile(response.data.files);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        swal({
-          position: "top-end",
-          text: "File Upload Failed",
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
+    data.append("file", e.target.files[0]);
+
+    if (e.target.files[0].size > 5e6) {
+      swal({
+        position: "top-end",
+        text: "Your File is too Large! Please provide the file below 5MB.",
+        icon: "warning",
+        button: false,
+        timer: 3000,
       });
+      e.target.value = null;
+    } else {
+      axios
+        .post(`${process.env.REACT_APP_API_URL}uploads/upload`, data)
+        .then((response) => {
+          console.log(response), setFile1(response.data.fileName);
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+          swal({
+            position: "top-end",
+            text: "File Upload Failed",
+            icon: "error",
+            button: false,
+            timer: 1500,
+          });
+        });
+    }
+  };
+
+  const uploadFile2 = (e) => {
+    var data = new FormData();
+    data.append("file", e.target.files[0]);
+
+    if (e.target.files[0].size > 5e6) {
+      swal({
+        position: "top-end",
+        text: "Your File is too Large! Please provide the file below 5MB.",
+        icon: "warning",
+        button: false,
+        timer: 3000,
+      });
+      e.target.value = null;
+    } else {
+      axios
+        .post(`${process.env.REACT_APP_API_URL}uploads/upload`, data)
+        .then((response) => {
+          console.log(response), setFile2(response.data.fileName);
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+          swal({
+            position: "top-end",
+            text: "File Upload Failed",
+            icon: "error",
+            button: false,
+            timer: 1500,
+          });
+        });
+    }
   };
 
   const openFile = (e) => {
-    console.log(e);
     window.open(`${process.env.REACT_APP_API_URL}uploads/uploads/get/${e}`);
   };
 
@@ -280,46 +268,6 @@ const BusinessStructure = ({ clickNext }) => {
   return (
     <div>
       <CForm onSubmit={handleSubmit(saveBusinessStructure)}>
-        <CRow className="mb-3">
-          <CFormLabel className="col-sm-4 col-form-label text-right">
-            Registered business address
-          </CFormLabel>
-          <CCol sm={8}>
-            <CFormSelect
-              aria-label="Default select example"
-              type="number"
-              {...register("Reg_business_address")}
-            >
-              <option>Select Country</option>
-              {lookupList &&
-                getCountryOption(lookupList).map((country, index) => (
-                  <option value={country.id} key={index}>
-                    {country.name}
-                  </option>
-                ))}
-            </CFormSelect>
-          </CCol>
-        </CRow>
-        <CRow className="mb-3">
-          <CFormLabel className="col-sm-4 col-form-label text-right">
-            Type of business
-          </CFormLabel>
-          <CCol sm={8}>
-            <CFormSelect
-              aria-label="Default select example"
-              type="number"
-              {...register("type_of_business")}
-            >
-              <option>Type of Business</option>
-              {lookupList &&
-                getBusinessOption(lookupList).map((country, index) => (
-                  <option value={country.id} key={index}>
-                    {country.name}
-                  </option>
-                ))}
-            </CFormSelect>
-          </CCol>
-        </CRow>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label text-right">
             Business Name
@@ -337,7 +285,24 @@ const BusinessStructure = ({ clickNext }) => {
         </CRow>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label text-right">
-            Business No.
+            Business Name
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("business_short_name", {
+                required: "Please provide Business Short Name",
+              })}
+              placeholder="Business Short Name"
+            />
+            <span className="text-danger">{errors.business_name?.message}</span>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label text-right">
+            {localStorage.getItem("business_type") == 2001001
+              ? "EIIN No."
+              : "BIN No."}
           </CFormLabel>
           <CCol sm={8}>
             <CFormInput
@@ -403,6 +368,18 @@ const BusinessStructure = ({ clickNext }) => {
           </CCol>
         </CRow>
         <CRow className="mb-3">
+          <CFormLabel className="col-sm-4 col-form-label">
+            Business website
+          </CFormLabel>
+          <CCol sm={8}>
+            <CFormInput
+              type="text"
+              {...register("bussiness_website")}
+              placeholder="Business website"
+            />
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label text-right">
             City
           </CFormLabel>
@@ -454,38 +431,48 @@ const BusinessStructure = ({ clickNext }) => {
         </CRow>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label">
-            File Upload
+            {getFileLebel(localStorage.getItem("business_type"))}
           </CFormLabel>
-          <CCol sm={8}>
-            <CFormInput
-              multiple={true}
-              type="file"
-              name="files"
-              onChange={uploadFile}
-            />
+          <CCol sm={7}>
+            <CFormInput type="file" onChange={uploadFile1} />
+          </CCol>
+          <CCol md={1}>
+            <CButton
+              color="secondary"
+              onClick={() => {
+                openFile(file1);
+              }}
+            >
+              <CIcon icon={cilLowVision}></CIcon>
+            </CButton>
           </CCol>
         </CRow>
-        <CRow>
-          <div className="text-center">
-            <CRow>
-              {multifile?.map((file) => {
-                return (
-                  <CCol md={1}>
-                    <CButton
-                      color="secondary"
-                      className="my-2"
-                      onClick={() => {
-                        openFile(file);
-                      }}
-                    >
-                      <CIcon icon={cilFile}></CIcon>
-                    </CButton>
-                  </CCol>
-                );
-              })}
-            </CRow>
-          </div>
-        </CRow>
+        <div
+          hidden={
+            localStorage.getItem("business_type") == 2001001 ? true : false
+          }
+        >
+          <CRow className="mb-3">
+            <CFormLabel className="col-sm-4 col-form-label">
+              TIN Certificate
+            </CFormLabel>
+            <CCol sm={7}>
+              <CFormInput type="file" onChange={uploadFile2} />
+            </CCol>
+            <CCol md={1}>
+              <CButton
+                color="secondary"
+                onClick={() => {
+                  openFile(file2);
+                }}
+              >
+                <CIcon icon={cilLowVision}></CIcon>
+              </CButton>
+            </CCol>
+          </CRow>
+        </div>
+
+        <CRow></CRow>
         <div className="text-center ">
           <CButton color="success" type="submit" className="mx-3">
             Save
