@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import swal from "sweetalert";
 import axios from "axios";
+import SlabUpdate from "src/components/slab/SlabUpdate";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilMinus } from "@coreui/icons";
 import {
@@ -247,6 +248,20 @@ const MerchantServiceUpdate = () => {
     return date;
   };
 
+  const closeModal = () => {
+    const getAllData = async () => {
+      await getMertchant();
+      await getMertchantDetailList();
+      await getMerchantService();
+      await getBankList();
+      await getLookupList();
+      await getSlabServiceList();
+      await getSlabList();
+    };
+    getAllData();
+    setVisible(false);
+  };
+
   const getMerchantName = (e) => {
     let merchatname;
     merchantList &&
@@ -350,68 +365,8 @@ const MerchantServiceUpdate = () => {
       });
   };
 
-  const setSlabService = (e) => {
-    console.log(e);
-    slabServiceList?.map((element) => {
-      if (element.mrservice_no == e) {
-        setSlabServices(element);
-        setServiceId(e);
-      }
-    });
-  };
-
-  const updateSlabCharge = (e) => {
-    const data = {
-      mrservice_no: serviceId,
-      from_slab_amount:
-        e.from_slab_amount == ""
-          ? slabService?.from_slab_amount
-          : parseFloat(e.from_slab_amount),
-      to_slab_amount:
-        e.to_slab_amount == ""
-          ? slabService?.to_slab_amount
-          : parseFloat(e.to_slab_amount),
-      charge_ammount:
-        e.charge_ammount == ""
-          ? slabService?.charge_ammount
-          : parseFloat(e.charge_ammount),
-    };
-    console.log(data);
-    console.log(slabService);
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}merchant-slabs/update/${slabService?.id}`,
-        data,
-        {
-          headers,
-        }
-      )
-      .then((response) => {
-        console.log("servive", response);
-        setSlabServices();
-        setVisible(false);
-        reset();
-        swal({
-          position: "top-end",
-          text: "slab Update Successfull",
-          icon: "success",
-          button: false,
-          timer: 1500,
-        });
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        swal({
-          position: "top-end",
-          text: error.response.data.detail,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
-      });
+  const updateSlabSerice = (e) => {
+    setSlabServices(e), setVisible(!visible);
   };
 
   // const saveMerchantServices = () => {
@@ -685,8 +640,7 @@ const MerchantServiceUpdate = () => {
                                     : ""
                                 }
                                 onClick={() => {
-                                  setSlabService(element.id),
-                                    setVisible(!visible);
+                                  updateSlabSerice(element.id);
                                 }}
                               >
                                 {getChargeType(element.service_charge_type)}
@@ -703,7 +657,7 @@ const MerchantServiceUpdate = () => {
                                 <CIcon icon={cilPen} />
                               </CButton>
                             </CCol>
-                            <CCol sm={1}>
+                            {/* <CCol sm={1}>
                               <CButton
                                 className="btn-sm"
                                 color="danger"
@@ -713,7 +667,7 @@ const MerchantServiceUpdate = () => {
                               >
                                 <CIcon icon={cilMinus} />
                               </CButton>
-                            </CCol>
+                            </CCol> */}
                           </CRow>
                         </div>
                       );
@@ -734,58 +688,16 @@ const MerchantServiceUpdate = () => {
           </CCol>
         </CRow>
       </CContainer>
-      <CModal visible={visible} onClose={() => setVisible(false)}>
-        <CModalHeader onClose={() => setVisible(false)}>
-          <CModalTitle>Update Slab Charge</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CForm onSubmit={handleSubmit(updateSlabCharge)}>
-            <CRow className="mb-3">
-              <CFormLabel className="col-sm-3 col-form-label">
-                From Slab Amount
-              </CFormLabel>
-              <CCol sm={9}>
-                <CFormInput
-                  type="text"
-                  defaultValue={slabService?.from_slab_amount}
-                  name="username"
-                  {...register("from_slab_amount")}
-                />
-              </CCol>
-            </CRow>
-            <CRow className="mb-3">
-              <CFormLabel className="col-sm-3 col-form-label">
-                To Slab Amount
-              </CFormLabel>
-              <CCol sm={9}>
-                <CFormInput
-                  type="text"
-                  defaultValue={slabService?.to_slab_amount}
-                  name="username"
-                  {...register("to_slab_amount")}
-                />
-              </CCol>
-            </CRow>
-            <CRow className="mb-3">
-              <CFormLabel className="col-sm-3 col-form-label">
-                Charge Amount
-              </CFormLabel>
-              <CCol sm={9}>
-                <CFormInput
-                  type="text"
-                  defaultValue={slabService?.charge_ammount}
-                  {...register("charge_ammount")}
-                />
-              </CCol>
-            </CRow>
-            <div className="text-center ">
-              <CButton type="submit" color="info">
-                Update
-              </CButton>
-            </div>
-          </CForm>
-        </CModalBody>
-      </CModal>
+      <div>
+        <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
+          <CModalHeader onClose={() => closeModal()}>
+            <CModalTitle>Add slab Amount</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <SlabUpdate data={slabService} />
+          </CModalBody>
+        </CModal>
+      </div>
     </div>
   );
 };

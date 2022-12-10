@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import swal from "sweetalert";
@@ -26,24 +26,66 @@ const SlabUpdate = (props) => {
     setValue,
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
+  const [slabService, setSlabService] = useState();
 
-  const SaveSlabCharge = (e) => {
-    console.log(e);
-    let data = [];
+  const getSlabServiceList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}merchant-slabs/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), slabServicedata(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
 
-    data.push({
-      mrservice_no: props.data,
-      from_slab_amount: parseInt(e.from_slab_amount),
-      to_slab_amount: parseInt(e.to_slab_amount),
-      charge_ammount: parseInt(e.charge_ammount),
+  const slabServicedata = (e) => {
+    let data;
+    e?.map((slab) => {
+      if (slab.mrservice_no == props.data) {
+        data = slab;
+        console.log(slab);
+      }
     });
+    setSlabService(data);
+  };
+
+  console.log("slabs", slabService);
+
+  const updateSlabCharge = (e) => {
+    console.log("element", e);
+
+    const data = {
+      mrservice_no: props.data,
+      from_slab_amount: parseInt(
+        e.from_slab_amount == ""
+          ? slabService?.from_slab_amount
+          : e.from_slab_amount
+      ),
+      to_slab_amount: parseInt(
+        e.to_slab_amount == "" ? slabService?.to_slab_amount : e.to_slab_amount
+      ),
+      charge_ammount: parseInt(
+        e.charge_ammount == "" ? slabService?.charge_ammount : e.charge_ammount
+      ),
+    };
+    console.log(data);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .post(`${process.env.REACT_APP_API_URL}merchant-slabs/`, data, {
-        headers,
-      })
+      .post(
+        `${process.env.REACT_APP_API_URL}merchant-slabs/update/${slabService?.id}`,
+        data,
+        {
+          headers,
+        }
+      )
       .then((response) => {
         console.log("servive", response);
         swal({
@@ -53,7 +95,6 @@ const SlabUpdate = (props) => {
           button: false,
           timer: 1500,
         });
-        navigate("/add-merchant-service");
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -67,6 +108,13 @@ const SlabUpdate = (props) => {
       });
   };
 
+  useEffect(() => {
+    const getAllData = async () => {
+      await getSlabServiceList();
+    };
+    getAllData();
+  }, []);
+
   return (
     <div className=" d-flex flex-row">
       <CContainer>
@@ -74,7 +122,7 @@ const SlabUpdate = (props) => {
           <CCol md={12}>
             <CCard className="p-4">
               <CCardBody>
-                <CForm onSubmit={handleSubmit(SaveSlabCharge)}>
+                <CForm onSubmit={handleSubmit(updateSlabCharge)}>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       From Slab Amount
@@ -83,6 +131,7 @@ const SlabUpdate = (props) => {
                       <CFormInput
                         type="text"
                         name="username"
+                        defaultValue={slabService?.from_slab_amount}
                         {...register("from_slab_amount")}
                       />
                     </CCol>
@@ -95,6 +144,7 @@ const SlabUpdate = (props) => {
                       <CFormInput
                         type="text"
                         name="username"
+                        defaultValue={slabService?.to_slab_amount}
                         {...register("to_slab_amount")}
                       />
                     </CCol>
@@ -107,13 +157,14 @@ const SlabUpdate = (props) => {
                       <CFormInput
                         type="text"
                         name="username"
+                        defaultValue={slabService?.charge_ammount}
                         {...register("charge_ammount")}
                       />
                     </CCol>
                   </CRow>
                   <div className="text-center ">
-                    <CButton disabled={!isDirty} type="submit" color="success">
-                      Save
+                    <CButton type="submit" color="info">
+                      Update
                     </CButton>
                   </div>
                 </CForm>

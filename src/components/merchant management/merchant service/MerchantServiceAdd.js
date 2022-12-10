@@ -255,8 +255,12 @@ const MerchantServiceAdd = () => {
 
   const addMerchantServices = (e) => {
     let duplicate = false;
+    console.log(marchantId);
     merchantService?.map((marchant) => {
-      if (marchant.service_no === parseInt(e.service_name)) {
+      if (
+        (marchant.merchant_no == marchantId) &
+        (marchant.service_no === parseInt(e.service_name))
+      ) {
         duplicate = true;
       }
     });
@@ -278,6 +282,7 @@ const MerchantServiceAdd = () => {
           service_charge_type: e.service_charge_type,
         },
       ];
+      console.log(merchantServiceData);
       const headers = {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       };
