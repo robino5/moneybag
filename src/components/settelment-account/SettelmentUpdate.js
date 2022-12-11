@@ -232,7 +232,7 @@ const SettelmentAdd = () => {
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCard className="p-4">
-              <h6 className="text-center">Update Settelment</h6>
+              <h6 className="text-center">Update Settlement Bnak</h6>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(updateSattelmentAccount)}>
                   <CRow className="mb-3">
@@ -362,14 +362,14 @@ const SettelmentAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Account number
+                      Account Number
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
                         {...register("account_id")}
                         defaultValue={location.state.account_id}
-                        placeholder="Account id"
+                        placeholder="Account Number"
                       />
                     </CCol>
                   </CRow>

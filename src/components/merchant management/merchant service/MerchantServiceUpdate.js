@@ -592,12 +592,12 @@ const MerchantServiceUpdate = () => {
                         >
                           Percentage{" "}
                         </option>
-                        <option
+                        {/* <option
                           selected={servicevalue.service_charge_type == "S"}
                           value={"S"}
                         >
                           Slab{" "}
-                        </option>
+                        </option> */}
                         {/* <option
                           selected={servicevalue.service_charge_type == "C"}
                           value={"C"}

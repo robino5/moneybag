@@ -110,6 +110,10 @@ const BusinessRepresentative = ({ clickNext }) => {
       file_2: localStorage.getItem("file2"),
     };
 
+    if (!localStorage.getItem("file2")) {
+      delete data.file_2;
+    }
+
     console.log(data);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -121,7 +125,7 @@ const BusinessRepresentative = ({ clickNext }) => {
       })
       .then((response) => {
         console.log(response);
-        localStorage.setItem("merchant_id", response.data.id);
+        localStorage.setItem("merchant_no", response.data.id);
         swal({
           position: "top-end",
           text: "Save Successfull",

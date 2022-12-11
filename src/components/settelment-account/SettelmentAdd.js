@@ -32,6 +32,9 @@ const SettelmentAdd = () => {
   const [lookupList, setLooupList] = useState();
   const [serviceList, setServiceList] = useState();
   const [service, setServices] = useState();
+  const [bankId, setBankId] = useState();
+
+  console.log("bank", bankId);
 
   const multipleInsert = (e) => {
     setServices(Array.isArray(e) ? e.map((value) => value.value) : []);
@@ -190,7 +193,11 @@ const SettelmentAdd = () => {
     let date = [];
     e &&
       e.map((element) => {
-        if (element.bank_flag === 0 && element.is_active === 1) {
+        if (
+          element.bank_flag === 0 &&
+          element.is_active === 1 &&
+          element.root_bank == bankId
+        ) {
           date.push({ id: element.id, branch_name: element.branch_name });
         }
       });
@@ -210,7 +217,7 @@ const SettelmentAdd = () => {
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCard className="p-4">
-              <h6 className="text-center">Add Settelment</h6>
+              <h6 className="text-center">Add Settlement Bnak</h6>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(saveSattelmentAccount)}>
                   <CRow className="mb-3">
@@ -251,6 +258,9 @@ const SettelmentAdd = () => {
                         {...register("select_bank_name", {
                           required: "Please Settelment Bank",
                         })}
+                        onChange={(e) => {
+                          setBankId(e.target.value);
+                        }}
                       >
                         <option>Settelment Bank</option>
                         {getBankOption(bankbranchList) &&
@@ -337,7 +347,7 @@ const SettelmentAdd = () => {
                         {...register("account_id", {
                           required: "Please provide Account Number",
                         })}
-                        placeholder="Account id"
+                        placeholder="Account Number"
                       />
                       <span className="text-danger">
                         {errors.account_id?.message}

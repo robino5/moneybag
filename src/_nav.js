@@ -113,11 +113,11 @@ const _nav = [
         name: "Merchant Service",
         to: "/merchant-service",
       },
-      {
-        component: CNavItem,
-        name: "Merchant Store",
-        to: "/merchant-store",
-      },
+      // {
+      //   component: CNavItem,
+      //   name: "Merchant Store",
+      //   to: "/merchant-store",
+      // },
       // {
       //   component: CNavItem,
       //   name: "Bank Payment",
@@ -126,7 +126,7 @@ const _nav = [
     ],
   },
 
-    {
+  {
     component: CNavGroup,
     name: "Statement",
     to: "/statement",
@@ -138,7 +138,6 @@ const _nav = [
       },
     ],
   },
-  
 
   // {
   //   component: CNavGroup,

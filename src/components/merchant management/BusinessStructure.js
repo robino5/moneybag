@@ -285,7 +285,7 @@ const BusinessStructure = ({ clickNext }) => {
         </CRow>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label text-right">
-            Business Name
+            Business Short Name
           </CFormLabel>
           <CCol sm={8}>
             <CFormInput

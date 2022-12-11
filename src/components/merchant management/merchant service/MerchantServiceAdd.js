@@ -458,7 +458,7 @@ const MerchantServiceAdd = () => {
                         <option>Select service charge type</option>
                         <option value={"F"}>Fixed</option>
                         <option value={"P"}>Percentage </option>
-                        <option value={"S"}>Slab </option>
+                        {/* <option value={"S"}>Slab </option> */}
                         {/* <option value={"C"}>Combination </option> */}
                       </CFormSelect>
                     </CCol>

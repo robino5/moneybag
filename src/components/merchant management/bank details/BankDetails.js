@@ -33,7 +33,7 @@ const BankDetails = ({ clickNext }) => {
 
   const saveBusinessDetails = (e) => {
     const businessDetailData = {
-      merchant_no: localStorage.getItem("merchant_id"),
+      merchant_no: localStorage.getItem("merchant_no"),
       currency_no: parseInt(e.currency),
       bank_no: parseInt(e.bank_name),
       branch_no: parseInt(e.branch_name),
@@ -64,7 +64,8 @@ const BankDetails = ({ clickNext }) => {
         });
         localStorage.setItem("isBankDetailDate", 1);
         reset();
-        clickNext(1);
+        getMertchantList();
+        setPageSetup(0);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -156,6 +157,16 @@ const BankDetails = ({ clickNext }) => {
         }
       });
     return date;
+  };
+
+  const getMercnatdetails = (e) => {
+    let data = [];
+    e?.map((element) => {
+      if (element.merchant_no == localStorage.getItem("merchant_no")) {
+        data.push(element);
+      }
+    });
+    return data;
   };
 
   const setBankName = (e) => {
@@ -262,9 +273,22 @@ const BankDetails = ({ clickNext }) => {
         </div>
         <CRow className="justify-content-center">
           <CCol md={12}>
-            <DataTable columns={comumn} data={marchantDetail} pagination />
+            <DataTable
+              columns={comumn}
+              data={getMercnatdetails(marchantDetail)}
+              pagination
+            />
           </CCol>
         </CRow>
+        <div className="text-center">
+          <CButton
+            onClick={() => {
+              clickNext(1);
+            }}
+          >
+            Next
+          </CButton>
+        </div>
       </div>
       <div hidden={pageSetup !== 1 ? true : false}>
         <CForm onSubmit={handleSubmit(saveBusinessDetails)}>

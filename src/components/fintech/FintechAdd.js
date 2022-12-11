@@ -33,7 +33,12 @@ const FintechAdd = () => {
 
   const navigate = useNavigate();
   const [lookupList, setLooupList] = useState();
-  console.log("fields", fields);
+  const [service, setservices] = useState([]);
+
+  const setservic = (e) => {
+    service.push(e.target.value);
+  };
+
   const saveFintech = (e) => {
     console.log("element");
     const fintechData = {
@@ -159,11 +164,22 @@ const FintechAdd = () => {
     let Date = [];
     e.forEach((element) => {
       if (element.lov_id === 6001 && element.is_active === 1) {
-        Date.push({ id: element.id, name: element.name });
+        service?.map((e) => {
+          console.log(element.id, e);
+          if (e != element.id) {
+            Date.push({ id: element.id, name: element.name });
+          }
+        });
       }
     });
     return Date;
   };
+
+  // fields?.map((e) => {
+  //   if (e.service_type != element.id) {
+  //     Date.push({ id: element.id, name: element.name });
+  //   }
+  // });
 
   const getServiceCategoryOption = (e) => {
     let Date = [];
@@ -423,6 +439,7 @@ const FintechAdd = () => {
                             aria-label="Default select example"
                             type="number"
                             {...register(`services.${index}.service_type`)}
+                            onChange={setservic}
                           >
                             <option>Service Name</option>
                             {lookupList &&

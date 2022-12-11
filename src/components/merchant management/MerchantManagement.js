@@ -84,7 +84,7 @@ const MerchantManagement = () => {
                       className={`nav-link ${active == 4 ? "active" : ""}`}
                       onClick={() => handleNext(4)}
                     >
-                      Bank Details
+                      Settlement Bank
                     </button>
                   </li>
                   <li className="nav-item" role="presentation">
