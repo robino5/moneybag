@@ -124,12 +124,9 @@ const Login = () => {
               >
                 <CCardBody className="text-center">
                   <div>
-                    <h2>Sign up</h2>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
-                    </p>
+                    <h2>Welcome To</h2>
+                    <h3>MoneyBag Admin Portal</h3>
+                    <h5>Secure Payment Anytime</h5>
                     <Link to="/register">
                       {/* <CButton
                         color="primary"

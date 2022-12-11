@@ -271,7 +271,7 @@ const SettelmentAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
-                      Bank Name
+                      Settelment Bank
                     </CFormLabel>
                     <CCol sm={9}>
                       <CFormSelect

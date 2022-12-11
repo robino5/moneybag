@@ -74,7 +74,7 @@ const Statement = () => {
     let name;
     merchantList?.map((mercant) => {
       if (mercant.marchant_id == e) {
-        name = mercant.business_name;
+        name = mercant.short_name;
       }
     });
     return name;

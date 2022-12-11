@@ -91,10 +91,7 @@ const DefaultService = () => {
     const data = [];
     let duplicate = false;
     defaultServiceList?.forEach((element) => {
-      if (
-        element.bank_no === parseInt(e.bank_name) &&
-        element.service_no === parseInt(e.service_name)
-      ) {
+      if (element.service_no === parseInt(e.service_name)) {
         duplicate = true;
         return false;
       }
@@ -160,10 +157,7 @@ const DefaultService = () => {
     console.log(e);
     let duplicate = false;
     defaultServiceList?.forEach((element) => {
-      if (
-        element.bank_no === parseInt(e.bank_no) &&
-        element.service_no === parseInt(e.service_no)
-      ) {
+      if (element.service_no === parseInt(e.service_no)) {
         duplicate = true;
         return false;
       }

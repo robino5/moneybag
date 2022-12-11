@@ -124,6 +124,8 @@ const MerchantUpdate = () => {
       is_active: e.status ? 1 : 0,
       upload_file: location.state.upload_file,
       merchant_pic: location.state.merchant_pic,
+      short_name: e.short_name,
+      date_of_birth: e.dob,
     };
     console.log(data);
     const headers = {
@@ -257,6 +259,19 @@ const MerchantUpdate = () => {
                             defaultValue={location.state.business_name}
                             {...register("business_name")}
                             placeholder="Business Name"
+                          />
+                        </CCol>
+                      </CRow>
+                      <CRow className="mb-3">
+                        <CFormLabel className="col-sm-4 col-form-label text-right">
+                          Business Short Name
+                        </CFormLabel>
+                        <CCol sm={8}>
+                          <CFormInput
+                            type="text"
+                            defaultValue={location.state.short_name}
+                            {...register("short_name")}
+                            placeholder="Business Short Name"
                           />
                         </CCol>
                       </CRow>
@@ -437,18 +452,6 @@ const MerchantUpdate = () => {
                       </CRow>
                       <CRow className="mb-3">
                         <CFormLabel className="col-sm-4 col-form-label">
-                          Date of Birth
-                        </CFormLabel>
-                        <CCol sm={8}>
-                          <CFormInput
-                            type="date"
-                            {...register("dob")}
-                            placeholder=" Date of Birth"
-                          />
-                        </CCol>
-                      </CRow>
-                      <CRow className="mb-3">
-                        <CFormLabel className="col-sm-4 col-form-label">
                           City
                         </CFormLabel>
                         <CCol sm={8}>
@@ -536,6 +539,19 @@ const MerchantUpdate = () => {
                             defaultValue={location.state.nid_number}
                             {...register("national_id")}
                             placeholder="Nationnal Id"
+                          />
+                        </CCol>
+                      </CRow>{" "}
+                      <CRow className="mb-3">
+                        <CFormLabel className="col-sm-4 col-form-label">
+                          Date Of Birth
+                        </CFormLabel>
+                        <CCol sm={8}>
+                          <CFormInput
+                            type="date"
+                            defaultValue={location.state.date_of_birth}
+                            {...register("dob")}
+                            placeholder="Date Of Birth"
                           />
                         </CCol>
                       </CRow>
