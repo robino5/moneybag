@@ -11,6 +11,9 @@ const StoreList = () => {
   const [merchantList, setmerchantList] = useState();
   const [marchantDetailList, setMarchentDetailsList] = useState();
   const [bankList, setBankList] = useState();
+  const [lookupList, setLooupList] = useState();
+
+  console.log("merhant details:", MerchantService);
 
   const getMertchant = async () => {
     const headers = {
@@ -59,6 +62,21 @@ const StoreList = () => {
         console.error("There was an error!", error);
       });
   };
+  const getLookupList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}lookups/detail-list`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setLooupList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
 
   const getBankList = async () => {
     const headers = {
@@ -90,6 +108,16 @@ const StoreList = () => {
     return data;
   };
 
+  const getServices = (e) => {
+    let data = [];
+    MerchantService?.map((service) => {
+      if (service.merchant_no == e) {
+        data.push(service.service_no);
+      }
+    });
+    return data;
+  };
+
   const getMertchantDetail = (e, id) => {
     let date = [];
     e &&
@@ -116,6 +144,16 @@ const StoreList = () => {
         }
       });
     return merchatname;
+  };
+
+  const getServiceName = (e) => {
+    let servicename;
+    lookupList?.map((service) => {
+      if (service.id === e) {
+        servicename = service.name;
+      }
+    });
+    return servicename;
   };
 
   const getBankName = (e) => {
@@ -175,6 +213,7 @@ const StoreList = () => {
       await getMertchantDetailList();
       await getMerchantService();
       await getBankList();
+      await getLookupList();
     };
     getAllData();
   }, []);
@@ -185,23 +224,28 @@ const StoreList = () => {
       selector: (row) => getMerchantName(row.id),
     },
     {
-      name: "Collection Account name ",
+      name: "Service Name",
       selector: (row) => (
-        <din>
-          {getMertchantDetail(marchantDetailList, row.id) &&
-            getMertchantDetail(marchantDetailList, row.id).map((element) => {
-              return (
-                <span>
-                  {getMerchantName(element.merchant_no) +
-                    "(" +
-                    getBankName(element.bank_no) +
-                    "-" +
-                    getBankName(element.branch_no) +
-                    ") "}
-                </span>
-              );
-            })}
-        </din>
+        <div>
+          {getServices(row.id)?.map((service) => {
+            return <span>{getServiceName(service) + ","}</span>;
+          })}
+        </div>
+        // <din>
+        //   {getMertchantDetail(marchantDetailList, row.id) &&
+        //     getMertchantDetail(marchantDetailList, row.id).map((element) => {
+        //       return (
+        //         <span>
+        //           {getMerchantName(element.merchant_no) +
+        //             "(" +
+        //             getBankName(element.bank_no) +
+        //             "-" +
+        //             getBankName(element.branch_no) +
+        //             ") "}
+        //         </span>
+        //       );
+        //     })}
+        // </din>
       ),
       minWidth: "500px",
     },

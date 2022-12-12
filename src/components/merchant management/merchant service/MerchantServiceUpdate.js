@@ -280,14 +280,14 @@ const MerchantServiceUpdate = () => {
   };
 
   const setService = (element) => {
-    setAddService(false)
+    setAddService(false);
     setServiceValue({
       id: element.id,
       bank_no: element.bank_no,
       charge_ammount: element.charge_ammount,
       service_charge_type: element.service_charge_type,
       service_no: element.service_no,
-      is_active: element.is_active == 1 ? true : false
+      is_active: element.is_active == 1 ? true : false,
     });
   };
 
@@ -302,7 +302,7 @@ const MerchantServiceUpdate = () => {
             service_no: element.service_no,
             service_charge_type: element.service_charge_type,
             charge_ammount: element.charge_ammount,
-            is_active: element.is_active
+            is_active: element.is_active,
           });
         }
       });
@@ -338,10 +338,10 @@ const MerchantServiceUpdate = () => {
           : e.service_charge_type,
       charge_ammount:
         e.percentage == "" ? servicevalue.charge_ammount : e.percentage,
-        is_active:e.status?1:0
+      is_active: e.status ? 1 : 0,
     };
 
-    console.log("dd",mercharDate)
+    console.log("dd", mercharDate);
 
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -356,6 +356,8 @@ const MerchantServiceUpdate = () => {
       )
       .then((response) => {
         console.log(response);
+        setServiceValue({ is_active: false });
+        reset();
         getMerchantService();
         swal({
           text: "Updated Successfull",
@@ -377,14 +379,14 @@ const MerchantServiceUpdate = () => {
       });
   };
 
-  const addService=()=>{
+  const addService = () => {
     const merchantServiceData = [
       {
         merchant_no: location.state,
         bank_no: parseInt(bank),
         service_no: parseInt(service),
-        charge_ammount: parseFloat(rate),
-        is_active:status?1:0,
+        charge_ammount: parseFloat(rate).toFixed(2),
+        is_active: status ? 1 : 0,
         service_charge_type: rateType,
       },
     ];
@@ -409,7 +411,7 @@ const MerchantServiceUpdate = () => {
           timer: 1500,
         });
         getMerchantService();
-        setAddService(false)
+        setAddService(false);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -421,7 +423,7 @@ const MerchantServiceUpdate = () => {
           timer: 1500,
         });
       });
-  }
+  };
 
   // const addMerchantService=(e)=>{
   //       console.log(e)
@@ -558,9 +560,9 @@ const MerchantServiceUpdate = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <p className="col-sm-3 col-form-label">
-                      Settlement Account Name
+                      Select FinTech Name
                     </p>
-                    <CCol sm={9}>
+                    {/* <CCol sm={9}>
                       {merchantList &&
                         getMertchantDetail(
                           marchantDetailList,
@@ -577,121 +579,15 @@ const MerchantServiceUpdate = () => {
                             </p>
                           );
                         })}
-                    </CCol>
+                    </CCol> */}
                   </CRow>
-                  <div hidden={addservice?true:false}>
-                  <CRow className="mb-3">
-                    <CCol sm={3}>
-                      <CFormSelect
-                        aria-label="Default select example"
-                        {...register("bank_name")}
-                        disabled="true"
-                      >
-                        <option>select Bank</option>
-                        {getBankOption(bankList) &&
-                          getBankOption(bankList).map((bank, index) => (
-                            <option
-                              value={bank.id}
-                              selected={
-                                bank.id === servicevalue.bank_no
-                                  ? "selected"
-                                  : ""
-                              }
-                              key={index}
-                            >
-                              {bank.branch_name}
-                            </option>
-                          ))}
-                      </CFormSelect>
-                    </CCol>
-                    <CCol sm={3}>
-                      <CFormSelect
-                        aria-label="Default select example"
-                        {...register("service_name")}
-                        disabled="true"
-                      >
-                        <option>select Service</option>
-                        {lookupList &&
-                          getServiceOption(lookupList).map((service, index) => (
-                            <option
-                              value={service.id}
-                              selected={
-                                service.id === servicevalue.service_no
-                                  ? "selected"
-                                  : ""
-                              }
-                              key={index}
-                            >
-                              {service.name}
-                            </option>
-                          ))}
-                      </CFormSelect>
-                    </CCol>
-                    <CCol sm={2}>
-                      <CFormInput
-                        type="text"
-                        {...register("percentage")}
-                        defaultValue={servicevalue.charge_ammount}
-                        placeholder="Percentage"
-                      />
-                    </CCol>
-                    <CCol sm={2}>
-                      <CFormSelect
-                        aria-label="Default select example"
-                        {...register("service_charge_type")}
-                        onChange={(e) => {
-                          setChargeType(e.target.value);
-                        }}
-                      >
-                        <option
-                          selected={servicevalue.service_charge_type == "F"}
-                          value={"F"}
-                        >
-                          Fixed
-                        </option>
-                        <option
-                          selected={servicevalue.service_charge_type == "P"}
-                          value={"P"}
-                        >
-                          Percentage{" "}
-                        </option>
-                        {/* <option
-                          selected={servicevalue.service_charge_type == "S"}
-                          value={"S"}
-                        >
-                          Slab{" "}
-                        </option> */}
-                        {/* <option
-                          selected={servicevalue.service_charge_type == "C"}
-                          value={"C"}
-                        >
-                          Combination{" "}
-                        </option> */}
-                      </CFormSelect>
-                    </CCol>
-                    <CCol sm={1}>
-                      <CFormCheck
-                        name="status"
-                        label="Active"
-                        defaultChecked={servicevalue.is_active}
-                        {...register("status")}
-                        onChange={()=>{setupdateStatus(e.target.value)}}
-                      />
-                    </CCol>
-                    <CCol sm={1}>
-                      <CButton className="btn-sm" color="info" type="submit">
-                        Update
-                      </CButton>
-                    </CCol>
-                  </CRow>
-                  </div>
-                </CForm>
-                <div hidden={!addservice?true:false}>
+                  <div hidden={addservice ? true : false}>
                     <CRow className="mb-3">
                       <CCol sm={3}>
                         <CFormSelect
                           aria-label="Default select example"
-                          onChange={(e)=>{setBank(e.target.value)}}
+                          {...register("bank_name")}
+                          disabled="true"
                         >
                           <option>select Bank</option>
                           {getBankOption(bankList) &&
@@ -713,59 +609,185 @@ const MerchantServiceUpdate = () => {
                       <CCol sm={3}>
                         <CFormSelect
                           aria-label="Default select example"
-                          onChange={(e)=>{setservice(e.target.value)}}
+                          {...register("service_name")}
+                          disabled="true"
                         >
                           <option>select Service</option>
                           {lookupList &&
-                            getServiceOption(lookupList).map((service, index) => (
-                              <option
-                                value={service.id}
-                                key={index}
-                              >
-                                {service.name}
-                              </option>
-                            ))}
+                            getServiceOption(lookupList).map(
+                              (service, index) => (
+                                <option
+                                  value={service.id}
+                                  selected={
+                                    service.id === servicevalue.service_no
+                                      ? "selected"
+                                      : ""
+                                  }
+                                  key={index}
+                                >
+                                  {service.name}
+                                </option>
+                              )
+                            )}
                         </CFormSelect>
                       </CCol>
                       <CCol sm={2}>
                         <CFormInput
                           type="text"
-                          placeholder="Rate"
-                          onChange={(e)=>{setrate(e.target.value)}}
+                          {...register("percentage")}
+                          defaultValue={servicevalue.charge_ammount}
+                          placeholder="Percentage"
                         />
                       </CCol>
                       <CCol sm={2}>
                         <CFormSelect
                           aria-label="Default select example"
-                          onChange={(e)=>{setrateType(e.target.value)}}
+                          {...register("service_charge_type")}
+                          onChange={(e) => {
+                            setChargeType(e.target.value);
+                          }}
                         >
-                         <option>Select Rate type</option>
-                        <option value={"F"}>Fixed</option>
-                        <option value={"P"}>Percentage </option>
-                 
+                          <option
+                            selected={servicevalue.service_charge_type == "F"}
+                            value={"F"}
+                          >
+                            Fixed
+                          </option>
+                          <option
+                            selected={servicevalue.service_charge_type == "P"}
+                            value={"P"}
+                          >
+                            Percentage{" "}
+                          </option>
+                          {/* <option
+                          selected={servicevalue.service_charge_type == "S"}
+                          value={"S"}
+                        >
+                          Slab{" "}
+                        </option> */}
+                          {/* <option
+                          selected={servicevalue.service_charge_type == "C"}
+                          value={"C"}
+                        >
+                          Combination{" "}
+                        </option> */}
                         </CFormSelect>
                       </CCol>
                       <CCol sm={1}>
                         <CFormCheck
                           name="status"
                           label="Active"
-                          onChange={(e)=>{serstatus(e.target.checked)}}
+                          defaultChecked={servicevalue.is_active}
+                          {...register("status")}
+                          onChange={() => {
+                            setupdateStatus(e.target.value);
+                          }}
                         />
                       </CCol>
                       <CCol sm={1}>
-                        <CButton className="btn-sm" color="success" onClick={addService}>
-                          Save
+                        <CButton className="btn-sm" color="info" type="submit">
+                          Update
                         </CButton>
                       </CCol>
                     </CRow>
+                  </div>
+                </CForm>
+                <div hidden={!addservice ? true : false}>
+                  <CRow className="mb-3">
+                    <CCol sm={3}>
+                      <CFormSelect
+                        aria-label="Default select example"
+                        onChange={(e) => {
+                          setBank(e.target.value);
+                        }}
+                      >
+                        <option>select Bank</option>
+                        {getBankOption(bankList) &&
+                          getBankOption(bankList).map((bank, index) => (
+                            <option
+                              value={bank.id}
+                              selected={
+                                bank.id === servicevalue.bank_no
+                                  ? "selected"
+                                  : ""
+                              }
+                              key={index}
+                            >
+                              {bank.branch_name}
+                            </option>
+                          ))}
+                      </CFormSelect>
+                    </CCol>
+                    <CCol sm={3}>
+                      <CFormSelect
+                        aria-label="Default select example"
+                        onChange={(e) => {
+                          setservice(e.target.value);
+                        }}
+                      >
+                        <option>select Service</option>
+                        {lookupList &&
+                          getServiceOption(lookupList).map((service, index) => (
+                            <option value={service.id} key={index}>
+                              {service.name}
+                            </option>
+                          ))}
+                      </CFormSelect>
+                    </CCol>
+                    <CCol sm={2}>
+                      <CFormInput
+                        type="text"
+                        placeholder="Rate"
+                        onChange={(e) => {
+                          setrate(e.target.value);
+                        }}
+                      />
+                    </CCol>
+                    <CCol sm={2}>
+                      <CFormSelect
+                        aria-label="Default select example"
+                        onChange={(e) => {
+                          setrateType(e.target.value);
+                        }}
+                      >
+                        <option>Select Rate type</option>
+                        <option value={"F"}>Fixed</option>
+                        <option value={"P"}>Percentage </option>
+                      </CFormSelect>
+                    </CCol>
+                    <CCol sm={1}>
+                      <CFormCheck
+                        name="status"
+                        label="Active"
+                        onChange={(e) => {
+                          serstatus(e.target.checked);
+                        }}
+                      />
+                    </CCol>
+                    <CCol sm={1}>
+                      <CButton
+                        className="btn-sm"
+                        color="success"
+                        onClick={addService}
+                      >
+                        Save
+                      </CButton>
+                    </CCol>
+                  </CRow>
                 </div>
                 <div className="text-left">
-                  <CButton onClick={() => { setAddService(true) }}>Add Service</CButton>
+                  <CButton
+                    onClick={() => {
+                      setAddService(true);
+                    }}
+                  >
+                    Add Service
+                  </CButton>
                 </div>
                 {merchantList &&
                   selectMerchatServices(merchantService, location.state).map(
                     (element, index) => {
-                      console.log(element)
+                      console.log(element);
                       return (
                         <div>
                           <CRow className="mb-3">
@@ -779,7 +801,9 @@ const MerchantServiceUpdate = () => {
                               <p>
                                 {element.service_charge_type == "S"
                                   ? getSlabAmount(element.id)
-                                  : parseFloat(element.charge_ammount).toFixed(2)}
+                                  : parseFloat(element.charge_ammount).toFixed(
+                                      2
+                                    )}
                               </p>
                             </CCol>
                             <CCol sm={2}>
@@ -797,7 +821,9 @@ const MerchantServiceUpdate = () => {
                               </p>
                             </CCol>
                             <CCol sm={1}>
-                              <p>{element.is_active == 1 ? "Active" : "Inactive"}</p>
+                              <p>
+                                {element.is_active == 1 ? "Active" : "Inactive"}
+                              </p>
                             </CCol>
                             <CCol sm={1}>
                               <CButton

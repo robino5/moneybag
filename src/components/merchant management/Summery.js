@@ -8,7 +8,7 @@ const Summery = () => {
   const navigate = useNavigate();
   const clickDone = () => {
     localStorage.removeItem("isSubmitBusiness");
-    localStorage.removeItem("merchant_id");
+    localStorage.removeItem("merchant_no");
     localStorage.removeItem("isBankDetailDate");
 
     navigate("/dashboard");

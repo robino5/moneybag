@@ -36,8 +36,8 @@ const FintechAdd = () => {
   const navigate = useNavigate();
   const [lookupList, setLooupList] = useState();
   const [services, setservices] = useState([]);
-  const [selectedMethod, setSelectedMethod] = useState([])
-  const [serviceData, serviceListDate] = useState([])
+  const [selectedMethod, setSelectedMethod] = useState([]);
+  const [serviceData, serviceListDate] = useState([]);
   const [fintechType, setFintecType] = useState([]);
   // serviceID = [6001001,]
 
@@ -51,8 +51,8 @@ const FintechAdd = () => {
   //   serviceID.push(e.target.value);
   // };
 
-  console.log(fields)
-  console.log(services)
+  console.log(fields);
+  console.log(services);
 
   const saveFintech = (e) => {
     console.log("element");
@@ -158,7 +158,7 @@ const FintechAdd = () => {
         headers,
       })
       .then((responce) => {
-        console.log(responce.data), setLooupList(responce.data)
+        console.log(responce.data), setLooupList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -175,19 +175,16 @@ const FintechAdd = () => {
     return Date;
   };
 
-
-
   var numbers = /^[0-9]+$/;
 
   const inArray = (key, arr) => {
-    arr.forEach(itm => {
-      if (itm.id == key){
-
-      }else {
-        return itm.id
+    arr.forEach((itm) => {
+      if (itm.id == key) {
+      } else {
+        return itm.id;
       }
-    })
-  }
+    });
+  };
 
   // const setServicesOptions = (services) => {
   //   const currentSelected = []
@@ -314,7 +311,7 @@ const FintechAdd = () => {
                         type="number"
                         {...register("fintech_type")}
                         onChange={(e) => {
-                          setFintecType(e.target.value)
+                          setFintecType(e.target.value);
                         }}
                       >
                         <option>Fintech Type</option>
@@ -508,7 +505,9 @@ const FintechAdd = () => {
                           <CFormSelect
                             aria-label="Default select example"
                             type="number"
-                            {...register(`services.${index}.service_type`, { required: true })}
+                            {...register(`services.${index}.service_type`, {
+                              required: true,
+                            })}
                           >
                             <option>Service Name</option>
                             {lookupList &&

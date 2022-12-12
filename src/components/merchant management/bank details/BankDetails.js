@@ -26,10 +26,14 @@ const BankDetails = ({ clickNext }) => {
     reset,
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
-  const [pageSetup, setPageSetup] = useState(0);
+  const [pageSetup, setPageSetup] = useState(1);
   const [marchantDetail, setMarchentDetailsList] = useState();
   const [lookupList, setLooupList] = useState();
   const [bankbranchList, setBankBranchList] = useState();
+  const [bankId, setBankID] = useState();
+  const [branchId, setBrunchID] = useState();
+
+  console.log("mr list", marchantDetail);
 
   const saveBusinessDetails = (e) => {
     const businessDetailData = {
@@ -152,7 +156,11 @@ const BankDetails = ({ clickNext }) => {
     let date = [];
     e &&
       e.map((element) => {
-        if (element.bank_flag === 0 && element.is_active === 1) {
+        if (
+          element.bank_flag === 0 &&
+          element.is_active === 1 &&
+          element.root_bank == bankId
+        ) {
           date.push({ id: element.id, branch_name: element.branch_name });
         }
       });
@@ -168,6 +176,8 @@ const BankDetails = ({ clickNext }) => {
     });
     return data;
   };
+
+  console.log("check", getMercnatdetails(marchantDetail));
 
   const setBankName = (e) => {
     let bankName;
@@ -200,6 +210,16 @@ const BankDetails = ({ clickNext }) => {
         }
       });
     return currency;
+  };
+
+  const setRoutingNo = (e) => {
+    let routing;
+    e?.map((branch) => {
+      if (branch.id == branchId) {
+        routing = branch.routing_no;
+      }
+    });
+    return routing;
   };
 
   useEffect(() => {
@@ -259,38 +279,10 @@ const BankDetails = ({ clickNext }) => {
       ),
     },
   ];
-  const handlePageSetup = () => {
-    setPageSetup(1);
-  };
 
   return (
     <div>
-      <div hidden={pageSetup !== 0 ? true : false}>
-        <div className="justify-content-centert mb-2">
-          <CButton color="primary" onClick={handlePageSetup}>
-            Add New
-          </CButton>
-        </div>
-        <CRow className="justify-content-center">
-          <CCol md={12}>
-            <DataTable
-              columns={comumn}
-              data={getMercnatdetails(marchantDetail)}
-              pagination
-            />
-          </CCol>
-        </CRow>
-        <div className="text-center">
-          <CButton
-            onClick={() => {
-              clickNext(1);
-            }}
-          >
-            Next
-          </CButton>
-        </div>
-      </div>
-      <div hidden={pageSetup !== 1 ? true : false}>
+      <div>
         <CForm onSubmit={handleSubmit(saveBusinessDetails)}>
           <CRow className="mb-3">
             <CFormLabel className="col-sm-4 col-form-label">
@@ -322,6 +314,9 @@ const BankDetails = ({ clickNext }) => {
                 {...register("bank_name", {
                   required: "Please select Industry",
                 })}
+                onChange={(e) => {
+                  setBankID(e.target.value);
+                }}
               >
                 <option>select Bank</option>
                 {getBankOption(bankbranchList) &&
@@ -344,6 +339,9 @@ const BankDetails = ({ clickNext }) => {
                 {...register("branch_name", {
                   required: "Please select Industry",
                 })}
+                onChange={(e) => {
+                  setBrunchID(e.target.value);
+                }}
               >
                 <option>select Branch</option>
                 {getBranchOption(bankbranchList) &&
@@ -363,6 +361,7 @@ const BankDetails = ({ clickNext }) => {
             <CCol sm={8}>
               <CFormInput
                 type="text"
+                value={setRoutingNo(bankbranchList)}
                 {...register("routing_no")}
                 placeholder="Transit/Routing No:"
               />
@@ -376,7 +375,7 @@ const BankDetails = ({ clickNext }) => {
               <CFormInput
                 type="text"
                 {...register("account_name", {
-                  required: "Please select Industry",
+                  required: "Please Provide Account Name",
                 })}
                 placeholder="Account Name"
               />
@@ -393,7 +392,11 @@ const BankDetails = ({ clickNext }) => {
               <CFormInput
                 type="text"
                 {...register("account_number", {
-                  required: "Please select Industry",
+                  required: "Please Provide Account Number",
+                  pattern: {
+                    value: /^[0-9]*$/,
+                    message: "Please Provide Number",
+                  },
                 })}
                 placeholder="Account Number"
               />
@@ -416,6 +419,27 @@ const BankDetails = ({ clickNext }) => {
             </CButton> */}
           </div>
         </CForm>
+      </div>
+      <div>
+        <div className="justify-content-centert mb-2"></div>
+        <CRow className="justify-content-center">
+          <CCol md={12}>
+            <DataTable
+              columns={comumn}
+              data={getMercnatdetails(marchantDetail)}
+              pagination
+            />
+          </CCol>
+        </CRow>
+        <div className="text-center">
+          <CButton
+            onClick={() => {
+              clickNext(1);
+            }}
+          >
+            Next
+          </CButton>
+        </div>
       </div>
     </div>
   );

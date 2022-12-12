@@ -212,7 +212,11 @@ const SettelmentAdd = () => {
     let date = [];
     e &&
       e.map((element) => {
-        if (element.bank_flag === 0 && element.is_active === 1) {
+        if (
+          element.bank_flag === 0 &&
+          element.is_active === 1 &&
+          element.root_bank == bankId
+        ) {
           date.push({ id: element.id, branch_name: element.branch_name });
         }
       });
@@ -367,10 +371,18 @@ const SettelmentAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("account_id")}
+                        {...register("account_id", {
+                          pattern: {
+                            value: /^[0-9]*$/,
+                            message: "Please Provide Number",
+                          },
+                        })}
                         defaultValue={location.state.account_id}
                         placeholder="Account Number"
                       />
+                      <span className="text-danger">
+                        {errors.account_id?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">

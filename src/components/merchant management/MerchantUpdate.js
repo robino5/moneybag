@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import DataTable from "react-data-table-component";
 import swal from "sweetalert";
 import axios from "axios";
+import CIcon from "@coreui/icons-react";
+import { cilLowVision } from "@coreui/icons";
 import {
   CCard,
   CCardBody,
@@ -29,8 +31,10 @@ const MerchantUpdate = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [lookupList, setLooupList] = useState();
+  const [businessType, setBusinessType] = useState();
+  const [CompanyId, setCompanyId] = useState(location.state.business_type);
 
-  console.log(location);
+  console.log(location.state);
 
   const getLookupList = () => {
     const headers = {
@@ -56,6 +60,40 @@ const MerchantUpdate = () => {
       }
     });
     return Date;
+  };
+
+  const getCetagoryCode = (e) => {
+    let id;
+    if (e) {
+      id = e;
+    } else {
+      id = location.state.industry_no;
+    }
+    if (id == 4001001) {
+      return 8299;
+    } else if (id == 4001002) {
+      return 8398;
+    } else if (id == 4001003) {
+      return 7801;
+    } else if (id == 4001003) {
+      return 7801;
+    } else if (id == 4001004) {
+      return 7801;
+    } else if (id == 4001005) {
+      return 5137;
+    } else if (id == 4001006) {
+      return 9802;
+    } else if (id == 4001007) {
+      return 9985;
+    } else if (id == 4001008) {
+      return 3531;
+    } else if (id == 4001009) {
+      return 8099;
+    } else if (id == 4001010) {
+      return 9985;
+    } else if (id == 4001007) {
+      return 9997;
+    }
   };
 
   const getBusinessOption = (e) => {
@@ -86,6 +124,21 @@ const MerchantUpdate = () => {
       }
     });
     return Date;
+  };
+
+  const getFileLebel = (e) => {
+    console.log(e);
+    if (e == 2001001) {
+      return "School Registartion Certificate by Board:";
+    } else if (e == 2001002 || e == 2001006) {
+      return "N Corporation File";
+    } else {
+      return "Trade License";
+    }
+  };
+
+  const openFile = (e) => {
+    window.open(`${process.env.REACT_APP_API_URL}uploads/uploads/get/${e}`);
   };
 
   const updateMerchat = (e) => {
@@ -172,6 +225,7 @@ const MerchantUpdate = () => {
         <CRow className="justify-content-center">
           <CCol md={12}>
             <CCard className="p-4">
+              <h4>Merchant Details</h4>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(updateMerchat)}>
                   <CRow>
@@ -183,7 +237,7 @@ const MerchantUpdate = () => {
                         <CCol sm={8}>
                           <CFormInput
                             type="text"
-                            readOnly
+                            disabled="true"
                             defaultValue={location.state.marchant_id}
                             {...register("merId")}
                             placeholder="Merchant ID"
@@ -192,42 +246,17 @@ const MerchantUpdate = () => {
                       </CRow>
                       <CRow className="mb-3">
                         <CFormLabel className="col-sm-4 col-form-label text-right">
-                          Registered business address
+                          Legal Identity of Company
                         </CFormLabel>
                         <CCol sm={8}>
                           <CFormSelect
                             aria-label="Default select example"
                             type="number"
-                            {...register("Reg_business_address")}
-                          >
-                            {lookupList &&
-                              getCountryOption(lookupList).map(
-                                (country, index) => (
-                                  <option
-                                    value={country.id}
-                                    selected={
-                                      country.id === location.state.country_no
-                                        ? "selected"
-                                        : ""
-                                    }
-                                    key={index}
-                                  >
-                                    {country.name}
-                                  </option>
-                                )
-                              )}
-                          </CFormSelect>
-                        </CCol>
-                      </CRow>
-                      <CRow className="mb-3">
-                        <CFormLabel className="col-sm-4 col-form-label text-right">
-                          Type of business
-                        </CFormLabel>
-                        <CCol sm={8}>
-                          <CFormSelect
-                            aria-label="Default select example"
-                            type="number"
+                            disabled="true"
                             {...register("type_of_business")}
+                            onChange={(e) => {
+                              setCompanyId(e.target.value);
+                            }}
                           >
                             {lookupList &&
                               getBusinessOption(lookupList).map(
@@ -251,11 +280,73 @@ const MerchantUpdate = () => {
                       </CRow>
                       <CRow className="mb-3">
                         <CFormLabel className="col-sm-4 col-form-label text-right">
+                          {CompanyId == 2001001 ? "EIIN No." : "BIN No."}
+                        </CFormLabel>
+                        <CCol sm={8}>
+                          <CFormInput
+                            type="text"
+                            disabled="true"
+                            defaultValue={location.state.bin}
+                            {...register("business_no")}
+                            placeholder="Business No"
+                          />
+                        </CCol>
+                      </CRow>
+                      <CRow className="mb-3">
+                        <CFormLabel className="col-sm-4 col-form-label">
+                          Industry/Business Type
+                        </CFormLabel>
+                        <CCol sm={8}>
+                          <CFormSelect
+                            aria-label="Default select example"
+                            {...register("industry")}
+                            type="number"
+                            disabled="true"
+                            onChange={(e) => {
+                              setBusinessType(e.target.value);
+                            }}
+                          >
+                            {lookupList &&
+                              getIndustryOption(lookupList).map(
+                                (country, index) => (
+                                  <option
+                                    value={country.id}
+                                    selected={
+                                      country.id === location.state.industry_no
+                                        ? "selected"
+                                        : ""
+                                    }
+                                    key={index}
+                                  >
+                                    {country.name}
+                                  </option>
+                                )
+                              )}
+                          </CFormSelect>
+                        </CCol>
+                      </CRow>
+                      <CRow className="mb-3">
+                        <CFormLabel className="col-sm-4 col-form-label">
+                          Merchant Category Code
+                        </CFormLabel>
+                        <CCol sm={8}>
+                          <CFormInput
+                            type="text"
+                            disabled="true"
+                            value={getCetagoryCode(businessType)}
+                            {...register("cat_code")}
+                            placeholder="Merchant cetagory code"
+                          />
+                        </CCol>
+                      </CRow>
+                      <CRow className="mb-3">
+                        <CFormLabel className="col-sm-4 col-form-label text-right">
                           Business Name
                         </CFormLabel>
                         <CCol sm={8}>
                           <CFormInput
                             type="text"
+                            disabled="true"
                             defaultValue={location.state.business_name}
                             {...register("business_name")}
                             placeholder="Business Name"
@@ -269,6 +360,7 @@ const MerchantUpdate = () => {
                         <CCol sm={8}>
                           <CFormInput
                             type="text"
+                            disabled="true"
                             defaultValue={location.state.short_name}
                             {...register("short_name")}
                             placeholder="Business Short Name"
@@ -277,24 +369,12 @@ const MerchantUpdate = () => {
                       </CRow>
                       <CRow className="mb-3">
                         <CFormLabel className="col-sm-4 col-form-label text-right">
-                          Business No.
-                        </CFormLabel>
-                        <CCol sm={8}>
-                          <CFormInput
-                            type="text"
-                            defaultValue={location.state.bin}
-                            {...register("business_no")}
-                            placeholder="Business No"
-                          />
-                        </CCol>
-                      </CRow>
-                      <CRow className="mb-3">
-                        <CFormLabel className="col-sm-4 col-form-label text-right">
                           Address
                         </CFormLabel>
                         <CCol sm={8}>
-                          <CFormInput
+                          <CFormTextarea
                             type="text"
+                            disabled="true"
                             defaultValue={location.state.business_address1}
                             {...register("b_address_line_1")}
                             placeholder="Address Line 1"
@@ -304,8 +384,9 @@ const MerchantUpdate = () => {
                       <CRow className="mb-3">
                         <CFormLabel className="col-sm-4 col-form-label"></CFormLabel>
                         <CCol sm={8}>
-                          <CFormInput
+                          <CFormTextarea
                             type="text"
+                            disabled="true"
                             defaultValue={location.state.business_address2}
                             {...register("b_address_line_2")}
                             placeholder="Address Line 2"
@@ -319,6 +400,7 @@ const MerchantUpdate = () => {
                         <CCol sm={8}>
                           <CFormInput
                             type="text"
+                            disabled="true"
                             defaultValue={location.state.business_city}
                             {...register("b_city")}
                             placeholder="City"
@@ -327,11 +409,12 @@ const MerchantUpdate = () => {
                       </CRow>
                       <CRow className="mb-3">
                         <CFormLabel className="col-sm-4 col-form-label text-right">
-                          State
+                          District
                         </CFormLabel>
                         <CCol sm={8}>
                           <CFormSelect
                             aria-label="Default select example"
+                            disabled="true"
                             {...register("b_state")}
                             type="number"
                           >
@@ -365,22 +448,10 @@ const MerchantUpdate = () => {
                         <CCol sm={8}>
                           <CFormInput
                             type="text"
+                            disabled="true"
                             defaultValue={location.state.business_postal_code}
                             {...register("b_postel_code")}
                             placeholder="Postal Code"
-                          />
-                        </CCol>
-                      </CRow>
-                      <CRow className="mb-3">
-                        <CFormLabel className="col-sm-4 col-form-label">
-                          Merchant cetagory code
-                        </CFormLabel>
-                        <CCol sm={8}>
-                          <CFormInput
-                            type="text"
-                            defaultValue={location.state.category_code}
-                            {...register("cat_code")}
-                            placeholder="Merchant cetagory code"
                           />
                         </CCol>
                       </CRow>
@@ -391,9 +462,23 @@ const MerchantUpdate = () => {
                         <CCol sm={8}>
                           <CFormInput
                             type="text"
+                            disabled="true"
                             defaultValue={location.state.website}
                             {...register("bussiness_website")}
                             placeholder="Business website"
+                          />
+                        </CCol>
+                      </CRow>
+                      <CRow className="mb-3">
+                        <CFormLabel className="col-sm-4 col-form-label">
+                          Product Description
+                        </CFormLabel>
+                        <CCol sm={8}>
+                          <CFormTextarea
+                            type="text"
+                            disabled="true"
+                            defaultValue={location.state.product_desc}
+                            {...register("Product_desc")}
                           />
                         </CCol>
                       </CRow>
@@ -405,14 +490,63 @@ const MerchantUpdate = () => {
                           <CFormCheck
                             label="Active"
                             {...register("status")}
+                            disabled="true"
                             defaultChecked={
                               location.state.is_active == 1 ? true : false
                             }
                           />
                         </CCol>
                       </CRow>
+                      <CRow className="mb-3">
+                        <CFormLabel className="col-sm-7 col-form-label">
+                          {getFileLebel(location.state.business_type)}
+                        </CFormLabel>
+                        <CCol sm={3}>
+                          <CButton
+                            color="secondary"
+                            onClick={() => {
+                              openFile(location.state.file_1);
+                            }}
+                          >
+                            <CIcon icon={cilLowVision}></CIcon>
+                          </CButton>
+                        </CCol>
+                      </CRow>
+                      <div hidden={!location.state.file_2 ? true : false}>
+                        <CRow className="mb-3">
+                          <CFormLabel className="col-sm-7 col-form-label">
+                            TIN Certificate
+                          </CFormLabel>
+                          <CCol sm={3}>
+                            <CButton
+                              color="secondary"
+                              onClick={() => {
+                                openFile(location.state.file_2);
+                              }}
+                            >
+                              <CIcon icon={cilLowVision}></CIcon>
+                            </CButton>
+                          </CCol>
+                        </CRow>
+                      </div>
                     </CCol>
                     <CCol md={6}>
+                      <CRow className="mb-3">
+                        <CCol sm={6}>
+                          <div className="merchant_img text-center">
+                            <img
+                              src={`${process.env.REACT_APP_API_URL}poricoy/image/${location.state.nid_number}.jpg`}
+                            />
+                          </div>
+                        </CCol>
+                        <CCol sm={6}>
+                          <div className="merchant_img text-center">
+                            <img
+                              src={`${process.env.REACT_APP_API_URL}uploads/uploads/get/${location.state.merchant_pic}`}
+                            />
+                          </div>
+                        </CCol>
+                      </CRow>
                       <CRow className="mb-3">
                         <CFormLabel className="col-sm-4 col-form-label">
                           Legal Name Of Person
@@ -420,6 +554,7 @@ const MerchantUpdate = () => {
                         <CCol sm={8}>
                           <CFormInput
                             type="text"
+                            disabled="true"
                             defaultValue={location.state.first_name}
                             {...register("first_name")}
                             placeholder="First Name"
@@ -431,6 +566,7 @@ const MerchantUpdate = () => {
                         <CCol sm={8}>
                           <CFormInput
                             type="text"
+                            disabled="true"
                             defaultValue={location.state.last_name}
                             {...register("last_name")}
                             placeholder="Last Name"
@@ -444,6 +580,7 @@ const MerchantUpdate = () => {
                         <CCol sm={8}>
                           <CFormInput
                             type="text"
+                            disabled="true"
                             defaultValue={location.state.email}
                             {...register("email")}
                             placeholder="Email Address"
@@ -457,6 +594,7 @@ const MerchantUpdate = () => {
                         <CCol sm={8}>
                           <CFormInput
                             type="text"
+                            disabled="true"
                             defaultValue={location.state.city}
                             {...register("city")}
                             placeholder="City"
@@ -468,8 +606,9 @@ const MerchantUpdate = () => {
                           Address
                         </CFormLabel>
                         <CCol sm={8}>
-                          <CFormInput
+                          <CFormTextarea
                             type="text"
+                            disabled="true"
                             defaultValue={location.state.address1}
                             {...register("address_line_1")}
                             placeholder="Address Line 1"
@@ -479,8 +618,9 @@ const MerchantUpdate = () => {
                       <CRow className="mb-3">
                         <CFormLabel className="col-sm-4 col-form-label"></CFormLabel>
                         <CCol sm={8}>
-                          <CFormInput
+                          <CFormTextarea
                             type="text"
+                            disabled="true"
                             defaultValue={location.state.address2}
                             {...register("address_line_2")}
                             placeholder="Address Line 2"
@@ -495,6 +635,7 @@ const MerchantUpdate = () => {
                           <CFormSelect
                             aria-label="Default select example"
                             {...register("state")}
+                            disabled="true"
                             type="number"
                           >
                             {lookupList &&
@@ -523,6 +664,7 @@ const MerchantUpdate = () => {
                         <CCol sm={8}>
                           <CFormInput
                             type="text"
+                            disabled="true"
                             defaultValue={location.state.postal_code}
                             {...register("postal_code")}
                             placeholder="Postal Code"
@@ -531,11 +673,12 @@ const MerchantUpdate = () => {
                       </CRow>
                       <CRow className="mb-3">
                         <CFormLabel className="col-sm-4 col-form-label">
-                          National Id
+                          National ID
                         </CFormLabel>
                         <CCol sm={8}>
                           <CFormInput
                             type="text"
+                            disabled="true"
                             defaultValue={location.state.nid_number}
                             {...register("national_id")}
                             placeholder="Nationnal Id"
@@ -549,6 +692,7 @@ const MerchantUpdate = () => {
                         <CCol sm={8}>
                           <CFormInput
                             type="date"
+                            disabled="true"
                             defaultValue={location.state.date_of_birth}
                             {...register("dob")}
                             placeholder="Date Of Birth"
@@ -557,43 +701,33 @@ const MerchantUpdate = () => {
                       </CRow>
                       <CRow className="mb-3">
                         <CFormLabel className="col-sm-4 col-form-label">
-                          Industry
+                          NID Copy
                         </CFormLabel>
                         <CCol sm={8}>
-                          <CFormSelect
-                            aria-label="Default select example"
-                            {...register("industry")}
-                            type="number"
+                          <CButton
+                            color="secondary"
+                            onClick={() => {
+                              openFile(location.state.nid_picture);
+                            }}
                           >
-                            {lookupList &&
-                              getIndustryOption(lookupList).map(
-                                (country, index) => (
-                                  <option
-                                    value={country.id}
-                                    selected={
-                                      country.id === location.state.industry_no
-                                        ? "selected"
-                                        : ""
-                                    }
-                                    key={index}
-                                  >
-                                    {country.name}
-                                  </option>
-                                )
-                              )}
-                          </CFormSelect>
+                            <CIcon icon={cilLowVision}></CIcon>
+                          </CButton>
                         </CCol>
                       </CRow>
                       <CRow className="mb-3">
-                        <CFormLabel className="col-sm-4 col-form-label">
-                          Product description
-                        </CFormLabel>
-                        <CCol sm={8}>
-                          <CFormTextarea
-                            type="text"
-                            defaultValue={location.state.product_desc}
-                            {...register("Product_desc")}
-                          />
+                        <CCol sm={12}>
+                          <div className="text-center">
+                            <CButton
+                              color="info"
+                              onClick={() =>
+                                navigate("/update-merchant-representative", {
+                                  state: location.state,
+                                })
+                              }
+                            >
+                              Update Representative
+                            </CButton>
+                          </div>
                         </CCol>
                       </CRow>
                     </CCol>
@@ -602,9 +736,9 @@ const MerchantUpdate = () => {
                     <Link to="/merchant">
                       <CButton color="danger">Cancle</CButton>
                     </Link>
-                    <CButton color="info" type="submit" className="mx-3">
+                    {/* <CButton color="info" type="submit" className="mx-3">
                       Updata
-                    </CButton>
+                    </CButton> */}
                   </div>
                 </CForm>
               </CCardBody>

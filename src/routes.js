@@ -146,22 +146,12 @@ const BankAccountUpdate = React.lazy(() =>
   import("./components/bank-account/BankAccountUpdate")
 );
 
-const BankList = React.lazy(() =>
-  import("./components/Banks/BankList")
-);
-const BankAdd = React.lazy(() =>
-  import("./components/Banks/BankAdd")
-);
-const BankUpdate = React.lazy(() =>
-  import("./components/Banks/BankUpdate")
-);
+const BankList = React.lazy(() => import("./components/Banks/BankList"));
+const BankAdd = React.lazy(() => import("./components/Banks/BankAdd"));
+const BankUpdate = React.lazy(() => import("./components/Banks/BankUpdate"));
 
-const BranchList = React.lazy(() =>
-  import("./components/branch/BranchList")
-);
-const BranchAdd = React.lazy(() =>
-  import("./components/branch/BranchAdd")
-);
+const BranchList = React.lazy(() => import("./components/branch/BranchList"));
+const BranchAdd = React.lazy(() => import("./components/branch/BranchAdd"));
 const BranchUpdate = React.lazy(() =>
   import("./components/branch/BranchUpdate")
 );
@@ -193,6 +183,10 @@ const MerchantStoreAdd = React.lazy(() =>
 
 const MerchantStoreUpdate = React.lazy(() =>
   import("./components/merchant management/merchant store/MerchantStoreUpdate")
+);
+
+const BusinessRepresentativeUpdate = React.lazy(() =>
+  import("./components/merchant management/BusinessRepresentativeUpdate")
 );
 
 // const Fees = React.lazy(() => import("./views/payment/Fees"));
@@ -229,9 +223,7 @@ const MerchantServiceUpdate = React.lazy(() =>
   )
 );
 const MerchantUpdate = React.lazy(() =>
-  import(
-    "./components/merchant management/MerchantUpdate"
-  )
+  import("./components/merchant management/MerchantUpdate")
 );
 
 const routes = [
@@ -534,6 +526,11 @@ const routes = [
     path: "/merchant-service/update-merchant-service",
     name: "add-merchant-service",
     element: MerchantServiceUpdate,
+  },
+  {
+    path: "/update-merchant-representative",
+    name: "update-merchant-representative",
+    element: BusinessRepresentativeUpdate,
   },
 ];
 

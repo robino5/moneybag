@@ -28,6 +28,8 @@ const BankDetailsUpdate = () => {
   const location = useLocation();
   const [bankbranchList, setBankBranchList] = useState();
   const [lookupList, setLooupList] = useState();
+  const [bankId, setBankID] = useState();
+  const [branchId, setBrunchID] = useState();
 
   console.log(location.state);
 
@@ -44,6 +46,7 @@ const BankDetailsUpdate = () => {
       routing_no: e.routing_no,
       account_name: e.account_name,
       account_no: e.account_number,
+      merchant_no: localStorage.getItem("merchant_no"),
     };
     console.log(businessDetailData);
     const headers = {
@@ -80,6 +83,16 @@ const BankDetailsUpdate = () => {
           timer: 1500,
         });
       });
+  };
+
+  const setRoutingNo = (e) => {
+    let routing;
+    e?.map((branch) => {
+      if (branch.id == branchId) {
+        routing = branch.routing_no;
+      }
+    });
+    return routing;
   };
 
   const getLookupList = () => {
@@ -132,7 +145,7 @@ const BankDetailsUpdate = () => {
         if (
           element.bank_flag === 0 &&
           element.is_active === 1 &&
-          element.root_bank === 0
+          element.root_bank == bankId
         ) {
           date.push({ id: element.id, branch_name: element.branch_name });
         }
@@ -200,6 +213,9 @@ const BankDetailsUpdate = () => {
                       <CFormSelect
                         aria-label="Default select example"
                         {...register("bank_name")}
+                        onChange={(e) => {
+                          setBankID(e.target.value);
+                        }}
                       >
                         {getBankOption(bankbranchList) &&
                           getBankOption(bankbranchList).map((bank, index) => (
@@ -226,6 +242,9 @@ const BankDetailsUpdate = () => {
                       <CFormSelect
                         aria-label="Default select example"
                         {...register("branch_name")}
+                        onChange={(e) => {
+                          setBrunchID(e.target.value);
+                        }}
                       >
                         {getBranchOption(bankbranchList) &&
                           getBranchOption(bankbranchList).map((bank, index) => (
@@ -251,7 +270,7 @@ const BankDetailsUpdate = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        defaultValue={location.state.routing_no}
+                        value={setRoutingNo(bankbranchList)}
                         {...register("routing_no")}
                         placeholder="Transit/Routing No:"
                       />
@@ -278,7 +297,12 @@ const BankDetailsUpdate = () => {
                       <CFormInput
                         type="text"
                         defaultValue={location.state.account_no}
-                        {...register("account_number")}
+                        {...register("account_number", {
+                          pattern: {
+                            value: /^[0-9]*$/,
+                            message: "Please Provide Number",
+                          },
+                        })}
                         placeholder="Account Number"
                       />
                       <span className="text-danger">

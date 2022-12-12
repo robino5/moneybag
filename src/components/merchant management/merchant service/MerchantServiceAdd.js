@@ -279,7 +279,7 @@ const MerchantServiceAdd = () => {
           bank_no: parseInt(e.bank_name),
           service_no: parseInt(e.service_name),
           charge_ammount: parseFloat(e.percentage),
-          is_active:e.status?1:0,
+          is_active: e.status ? 1 : 0,
           service_charge_type: e.service_charge_type,
         },
       ];
@@ -331,7 +331,7 @@ const MerchantServiceAdd = () => {
             service_no: element.service_no,
             service_charge_type: element.service_charge_type,
             charge_ammount: element.charge_ammount,
-            is_active: element.is_active
+            is_active: element.is_active,
           });
         }
       });
@@ -392,9 +392,9 @@ const MerchantServiceAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <p className="col-sm-3 col-form-label">
-                      Settlement Account Name
+                      Select FinTech Name
                     </p>
-                    <CCol sm={9}>
+                    {/* <CCol sm={9}>
                       {marchantDetail &&
                         marchantDetail.map((element, index) => {
                           return (
@@ -408,7 +408,7 @@ const MerchantServiceAdd = () => {
                             </p>
                           );
                         })}
-                    </CCol>
+                    </CCol> */}
                   </CRow>
                   <CRow className="mb-3">
                     <CCol sm={3}>
@@ -465,12 +465,12 @@ const MerchantServiceAdd = () => {
                       </CFormSelect>
                     </CCol>
                     <CCol sm={1}>
-                    <CFormCheck
+                      <CFormCheck
                         name="status"
                         label="Active"
                         {...register("status")}
                       />
-                     </CCol>
+                    </CCol>
                     <CCol sm={1}>
                       <CButton
                         className="btn-sm"
@@ -516,7 +516,9 @@ const MerchantServiceAdd = () => {
                               </p>
                             </CCol>
                             <CCol sm={2}>
-                              <p>{element.is_active==1?"Active":"Inactive"}</p>
+                              <p>
+                                {element.is_active == 1 ? "Active" : "Inactive"}
+                              </p>
                             </CCol>
                             {/* <CCol sm={1}>
                               <CButton

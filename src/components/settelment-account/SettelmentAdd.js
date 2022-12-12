@@ -24,6 +24,7 @@ const SettelmentAdd = () => {
     formState: { errors, isDirty },
     handleSubmit,
     setValue,
+    reset,
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
   const [organizationList, setOrganizationList] = useState();
@@ -346,6 +347,10 @@ const SettelmentAdd = () => {
                         type="text"
                         {...register("account_id", {
                           required: "Please provide Account Number",
+                          pattern: {
+                            value: /^[0-9]*$/,
+                            message: "Please Provide Number",
+                          },
                         })}
                         placeholder="Account Number"
                       />

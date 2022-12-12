@@ -154,7 +154,7 @@ const BusinessDetails = ({ clickNext }) => {
 
   useEffect(() => {
     getLookupList();
-    localStorage.setItem("isSubmitBusiness", 0);
+    // localStorage.setItem("isSubmitBusiness", 0);
   }, []);
 
   return (
@@ -162,7 +162,7 @@ const BusinessDetails = ({ clickNext }) => {
       <CForm onSubmit={handleSubmit(saveBusinessDetails)}>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label">
-          Merchant ID
+            Merchant ID
           </CFormLabel>
           <CCol sm={8}>
             <CFormInput
