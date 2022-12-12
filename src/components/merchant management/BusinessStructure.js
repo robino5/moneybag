@@ -165,7 +165,7 @@ const BusinessStructure = ({ clickNext }) => {
 
   const getFileLebel = (e) => {
     if (e == 2001001) {
-      return "EIIN File:";
+      return "School Registartion Certificate by Board:";
     } else if (e == 2001002 || e == 2001006) {
       return "N Corporation File";
     } else {
@@ -310,7 +310,6 @@ const BusinessStructure = ({ clickNext }) => {
               {...register("business_no", {
                 required: "Please provide Business no",
               })}
-              placeholder="Business no"
             />
             <span className="text-danger">{errors.business_no?.message}</span>
           </CCol>

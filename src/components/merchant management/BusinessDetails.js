@@ -162,13 +162,13 @@ const BusinessDetails = ({ clickNext }) => {
       <CForm onSubmit={handleSubmit(saveBusinessDetails)}>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label">
-            Merchant Id
+          Merchant ID
           </CFormLabel>
           <CCol sm={8}>
             <CFormInput
               type="text"
               {...register("merchant_id", {
-                required: "Please select Merchant Id",
+                required: "Please select Merchant ID",
               })}
               placeholder="Merchant cetagory Id"
             />
@@ -223,14 +223,14 @@ const BusinessDetails = ({ clickNext }) => {
         </CRow>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label">
-            Merchant cetagory code
+            Merchant Category Code
           </CFormLabel>
           <CCol sm={8}>
             <CFormInput
               type="text"
               value={getCetagoryCode(businessType)}
               {...register("cat_code")}
-              placeholder="Merchant cetagory code"
+              placeholder="Merchant Category Code"
             />
             <span className="text-danger">{errors.cat_code?.message}</span>
           </CCol>

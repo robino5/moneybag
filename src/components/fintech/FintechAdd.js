@@ -16,6 +16,7 @@ import {
   CFormCheck,
   CButton,
 } from "@coreui/react";
+import { element } from "prop-types";
 
 const FintechAdd = () => {
   const {
@@ -33,11 +34,14 @@ const FintechAdd = () => {
 
   const navigate = useNavigate();
   const [lookupList, setLooupList] = useState();
-  const [service, setservices] = useState([]);
+  const [serviceID, setservices] = useState([]);
+  const [fintechType, setFintecType] = useState([]);
 
   const setservic = (e) => {
-    service.push(e.target.value);
+    serviceID.push(e.target.value);
   };
+
+  console.log(fintechType)
 
   const saveFintech = (e) => {
     console.log("element");
@@ -164,16 +168,28 @@ const FintechAdd = () => {
     let Date = [];
     e.forEach((element) => {
       if (element.lov_id === 6001 && element.is_active === 1) {
-        service?.map((e) => {
-          console.log(element.id, e);
-          if (e != element.id) {
-            Date.push({ id: element.id, name: element.name });
-          }
-        });
+        Date.push({ id: element.id, name: element.name });
       }
     });
     return Date;
   };
+
+  // const getFIlterService=(e)=>{
+  //   let data=[];
+  //   if(serviceID.length>0){
+  //       e?.map((service)=>{
+  //         serviceID.map((id)=>{
+  //           if(service.id!=id){
+  //             console.log(service);
+  //             data.push(service)
+  //           }
+  //         })
+  //       })
+  //       return data
+  //   }else{
+  //     return e
+  //   }
+  // }
 
   // fields?.map((e) => {
   //   if (e.service_type != element.id) {
@@ -250,6 +266,9 @@ const FintechAdd = () => {
                         aria-label="Default select example"
                         type="number"
                         {...register("fintech_type")}
+                        onChange={(e) => {
+                          setFintecType(e.target.value)
+                        }}
                       >
                         <option>Fintech Type</option>
                         {lookupList &&
@@ -364,18 +383,21 @@ const FintechAdd = () => {
                       />
                     </CCol>
                   </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel className="col-sm-3 col-form-label">
-                      Swift Code
-                    </CFormLabel>
-                    <CCol sm={9}>
-                      <CFormInput
-                        type="text"
-                        {...register("swift_code")}
-                        placeholder="Swift Code"
-                      />
-                    </CCol>
-                  </CRow>
+                  <div hidden={fintechType != 8001001 ? true : false}>
+                    <CRow className="mb-3">
+                      <CFormLabel className="col-sm-3 col-form-label">
+                        Swift Code
+                      </CFormLabel>
+                      <CCol sm={9}>
+                        <CFormInput
+                          type="text"
+                          {...register("swift_code")}
+                          placeholder="Swift Code"
+                        />
+                      </CCol>
+                    </CRow>
+                  </div>
+
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Status
@@ -396,11 +418,12 @@ const FintechAdd = () => {
                       <p>Service Name</p>
                     </CCol>
                     <CCol sm={2}>
-                      <p>Rate</p>
-                    </CCol>
-                    <CCol sm={2}>
                       <p>Rate Type</p>
                     </CCol>
+                    <CCol sm={2}>
+                      <p>Rate</p>
+                    </CCol>
+                    
                     {/* <CCol sm={3}>
                       <p>End Point Url</p>
                     </CCol>
@@ -453,13 +476,6 @@ const FintechAdd = () => {
                           </CFormSelect>
                         </CCol>
                         <CCol sm={2}>
-                          <CFormInput
-                            type="text"
-                            {...register(`services.${index}.rate`)}
-                            placeholder="Rate"
-                          />
-                        </CCol>
-                        <CCol sm={2}>
                           <CFormSelect
                             aria-label="Default select example"
                             type="number"
@@ -468,8 +484,14 @@ const FintechAdd = () => {
                             <option>Select Rate Type</option>
                             <option value={"F"}>Fixed</option>
                             <option value={"P"}>Percentage </option>
-                            <option value={"S"}>Slab </option>
                           </CFormSelect>
+                        </CCol>
+                        <CCol sm={2}>
+                          <CFormInput
+                            type="text"
+                            {...register(`services.${index}.rate`)}
+                            placeholder="Rate"
+                          />
                         </CCol>
                         {/* <CCol sm={3}>
                           <CFormInput

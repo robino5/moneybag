@@ -278,7 +278,8 @@ const MerchantServiceAdd = () => {
           merchant_no: parseInt(e.merchant_name),
           bank_no: parseInt(e.bank_name),
           service_no: parseInt(e.service_name),
-          charge_ammount: e.percentage === "" ? 0 : parseFloat(e.percentage),
+          charge_ammount: parseFloat(e.percentage),
+          is_active:e.status?1:0,
           service_charge_type: e.service_charge_type,
         },
       ];
@@ -330,6 +331,7 @@ const MerchantServiceAdd = () => {
             service_no: element.service_no,
             service_charge_type: element.service_charge_type,
             charge_ammount: element.charge_ammount,
+            is_active: element.is_active
           });
         }
       });
@@ -445,23 +447,30 @@ const MerchantServiceAdd = () => {
                       <CFormInput
                         type="text"
                         {...register("percentage")}
-                        placeholder="Percentage"
+                        placeholder="Rate"
                       />
                     </CCol>
-                    <CCol sm={3}>
+                    <CCol sm={2}>
                       <CFormSelect
                         aria-label="Default select example"
                         {...register("service_charge_type", {
-                          required: "Please select service charge type",
+                          required: "Please select rate type",
                         })}
                       >
-                        <option>Select service charge type</option>
+                        <option>Select Rate type</option>
                         <option value={"F"}>Fixed</option>
                         <option value={"P"}>Percentage </option>
                         {/* <option value={"S"}>Slab </option> */}
                         {/* <option value={"C"}>Combination </option> */}
                       </CFormSelect>
                     </CCol>
+                    <CCol sm={1}>
+                    <CFormCheck
+                        name="status"
+                        label="Active"
+                        {...register("status")}
+                      />
+                     </CCol>
                     <CCol sm={1}>
                       <CButton
                         className="btn-sm"
@@ -505,6 +514,9 @@ const MerchantServiceAdd = () => {
                               >
                                 {getChargeType(element.service_charge_type)}
                               </p>
+                            </CCol>
+                            <CCol sm={2}>
+                              <p>{element.is_active==1?"Active":"Inactive"}</p>
                             </CCol>
                             {/* <CCol sm={1}>
                               <CButton

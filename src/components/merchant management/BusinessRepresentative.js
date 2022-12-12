@@ -274,7 +274,7 @@ const BusinessRepresentative = ({ clickNext }) => {
           <CCol sm={8}>
             <CRow className="mb-3">
               <CFormLabel className="col-sm-4 col-form-label">
-                Nid Number
+              NID Number
               </CFormLabel>
               <CCol sm={8}>
                 <CFormInput
