@@ -15,6 +15,7 @@ import {
   CRow,
   CFormCheck,
   CButton,
+  CListGroup,
 } from "@coreui/react";
 import { element } from "prop-types";
 
@@ -34,14 +35,24 @@ const FintechAdd = () => {
 
   const navigate = useNavigate();
   const [lookupList, setLooupList] = useState();
-  const [serviceID, setservices] = useState([]);
+  const [services, setservices] = useState([]);
+  const [selectedMethod, setSelectedMethod] = useState([])
+  const [serviceData, serviceListDate] = useState([])
   const [fintechType, setFintecType] = useState([]);
+  // serviceID = [6001001,]
 
-  const setservic = (e) => {
-    serviceID.push(e.target.value);
-  };
+  // const isServiceAlreadyExists = () => {
+  //   serviceID.forEach(service => {
 
-  console.log(fintechType)
+  //   })
+  // }
+
+  // const setservic = (e) => {
+  //   serviceID.push(e.target.value);
+  // };
+
+  console.log(fields)
+  console.log(services)
 
   const saveFintech = (e) => {
     console.log("element");
@@ -147,7 +158,7 @@ const FintechAdd = () => {
         headers,
       })
       .then((responce) => {
-        console.log(responce.data), setLooupList(responce.data);
+        console.log(responce.data), setLooupList(responce.data)
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -164,22 +175,57 @@ const FintechAdd = () => {
     return Date;
   };
 
+
+
+  var numbers = /^[0-9]+$/;
+
+  const inArray = (key, arr) => {
+    arr.forEach(itm => {
+      if (itm.id == key){
+
+      }else {
+        return itm.id
+      }
+    })
+  }
+
+  // const setServicesOptions = (services) => {
+  //   const currentSelected = []
+
+  //   fields?.map(field => {
+  //     if (field.service_type !== undefined && field.service_type.match(numbers)) {
+  //       if (!field.service_type in selectedMethod){
+  //         selectedMethod.push(Number(field.service_type))
+  //       }
+  //     }
+  //   })
+
+  //   let data = []
+  //   for (let i = 0; i < services.length; i++ ) {
+  //     console.log("CCC: ", selectedMethod)
+  //     if (!(services[i].id in selectedMethod)){
+  //       serviceData.push(services[i])
+  //     }
+  //   }
+  //   console.log("DATA", data)
+  // }
+
   const getServiceOption = (e) => {
-    let Date = [];
+    let data = [];
     e.forEach((element) => {
       if (element.lov_id === 6001 && element.is_active === 1) {
-        Date.push({ id: element.id, name: element.name });
+        data.push({ id: element.id, name: element.name });
       }
     });
-    return Date;
+    return data;
   };
 
   // const getFIlterService=(e)=>{
   //   let data=[];
-  //   if(serviceID.length>0){
+  //   if(fields.length>0){
   //       e?.map((service)=>{
-  //         serviceID.map((id)=>{
-  //           if(service.id!=id){
+  //         fields.map((id)=>{
+  //           if(service.id!=id.service_type){
   //             console.log(service);
   //             data.push(service)
   //           }
@@ -229,6 +275,7 @@ const FintechAdd = () => {
 
   useEffect(() => {
     getLookupList();
+    append({});
   }, []);
 
   return (
@@ -423,7 +470,7 @@ const FintechAdd = () => {
                     <CCol sm={2}>
                       <p>Rate</p>
                     </CCol>
-                    
+
                     {/* <CCol sm={3}>
                       <p>End Point Url</p>
                     </CCol>
@@ -461,8 +508,7 @@ const FintechAdd = () => {
                           <CFormSelect
                             aria-label="Default select example"
                             type="number"
-                            {...register(`services.${index}.service_type`)}
-                            onChange={setservic}
+                            {...register(`services.${index}.service_type`, { required: true })}
                           >
                             <option>Service Name</option>
                             {lookupList &&
@@ -531,6 +577,7 @@ const FintechAdd = () => {
                   <CRow>
                     <CCol sm={2}>
                       <CButton
+                        disabled={!isDirty}
                         color="primary"
                         onClick={() => {
                           append({});
