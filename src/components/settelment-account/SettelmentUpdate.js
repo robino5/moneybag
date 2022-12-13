@@ -34,6 +34,7 @@ const SettelmentAdd = () => {
   const [services, setService] = useState();
   const [serviceList, setServiceList] = useState();
   const [service, setServices] = useState();
+  const [bankId, setBankId] = useState();
 
   const multipleInsert = (e) => {
     setServices(Array.isArray(e) ? e.map((value) => value.value) : []);
@@ -281,6 +282,9 @@ const SettelmentAdd = () => {
                       <CFormSelect
                         aria-label="Default select example"
                         {...register("select_bank_name")}
+                        onChange={(e) => {
+                          setBankId(e.target.value);
+                        }}
                       >
                         {getBankOption(bankbranchList) &&
                           getBankOption(bankbranchList).map((bank, index) => (
