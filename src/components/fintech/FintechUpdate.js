@@ -88,7 +88,7 @@ const FintechUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
         swal({
@@ -123,6 +123,7 @@ const FintechUpdate = () => {
         .then((response) => {
           console.log(response);
           getLookupList();
+          getServiceList();
         })
         .catch((error) => {
           console.error("There was an error!", error);
@@ -196,7 +197,7 @@ const FintechUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -215,7 +216,7 @@ const FintechUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -616,12 +617,6 @@ const FintechUpdate = () => {
                               >
                                 Percentage{" "}
                               </option>
-                              <option
-                                selected={element.rate_type == "S"}
-                                value={"S"}
-                              >
-                                Slab{" "}
-                              </option>
                             </CFormSelect>
                           </CCol>
                           {/* <CCol sm={3}>
@@ -717,7 +712,6 @@ const FintechUpdate = () => {
                             <option>Select Rate Type</option>
                             <option value={"F"}>Fixed</option>
                             <option value={"P"}>Percentage </option>
-                            <option value={"S"}>Slab </option>
                           </CFormSelect>
                         </CCol>
                         {/* <CCol sm={3}>

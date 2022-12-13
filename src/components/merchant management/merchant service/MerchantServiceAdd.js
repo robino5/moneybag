@@ -30,6 +30,7 @@ const MerchantServiceAdd = () => {
     formState: { errors, isDirty },
     handleSubmit,
     setValue,
+    reset,
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
   const [merchantList, setmerchantList] = useState();
@@ -59,7 +60,7 @@ const MerchantServiceAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -78,7 +79,7 @@ const MerchantServiceAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -97,7 +98,7 @@ const MerchantServiceAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -116,7 +117,7 @@ const MerchantServiceAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -135,7 +136,7 @@ const MerchantServiceAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -154,7 +155,7 @@ const MerchantServiceAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -178,6 +179,25 @@ const MerchantServiceAdd = () => {
     });
     console.log(amount);
     return amount;
+  };
+  const setServicesOptions = (services) => {
+    const currentSelected = [];
+
+    merchantService?.map((services) => {
+      if (services.merchant_no == marchantId) {
+        currentSelected.push(services.service_no);
+      }
+    });
+
+    let data = [];
+    for (let i = 0; i < services.length; i++) {
+      console.log("CCC: ", currentSelected);
+      if (!currentSelected.includes(services[i].id)) {
+        data.push(services[i]);
+      }
+    }
+    console.log("DATA", data, currentSelected);
+    return data;
   };
 
   const getServiceOption = (e) => {
@@ -315,6 +335,7 @@ const MerchantServiceAdd = () => {
         )
         .then((response) => {
           console.log("servive", response);
+
           swal({
             position: "top-end",
             text: "Store Created Successfull",
@@ -326,7 +347,7 @@ const MerchantServiceAdd = () => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
-          if(error.response.status==401){
+          if (error.response.status == 401) {
             navigate("/login");
           }
           swal({
@@ -457,11 +478,13 @@ const MerchantServiceAdd = () => {
                       >
                         <option>select Service</option>
                         {lookupList &&
-                          getServiceOption(lookupList).map((service, index) => (
-                            <option value={service.id} key={index}>
-                              {service.name}
-                            </option>
-                          ))}
+                          setServicesOptions(getServiceOption(lookupList)).map(
+                            (service, index) => (
+                              <option value={service.id} key={index}>
+                                {service.name}
+                              </option>
+                            )
+                          )}
                       </CFormSelect>
                     </CCol>
                     <CCol sm={2}>

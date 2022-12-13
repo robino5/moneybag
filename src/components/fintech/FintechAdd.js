@@ -39,6 +39,7 @@ const FintechAdd = () => {
   const [selectedMethod, setSelectedMethod] = useState([]);
   const [serviceData, serviceListDate] = useState([]);
   const [fintechType, setFintecType] = useState([]);
+  // const [serviceCategory, setServiceCategory] = useState([]);
   // serviceID = [6001001,]
 
   // const isServiceAlreadyExists = () => {
@@ -49,6 +50,33 @@ const FintechAdd = () => {
 
   // const setservic = (e) => {
   //   serviceID.push(e.target.value);
+  // };
+
+  // const filterService = (e) => {
+  //   let data = [];
+  //   console.log(serviceCategory, e);
+  //   serviceCategory?.map((categoryservice) => {
+  //     if (categoryservice == 7001002) {
+  //       e.map((service) => {
+  //         if (
+  //           service.id == 6001001 ||
+  //           service.id == 6001002 ||
+  //           service.id == 6001003 ||
+  //           service.id == 6001004
+  //         ) {
+  //           data.push(service);
+  //         }
+  //       });
+  //     } else if (categoryservice == 7001004) {
+  //       e.map((service) => {
+  //         if (service.id == 6001005 || service.id == 6001006) {
+  //           data.push(service);
+  //         }
+  //       });
+  //     }
+  //   });
+
+  //   return data;
   // };
 
   console.log(fields);
@@ -139,7 +167,7 @@ const FintechAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error.response.status);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
         swal({
@@ -165,7 +193,7 @@ const FintechAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -192,26 +220,28 @@ const FintechAdd = () => {
     });
   };
 
-  // const setServicesOptions = (services) => {
-  //   const currentSelected = []
+  const setServicesOptions = (services) => {
+    const currentSelected = [];
 
-  //   fields?.map(field => {
-  //     if (field.service_type !== undefined && field.service_type.match(numbers)) {
-  //       if (!field.service_type in selectedMethod){
-  //         selectedMethod.push(Number(field.service_type))
-  //       }
-  //     }
-  //   })
+    fields?.map((field) => {
+      if (
+        field.service_type !== undefined &&
+        field.service_type.match(numbers)
+      ) {
+        currentSelected.push(Number(field.service_type));
+      }
+    });
 
-  //   let data = []
-  //   for (let i = 0; i < services.length; i++ ) {
-  //     console.log("CCC: ", selectedMethod)
-  //     if (!(services[i].id in selectedMethod)){
-  //       serviceData.push(services[i])
-  //     }
-  //   }
-  //   console.log("DATA", data)
-  // }
+    let data = [];
+    for (let i = 0; i < services.length; i++) {
+      console.log("CCC: ", currentSelected);
+      if (!currentSelected.includes(services[i].id)) {
+        data.push(services[i]);
+      }
+    }
+    console.log("DATA", data, currentSelected);
+    return data;
+  };
 
   const getServiceOption = (e) => {
     let data = [];
@@ -495,6 +525,9 @@ const FintechAdd = () => {
                             {...register(
                               `services.${index}.category_service_id`
                             )}
+                            // onChange={(e) => {
+                            //   serviceCategory.push(e.target.value);
+                            // }}
                           >
                             <option>Service Category</option>
                             {lookupList &&
