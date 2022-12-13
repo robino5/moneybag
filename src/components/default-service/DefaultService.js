@@ -18,6 +18,12 @@ import {
   CRow,
   CFormCheck,
   CButton,
+  CTable,
+  CTableHead,
+  CTableRow,
+  CTableHeaderCell,
+  CTableDataCell,
+  CTableBody,
 } from "@coreui/react";
 import { findAllByText } from "@testing-library/react";
 
@@ -52,7 +58,7 @@ const DefaultService = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -70,7 +76,7 @@ const DefaultService = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -88,7 +94,7 @@ const DefaultService = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -140,7 +146,7 @@ const DefaultService = () => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
-          if(error.response.status==401){
+          if (error.response.status == 401) {
             navigate("/login");
           }
           swal({
@@ -219,7 +225,7 @@ const DefaultService = () => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
-          if(error.response.status==401){
+          if (error.response.status == 401) {
             navigate("/login");
           }
           swal({
@@ -315,7 +321,7 @@ const DefaultService = () => {
             <h4 className="text-center">Assign Default Service for Moneybag</h4>
             <CCard className="p-4">
               <CCardBody>
-                <CForm
+                {/* <CForm
                   hidden={defaultService != null ? true : false}
                   onSubmit={handleSubmit(saveDefaultService)}
                 >
@@ -434,7 +440,60 @@ const DefaultService = () => {
                   data={defaultServiceList}
                   pagination
                   expandableCol
-                />
+                /> */}
+                <CTable>
+                  <CTableHead>
+                    <CTableRow>
+                      <CTableHeaderCell scope="col">Service</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Fintech</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Status</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                    </CTableRow>
+                  </CTableHead>
+                  <CTableBody>
+                    {getServiceOption(lookupList).map((servie, index) => (
+                      <CTableRow>
+                        <CTableDataCell>{servie.name}</CTableDataCell>
+                        <CTableDataCell>
+                          {" "}
+                          <CFormSelect aria-label="Default select example">
+                            {organizationList &&
+                              organizationList.map((organization, index) => (
+                                <option
+                                  value={organization.id}
+                                  selected={
+                                    defaultService &&
+                                    defaultService.bank_no === organization.id
+                                      ? "selected"
+                                      : ""
+                                  }
+                                  key={index}
+                                >
+                                  {organization.name}
+                                </option>
+                              ))}
+                          </CFormSelect>
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <CCol sm={2}>
+                            <CFormCheck label="Active" />
+                          </CCol>
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <CButton
+                            className="btn-sm"
+                            disabled={!isDirty}
+                            type="submit"
+                            color="success"
+                          >
+                            Update
+                          </CButton>
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))}
+                  </CTableBody>
+                </CTable>
+
                 {/* {defaultService &&
                   defaultService.map((defaultservice, index) => {
                     return (
