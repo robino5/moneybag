@@ -170,7 +170,7 @@ const BusinessDetails = ({ clickNext }) => {
               {...register("merchant_id", {
                 required: "Please select Merchant ID",
               })}
-              placeholder="Merchant cetagory Id"
+              placeholder="Merchant ID"
             />
             <span className="text-danger">{errors.merchant_id?.message}</span>
           </CCol>
