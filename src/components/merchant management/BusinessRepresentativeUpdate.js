@@ -140,6 +140,9 @@ const BusinessRepresentativeUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
         swal({
           text: error.response.data.detail,
           icon: "error",
@@ -163,6 +166,9 @@ const BusinessRepresentativeUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
@@ -196,6 +202,9 @@ const BusinessRepresentativeUpdate = () => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
+          if(error.response.status==401){
+            navigate("/login");
+          }
           swal({
             position: "top-end",
             text: "File Upload Failed",
@@ -228,6 +237,9 @@ const BusinessRepresentativeUpdate = () => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
+          if(error.response.status==401){
+            navigate("/login");
+          }
           swal({
             position: "top-end",
             text: "File Upload Failed",

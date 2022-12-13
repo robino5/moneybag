@@ -160,6 +160,9 @@ const BusinessStructure = ({ clickNext }) => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
@@ -214,6 +217,9 @@ const BusinessStructure = ({ clickNext }) => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
+          if(error.response.status==401){
+            navigate("/login");
+          }
           swal({
             position: "top-end",
             text: "File Upload Failed",
@@ -246,6 +252,9 @@ const BusinessStructure = ({ clickNext }) => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
+          if(error.response.status==401){
+            navigate("/login");
+          }
           swal({
             position: "top-end",
             text: "File Upload Failed",

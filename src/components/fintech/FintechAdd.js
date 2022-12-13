@@ -138,10 +138,13 @@ const FintechAdd = () => {
         navigate("/fintech");
       })
       .catch((error) => {
-        console.error("There was an error!", error);
+        console.error("There was an error!", error.response.status);
+        if(error.response.status==401){
+          navigate("/login");
+        }
         swal({
           position: "top-end",
-          text: error.response.data.detail,
+          text: error.response.status,
           icon: "error",
           button: false,
           timer: 1500,
@@ -162,6 +165,9 @@ const FintechAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 

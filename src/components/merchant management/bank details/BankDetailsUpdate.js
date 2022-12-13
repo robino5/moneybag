@@ -75,6 +75,9 @@ const BankDetailsUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
         swal({
           position: "top-end",
           text: error.response.data.detail,
@@ -108,6 +111,9 @@ const BankDetailsUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
@@ -124,6 +130,9 @@ const BankDetailsUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 

@@ -79,6 +79,9 @@ const SettelmentAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
         swal({
           position: "top-end",
           text: error.response.data.detail,
@@ -102,6 +105,9 @@ const SettelmentAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
@@ -118,6 +124,9 @@ const SettelmentAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
@@ -134,6 +143,9 @@ const SettelmentAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
   const getLookupList = () => {
@@ -149,6 +161,9 @@ const SettelmentAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 

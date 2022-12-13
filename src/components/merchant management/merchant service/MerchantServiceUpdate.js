@@ -65,6 +65,9 @@ const MerchantServiceUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
@@ -81,6 +84,9 @@ const MerchantServiceUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
@@ -97,6 +103,9 @@ const MerchantServiceUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
@@ -113,6 +122,9 @@ const MerchantServiceUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
@@ -129,6 +141,9 @@ const MerchantServiceUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
@@ -145,6 +160,9 @@ const MerchantServiceUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
@@ -161,6 +179,9 @@ const MerchantServiceUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
@@ -369,6 +390,9 @@ const MerchantServiceUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
         swal({
           text: error.response.data.detail,
           icon: "error",
@@ -415,6 +439,9 @@ const MerchantServiceUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
         swal({
           position: "top-end",
           text: error.response.data.detail,

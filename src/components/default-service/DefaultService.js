@@ -52,6 +52,9 @@ const DefaultService = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
   const getOrganization = () => {
@@ -67,6 +70,9 @@ const DefaultService = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
   const getLookupList = async () => {
@@ -82,6 +88,9 @@ const DefaultService = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
@@ -131,6 +140,9 @@ const DefaultService = () => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
+          if(error.response.status==401){
+            navigate("/login");
+          }
           swal({
             position: "top-end",
             text: error.response.data.detail,
@@ -207,6 +219,9 @@ const DefaultService = () => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
+          if(error.response.status==401){
+            navigate("/login");
+          }
           swal({
             position: "top-end",
             text: error.response.data.detail,

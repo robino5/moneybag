@@ -96,6 +96,9 @@ const BankDetails = ({ clickNext }) => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
@@ -112,6 +115,9 @@ const BankDetails = ({ clickNext }) => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
@@ -128,6 +134,9 @@ const BankDetails = ({ clickNext }) => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if(error.response.status==401){
+          navigate("/login");
+        }
       });
   };
 
