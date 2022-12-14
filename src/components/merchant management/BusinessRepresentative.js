@@ -88,7 +88,7 @@ const BusinessRepresentative = ({ clickNext }) => {
       date_of_birth: dob,
       merchant_pic: image,
       nid_picture: nidCopy,
-      marchant_id: localStorage.getItem("merchant_id"),
+      merchant_id: localStorage.getItem("merchant_id"),
       industry_no: localStorage.getItem("indeustry"),
       category_code: localStorage.getItem("category_code"),
       website: localStorage.getItem("business_website"),
@@ -115,6 +115,7 @@ const BusinessRepresentative = ({ clickNext }) => {
     }
 
     console.log(data);
+
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
@@ -181,7 +182,7 @@ const BusinessRepresentative = ({ clickNext }) => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -217,7 +218,7 @@ const BusinessRepresentative = ({ clickNext }) => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
-          if(error.response.status==401){
+          if (error.response.status == 401) {
             navigate("/login");
           }
           swal({
@@ -252,7 +253,7 @@ const BusinessRepresentative = ({ clickNext }) => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
-          if(error.response.status==401){
+          if (error.response.status == 401) {
             navigate("/login");
           }
           swal({
@@ -283,7 +284,7 @@ const BusinessRepresentative = ({ clickNext }) => {
           <CCol sm={8}>
             <CRow className="mb-3">
               <CFormLabel className="col-sm-4 col-form-label">
-              NID Number
+                NID Number
               </CFormLabel>
               <CCol sm={8}>
                 <CFormInput
@@ -310,7 +311,7 @@ const BusinessRepresentative = ({ clickNext }) => {
             </CRow>
             <CRow className="mb-3">
               <CFormLabel className="col-sm-4 col-form-label">
-                Legal Name Of Person
+                Legal Name of Person
               </CFormLabel>
               <CCol sm={8}>
                 <CFormInput
@@ -464,7 +465,7 @@ const BusinessRepresentative = ({ clickNext }) => {
           </CCol>
         </CRow>
         <CRow className="mb-3">
-          <CFormLabel className="col-sm-2 col-form-label">Nid Copy</CFormLabel>
+          <CFormLabel className="col-sm-2 col-form-label">NID Copy</CFormLabel>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <CCol sm={4}>
             <CFormInput type="file" onChange={uploadFile} />

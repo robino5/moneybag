@@ -511,7 +511,7 @@ const FintechAdd = () => {
                       <p>Call Back Url</p>
                     </CCol> */}
                     <CCol sm={1}>
-                      <p>Active?</p>
+                      <p>Status</p>
                     </CCol>
                     <CCol sm={1}></CCol>
                   </CRow>

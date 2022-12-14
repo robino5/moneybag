@@ -22,7 +22,7 @@ const MerchantList = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -75,7 +75,7 @@ const MerchantList = () => {
     {
       name: "Merchant Id",
       sortable: true,
-      selector: (row) => row.marchant_id,
+      selector: (row) => row.merchant_id,
     },
     {
       name: "Merchant Name",

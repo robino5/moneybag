@@ -75,7 +75,7 @@ const BankDetailsUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
         swal({
@@ -111,7 +111,7 @@ const BankDetailsUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -130,7 +130,7 @@ const BankDetailsUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -279,6 +279,7 @@ const BankDetailsUpdate = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
+                        disabled={true}
                         value={setRoutingNo(bankbranchList)}
                         {...register("routing_no")}
                         placeholder="Transit/Routing No:"

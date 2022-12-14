@@ -160,7 +160,7 @@ const BusinessStructure = ({ clickNext }) => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -170,7 +170,7 @@ const BusinessStructure = ({ clickNext }) => {
     if (e == 2001001) {
       return "School Registartion Certificate by Board:";
     } else if (e == 2001002 || e == 2001006) {
-      return "N Corporation File";
+      return "Incorporation Certificate";
     } else {
       return "Trade License";
     }
@@ -217,7 +217,7 @@ const BusinessStructure = ({ clickNext }) => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
-          if(error.response.status==401){
+          if (error.response.status == 401) {
             navigate("/login");
           }
           swal({
@@ -252,7 +252,7 @@ const BusinessStructure = ({ clickNext }) => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
-          if(error.response.status==401){
+          if (error.response.status == 401) {
             navigate("/login");
           }
           swal({

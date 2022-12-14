@@ -121,7 +121,7 @@ const SettelmentAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -140,7 +140,7 @@ const SettelmentAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -159,7 +159,7 @@ const SettelmentAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -177,7 +177,7 @@ const SettelmentAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -249,7 +249,7 @@ const SettelmentAdd = () => {
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCard className="p-4">
-              <h6 className="text-center">Update Settlement Bnak</h6>
+              <h6 className="text-center">Update Settlement Bank</h6>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(updateSattelmentAccount)}>
                   <CRow className="mb-3">
@@ -266,7 +266,7 @@ const SettelmentAdd = () => {
                           );
                         }}
                       >
-                        <option>select Bank</option>
+                        <option>Select Bank</option>
                         {getOrganizationOption(organizationList) &&
                           getOrganizationOption(organizationList).map(
                             (org, index) => (

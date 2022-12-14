@@ -96,7 +96,7 @@ const BankDetails = ({ clickNext }) => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -115,7 +115,7 @@ const BankDetails = ({ clickNext }) => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -134,7 +134,7 @@ const BankDetails = ({ clickNext }) => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -327,7 +327,7 @@ const BankDetails = ({ clickNext }) => {
                   setBankID(e.target.value);
                 }}
               >
-                <option>select Bank</option>
+                <option>Select Bank</option>
                 {getBankOption(bankbranchList) &&
                   getBankOption(bankbranchList).map((bank, index) => (
                     <option value={bank.id} key={index}>
@@ -352,7 +352,7 @@ const BankDetails = ({ clickNext }) => {
                   setBrunchID(e.target.value);
                 }}
               >
-                <option>select Branch</option>
+                <option>Select Branch</option>
                 {getBranchOption(bankbranchList) &&
                   getBranchOption(bankbranchList).map((bank, index) => (
                     <option value={bank.id} key={index}>
@@ -369,6 +369,7 @@ const BankDetails = ({ clickNext }) => {
             </CFormLabel>
             <CCol sm={8}>
               <CFormInput
+                disabled={true}
                 type="text"
                 value={setRoutingNo(bankbranchList)}
                 {...register("routing_no")}

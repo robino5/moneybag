@@ -140,7 +140,7 @@ const BusinessRepresentativeUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
         swal({
@@ -166,7 +166,7 @@ const BusinessRepresentativeUpdate = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -202,7 +202,7 @@ const BusinessRepresentativeUpdate = () => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
-          if(error.response.status==401){
+          if (error.response.status == 401) {
             navigate("/login");
           }
           swal({
@@ -237,7 +237,7 @@ const BusinessRepresentativeUpdate = () => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
-          if(error.response.status==401){
+          if (error.response.status == 401) {
             navigate("/login");
           }
           swal({
@@ -463,7 +463,7 @@ const BusinessRepresentativeUpdate = () => {
               </CRow>
               <CRow className="mb-3">
                 <CFormLabel className="col-sm-2 col-form-label">
-                  Nid Copy
+                  NID Copy
                 </CFormLabel>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <CCol sm={4}>

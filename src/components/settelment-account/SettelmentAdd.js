@@ -79,7 +79,7 @@ const SettelmentAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
         swal({
@@ -105,7 +105,7 @@ const SettelmentAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -124,7 +124,7 @@ const SettelmentAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -143,7 +143,7 @@ const SettelmentAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -161,7 +161,7 @@ const SettelmentAdd = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -233,7 +233,7 @@ const SettelmentAdd = () => {
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCard className="p-4">
-              <h6 className="text-center">Add Settlement Bnak</h6>
+              <h6 className="text-center">Add Settlement Bank</h6>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(saveSattelmentAccount)}>
                   <CRow className="mb-3">
@@ -252,7 +252,7 @@ const SettelmentAdd = () => {
                           );
                         }}
                       >
-                        <option>select Fintech</option>
+                        <option>Select Fintech</option>
                         {getOrganizationOption(organizationList) &&
                           getOrganizationOption(organizationList).map(
                             (org, index) => (
@@ -278,7 +278,7 @@ const SettelmentAdd = () => {
                           setBankId(e.target.value);
                         }}
                       >
-                        <option>Settelment Bank</option>
+                        <option>Select Settelment Bank</option>
                         {getBankOption(bankbranchList) &&
                           getBankOption(bankbranchList).map((bank, index) => (
                             <option value={bank.id} key={index}>
@@ -299,7 +299,7 @@ const SettelmentAdd = () => {
                           required: "Please Select Branch",
                         })}
                       >
-                        <option>select Branch</option>
+                        <option>Select Branch</option>
                         {getBranchOption(bankbranchList) &&
                           getBranchOption(bankbranchList).map((bank, index) => (
                             <option value={bank.id} key={index}>

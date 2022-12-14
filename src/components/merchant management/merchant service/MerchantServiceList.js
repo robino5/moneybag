@@ -28,7 +28,7 @@ const StoreList = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -47,7 +47,7 @@ const StoreList = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -66,7 +66,7 @@ const StoreList = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -84,7 +84,7 @@ const StoreList = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -103,7 +103,7 @@ const StoreList = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -235,7 +235,7 @@ const StoreList = () => {
 
   const columns = [
     {
-      name: "Store Name",
+      name: "Merchant Name",
       selector: (row) => getMerchantName(row.id),
     },
     {

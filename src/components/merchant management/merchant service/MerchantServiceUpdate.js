@@ -857,16 +857,7 @@ const MerchantServiceUpdate = () => {
                               </p>
                             </CCol>
                             <CCol sm={2}>
-                              <p
-                                className={
-                                  element.service_charge_type == "S"
-                                    ? "service_charge_type_wrapper"
-                                    : ""
-                                }
-                                onClick={() => {
-                                  updateSlabSerice(element.id);
-                                }}
-                              >
+                              <p>
                                 {getChargeType(element.service_charge_type)}
                               </p>
                             </CCol>
