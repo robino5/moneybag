@@ -35,7 +35,7 @@ const FintechAdd = () => {
 
   const navigate = useNavigate();
   const [lookupList, setLooupList] = useState();
-  const [services, setservices] = useState([]);
+  // const [services, setservices] = useState([]);
   const [selectedMethod, setSelectedMethod] = useState([]);
   const [serviceData, serviceListDate] = useState([]);
   const [fintechType, setFintecType] = useState([]);
@@ -84,7 +84,6 @@ const FintechAdd = () => {
   // };
 
   console.log(fields);
-  console.log(services);
 
   const saveFintech = (e) => {
     console.log("element");
@@ -121,7 +120,7 @@ const FintechAdd = () => {
         }
       )
       .then((response) => {
-        console.log(response), saveService(response.data.id);
+        console.log(response), saveService(response.data.id, e.services);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -135,54 +134,54 @@ const FintechAdd = () => {
       });
   };
 
-  // const saveService = (id) => {
-  //   let data = [];
-  //   services &&
-  //     services.map((element) => {
-  //       data.push({
-  //         organization_no: id,
-  //         category_service_id: parseInt(element.category_service_id),
-  //         service_type: parseInt(element.service_type),
-  //         end_point_url: "Test",
-  //         call_back_url: "Test",
-  //         rate: parseInt(element.rate),
-  //         rate_type: element.rate_type,
-  //         is_active: element.is_active ? 1 : 0,
-  //       });
-  //     });
-  //   console.log("services", data);
-  //   const headers = {
-  //     Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //   };
-  //   axios
-  //     .post(`${process.env.REACT_APP_API_URL}services/`, data, {
-  //       headers,
-  //     })
-  //     .then((response) => {
-  //       console.log(response);
-  //       swal({
-  //         position: "top-end",
-  //         text: "Fintech Created Successfull",
-  //         icon: "success",
-  //         button: false,
-  //         timer: 1500,
-  //       });
-  //       navigate("/fintech");
-  //     })
-  //     .catch((error) => {
-  //       console.error("There was an error!", error.response.status);
-  //       if (error.response.status == 401) {
-  //         navigate("/login");
-  //       }
-  //       swal({
-  //         position: "top-end",
-  //         text: error.response.status,
-  //         icon: "error",
-  //         button: false,
-  //         timer: 1500,
-  //       });
-  //     });
-  // };
+  const saveService = (id, services) => {
+    let data = [];
+    services &&
+      services.map((element) => {
+        data.push({
+          organization_no: id,
+          category_service_id: parseInt(element.category_service_id),
+          service_type: parseInt(element.service_type),
+          end_point_url: "Test",
+          call_back_url: "Test",
+          rate: parseInt(element.rate),
+          rate_type: element.rate_type,
+          is_active: element.is_active ? 1 : 0,
+        });
+      });
+    console.log("services", data);
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .post(`${process.env.REACT_APP_API_URL}services/`, data, {
+        headers,
+      })
+      .then((response) => {
+        console.log(response);
+        swal({
+          position: "top-end",
+          text: "Fintech Created Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
+        navigate("/fintech");
+      })
+      .catch((error) => {
+        console.error("There was an error!", error.response.status);
+        if (error.response.status == 401) {
+          navigate("/login");
+        }
+        swal({
+          position: "top-end",
+          text: error.response.status,
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
+      });
+  };
 
   const getLookupList = () => {
     const headers = {
@@ -311,31 +310,31 @@ const FintechAdd = () => {
     return Date;
   };
 
-  const addServices = () => {
-    services.push(
-      {
-        category_service_id: serviceCategory,
-        service_type: serviceType,
-        end_point_url: "test",
-        call_back_url: "test",
-        rate_type: rateType,
-        rate: rate,
-        is_active: status?1:0
-      }
-    )
-    console.log("services:",services)
-  }
+  // const addServices = () => {
+  //   services.push(
+  //     {
+  //       category_service_id: serviceCategory,
+  //       service_type: serviceType,
+  //       end_point_url: "test",
+  //       call_back_url: "test",
+  //       rate_type: rateType,
+  //       rate: rate,
+  //       is_active: status?1:0
+  //     }
+  //   )
+  //   console.log("services:",services)
+  // }
 
-  const removeService=(e)=>{
-     console.log(services)
+  // const removeService=(e)=>{
+  //    console.log(services)
      
-     const data=services.splice(e,1)
-     console.log(services)
-     setservices(services)
-     console.log("data",data)
-    //  setservices(data)
+  //    const data=services.splice(e,1)
+  //    console.log(services)
+  //    setservices(services)
+  //    console.log("data",data)
+  //   //  setservices(data)
       
-  }
+  // }
 
   useEffect(() => {
     getLookupList();
@@ -524,7 +523,7 @@ const FintechAdd = () => {
                     <CCol sm={3}>
                       <p>Service Category</p>
                     </CCol>
-                    <CCol sm={2}>
+                    <CCol sm={3}>
                       <p>Service Name</p>
                     </CCol>
                     <CCol sm={2}>
@@ -543,138 +542,111 @@ const FintechAdd = () => {
                     <CCol sm={1}>
                       <p>Status</p>
                     </CCol>
-                    <CCol sm={2}></CCol>
                   </CRow>
-                  <CRow className="mb-3">
-                    <CCol sm={3}>
-                      <CFormSelect
-                        aria-label="Default select example"
-                        type="number"
-                        onChange={(e) => {
-                          setServiceCategory(e.target.value);
-                        }}
-                      >
-                        <option>Service Category</option>
-                        {lookupList &&
-                          getServiceCategoryOption(lookupList).map(
-                            (country, index) => (
-                              <option value={country.id} key={index}>
-                                {country.name}
-                              </option>
-                            )
-                          )}
-                      </CFormSelect>
-                    </CCol>
-                    <CCol sm={2}>
-                      <CFormSelect
-                        aria-label="Default select example"
-                        type="number"
-                        onChange={(e) => {
-                          setServiceType(e.target.value);
-                        }}
-                      >
-                        <option>Service Name</option>
-                        {lookupList &&
-                          setServicesOptions(getServiceOption(lookupList)).map(
-                            (country, index) => (
-                              <option value={country.id} key={index}>
-                                {country.name}
-                              </option>
-                            )
-                          )}
-                      </CFormSelect>
-                    </CCol>
-                    <CCol sm={2}>
-                      <CFormSelect
-                        aria-label="Default select example"
-                        type="number"
-                        onChange={(e) => {
-                          setRateType(e.target.value);
-                        }}
-                      >
-                        <option>Select Rate Type</option>
-                        <option value={"F"}>Fixed</option>
-                        <option value={"P"}>Percentage </option>
-                      </CFormSelect>
-                    </CCol>
-                    <CCol sm={2}>
-                      <CFormInput
-                        type="text"
-                        placeholder="Rate"
-                        onChange={(e) => {
-                          setRate(e.target.value);
-                        }}
-                      />
-                    </CCol>
-                    {/* <CCol sm={3}>
+                  {fields.map((service, index) => {
+                    return (
+                      <CRow className="mb-3" key={service.id}>
+                        <CCol sm={3}>
+                          <CFormSelect
+                            aria-label="Default select example"
+                            type="number"
+                            {...register(
+                              `services.${index}.category_service_id`
+                            )}
+                          >
+                            <option>Service Category</option>
+                            {lookupList &&
+                              getServiceCategoryOption(lookupList).map(
+                                (country, index) => (
+                                  <option value={country.id} key={index}>
+                                    {country.name}
+                                  </option>
+                                )
+                              )}
+                          </CFormSelect>
+                        </CCol>
+                        <CCol sm={3}>
+                          <CFormSelect
+                            aria-label="Default select example"
+                            type="number"
+                            {...register(`services.${index}.service_type`)}
+                          >
+                            <option>Service Name</option>
+                            {lookupList &&
+                              getServiceOption(lookupList).map(
+                                (country, index) => (
+                                  <option value={country.id} key={index}>
+                                    {country.name}
+                                  </option>
+                                )
+                              )}
+                          </CFormSelect>
+                        </CCol>
+                        <CCol sm={2}>
                           <CFormInput
                             type="text"
-                            {...register(`services.${index}.end_point_url`)}
+                            {...register(`services.${index}.rate`)}
+                            placeholder="Rate"
+                          />
+                        </CCol>
+                        <CCol sm={2}>
+                          <CFormSelect
+                            aria-label="Default select example"
+                            type="number"
+                            {...register(`services.${index}.rate_type`)}
+                          >
+                            <option>Select Rate Type</option>
+                            <option value={"F"}>Fixed</option>
+                            <option value={"P"}>Percentage </option>
+                          </CFormSelect>
+                        </CCol>
+                        {/* <CCol sm={3}>
+                          <CFormInput
+                            type="text"
+                            {...register(`addServices.${index}.end_point_url`)}
                             placeholder="End Point Url"
                           />
                         </CCol>
                         <CCol sm={3}>
                           <CFormInput
                             type="text"
-                            {...register(`services.${index}.call_back_url`)}
+                            {...register(`addServices.${index}.call_back_url`)}
                             placeholder="Call Back Url"
                           />
                         </CCol> */}
-                    <CCol sm={1}>
-                      <CFormCheck
-                        name="status"
-                        label="Active"
-                        onChange={(e) => {
-                          setStatus(e.target.checked);
-                        }}
-                      />
-                    </CCol>
+                        <CCol sm={1}>
+                          <CFormCheck
+                            name="status"
+                            label="Active"
+                            {...register(`services.${index}.is_active`)}
+                          />
+                        </CCol>
+                        <CCol sm={1}>
+                          <CButton
+                            color="danger"
+                            onClick={() => {
+                              remove(index);
+                            }}
+                          >
+                            Remove
+                          </CButton>
+                        </CCol>
+                      </CRow>
+                    );
+                  })}
+
+                  <CRow>
                     <CCol sm={2}>
                       <CButton
                         color="primary"
-                        type="submit"
                         onClick={() => {
-                          addServices()
+                          append({});
                         }}
                       >
                         Add Service
                       </CButton>
                     </CCol>
                   </CRow>
-                  <hr></hr>
-                  {
-                   services.map((service,index)=>{
-                      return(
-                        <CRow>
-                        <CCol md={3}>
-                           <p>{getServiceCategoryName(service.category_service_id)}</p>
-                        </CCol>
-                        <CCol md={2}>
-                        <p>{getServiceCategoryName(service.service_type)}</p>
-                        </CCol>
-                        <CCol md={2}>
-                            <p>{service.rate_type=='P'?"Percent":"Fixed"}</p>
-                        </CCol>
-                        <CCol md={2}>
-                        <p>{parseFloat(service.rate).toFixed(2)}</p>
-                        </CCol>
-                        <CCol md={1}>
-                        <p>{service.is_active==1?"Active":"Inactive"}</p>
-                        </CCol>
-                        <CCol md={1}>
-                        <CButton
-                        color="danger"
-                        onClick={() => {
-                          removeService(index)
-                        }}
-                      >
-                        Remove
-                      </CButton>
-                        </CCol>
-                      </CRow>
-                    )
-                    })
-                  }
           
 
                   {/* <CRow className="mb-3">
