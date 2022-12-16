@@ -34,6 +34,7 @@ const SettelmentAdd = () => {
   const [serviceList, setServiceList] = useState();
   const [service, setServices] = useState();
   const [bankId, setBankId] = useState();
+  const [branchId, setBranchId] = useState();
 
   console.log("bank", bankId);
 
@@ -189,6 +190,26 @@ const SettelmentAdd = () => {
     return date;
   };
 
+  const getRoutingNumber = (e) => {
+    let routing;
+    e?.map((branch) => {
+      if (branch.id == branchId) {
+        routing = branch.routing_no;
+      }
+    });
+    return routing;
+  };
+
+  const getSwiftCode = (e) => {
+    let swift_code;
+    e?.map((branch) => {
+      if (branch.id == branchId) {
+        swift_code = branch.swift_code;
+      }
+    });
+    return swift_code;
+  };
+
   const getServiceOption = (e, id) => {
     let data = [];
     e &&
@@ -298,6 +319,9 @@ const SettelmentAdd = () => {
                         {...register("select_branch_name", {
                           required: "Please Select Branch",
                         })}
+                        onChange={(e) => {
+                          setBranchId(e.target.value);
+                        }}
                       >
                         <option>Select Branch</option>
                         {getBranchOption(bankbranchList) &&
@@ -307,6 +331,32 @@ const SettelmentAdd = () => {
                             </option>
                           ))}
                       </CFormSelect>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Routing No.
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        value={getRoutingNumber(bankbranchList)}
+                        {...register("routing_no")}
+                        placeholder="Routing No."
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Swift code
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        value={getSwiftCode(bankbranchList)}
+                        placeholder="Swift code"
+                        {...register("swift_code")}
+                      />
                     </CCol>
                   </CRow>
                   {/* <CRow className="mb-3">
