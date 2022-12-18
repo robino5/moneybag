@@ -50,6 +50,8 @@ const SettelmentAdd = () => {
       bank_id: parseInt(e.select_bank_name),
       branch_id: parseInt(e.select_branch_name),
       service_name: "tet",
+      swift_code: e.swift_code,
+      routing: e.routing_no,
       account_name: e.account_name,
       account_id: e.account_id,
       note: e.note,
@@ -340,6 +342,7 @@ const SettelmentAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
+                        disabled="true"
                         value={getRoutingNumber(bankbranchList)}
                         {...register("routing_no")}
                         placeholder="Routing No."
@@ -353,6 +356,7 @@ const SettelmentAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
+                        disabled="true"
                         value={getSwiftCode(bankbranchList)}
                         placeholder="Swift code"
                         {...register("swift_code")}

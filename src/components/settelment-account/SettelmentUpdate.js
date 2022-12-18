@@ -34,7 +34,8 @@ const SettelmentAdd = () => {
   const [services, setService] = useState();
   const [serviceList, setServiceList] = useState();
   const [service, setServices] = useState();
-  const [bankId, setBankId] = useState();
+  const [bankId, setBankId] = useState(location.state.bank_id);
+  const [branchId, setBranchId] = useState(location.state.branch_id);
 
   const multipleInsert = (e) => {
     setServices(Array.isArray(e) ? e.map((value) => value.value) : []);
@@ -236,6 +237,26 @@ const SettelmentAdd = () => {
     return date;
   };
 
+  const getRoutingNumber = (e) => {
+    let routing;
+    e?.map((branch) => {
+      if (branch.id == branchId) {
+        routing = branch.routing_no;
+      }
+    });
+    return routing;
+  };
+
+  const getSwiftCode = (e) => {
+    let swift_code;
+    e?.map((branch) => {
+      if (branch.id == branchId) {
+        swift_code = branch.swift_code;
+      }
+    });
+    return swift_code;
+  };
+
   useEffect(() => {
     getOrganization();
     getBankBranchList();
@@ -323,6 +344,9 @@ const SettelmentAdd = () => {
                       <CFormSelect
                         aria-label="Default select example"
                         {...register("select_branch_name")}
+                        onChange={(e) => {
+                          setBranchId(e.target.value);
+                        }}
                       >
                         {getBranchOption(bankbranchList) &&
                           getBranchOption(bankbranchList).map(
@@ -341,6 +365,34 @@ const SettelmentAdd = () => {
                             )
                           )}
                       </CFormSelect>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Routing No.
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        disabled="true"
+                        value={getRoutingNumber(bankbranchList)}
+                        {...register("routing_no")}
+                        placeholder="Routing No."
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Swift code
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        disabled="true"
+                        value={getSwiftCode(bankbranchList)}
+                        placeholder="Swift code"
+                        {...register("swift_code")}
+                      />
                     </CCol>
                   </CRow>
                   {/* <CRow className="mb-3">

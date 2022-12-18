@@ -5,6 +5,8 @@ import swal from "sweetalert";
 import { useForm } from "react-hook-form";
 import CIcon from "@coreui/icons-react";
 import { cilLowVision } from "@coreui/icons";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import {
   CCard,
   CCardBody,
@@ -299,10 +301,15 @@ const BusinessRepresentative = ({ clickNext }) => {
                 Date of Birth
               </CFormLabel>
               <CCol sm={6}>
-                <CFormInput
+                {/* <CFormInput
                   type="date"
                   placeholder=" Date of Birth"
                   onChange={handleDOB}
+                /> */}
+
+                <DatePicker
+                  onChange={handleDOB}
+                  dateFormat="dd/mm/yyyy"
                 />
               </CCol>
               <CCol sm={2}>
