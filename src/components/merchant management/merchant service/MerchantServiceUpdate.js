@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import swal from "sweetalert";
 import axios from "axios";
-import SlabUpdate from "src/components/slab/SlabUpdate";
+import MerchantServiceUpdateModal from "./MerchantServiceUpdateModal";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilMinus } from "@coreui/icons";
 import {
@@ -39,7 +39,7 @@ const MerchantServiceUpdate = () => {
   const [lookupList, setLooupList] = useState();
   const [merchantService, setMerchantServicee] = useState();
   const [marchantDetailList, setMarchentDetailsList] = useState();
-  const [servicevalue, setServiceValue] = useState({});
+  const [servicevalue, setServiceValue] = useState();
   const [slabServiceList, setSlabServiceList] = useState();
   const [slabService, setSlabServices] = useState();
   const [updateState, setupdateStatus] = useState();
@@ -275,19 +275,19 @@ const MerchantServiceUpdate = () => {
     return date;
   };
 
-  const closeModal = () => {
-    const getAllData = async () => {
-      await getMertchant();
-      await getMertchantDetailList();
-      await getMerchantService();
-      await getBankList();
-      await getLookupList();
-      await getSlabServiceList();
-      await getSlabList();
-    };
-    getAllData();
-    setVisible(false);
-  };
+  // const closeModal = () => {
+  //   const getAllData = async () => {
+  //     await getMertchant();
+  //     await getMertchantDetailList();
+  //     await getMerchantService();
+  //     await getBankList();
+  //     await getLookupList();
+  //     await getSlabServiceList();
+  //     await getSlabList();
+  //   };
+  //   getAllData();
+  //   setVisible(false);
+  // };
 
   const getMerchantName = (e) => {
     let merchatname;
@@ -321,15 +321,27 @@ const MerchantServiceUpdate = () => {
   };
 
   const setService = (element) => {
-    setAddService(false);
-    setServiceValue({
+    let data = {
+      merchant_no: location.state,
       id: element.id,
       bank_no: element.bank_no,
       charge_ammount: element.charge_ammount,
       service_charge_type: element.service_charge_type,
       service_no: element.service_no,
-      is_active: element.is_active == 1 ? true : false,
-    });
+      is_active: element.is_active,
+    };
+    setServiceValue(data);
+    setVisible(true);
+
+    // setAddService(false);
+    // setServiceValue({
+    //   id: element.id,
+    //   bank_no: element.bank_no,
+    //   charge_ammount: element.charge_ammount,
+    //   service_charge_type: element.service_charge_type,
+    //   service_no: element.service_no,
+    //   is_active: element.is_active == 1 ? true : false,
+    // });
   };
 
   const selectMerchatServices = (e, id) => {
@@ -368,60 +380,60 @@ const MerchantServiceUpdate = () => {
   //   });
   // };
 
-  const updateMerchantService = (e) => {
-    const mercharDate = {
-      merchant_no: location.state,
-      bank_no: servicevalue.bank_no,
-      service_no: servicevalue.service_no,
-      service_charge_type:
-        e.service_charge_type == ""
-          ? servicevalue.service_charge_type
-          : e.service_charge_type,
-      charge_ammount:
-        e.percentage == "" ? servicevalue.charge_ammount : e.percentage,
-      is_active: e.status ? 1 : 0,
-    };
+  // const updateMerchantService = (e) => {
+  //   const mercharDate = {
+  //     merchant_no: location.state,
+  //     bank_no: servicevalue.bank_no,
+  //     service_no: servicevalue.service_no,
+  //     service_charge_type:
+  //       e.service_charge_type == ""
+  //         ? servicevalue.service_charge_type
+  //         : e.service_charge_type,
+  //     charge_ammount:
+  //       e.percentage == "" ? servicevalue.charge_ammount : e.percentage,
+  //     is_active: e.status ? 1 : 0,
+  //   };
 
-    console.log("dd", mercharDate);
+  //   console.log("dd", mercharDate);
 
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}merchant-services/update/${servicevalue.id}`,
-        mercharDate,
-        {
-          headers,
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        setServiceValue({ is_active: false });
-        reset();
-        getMerchantService();
-        swal({
-          text: "Updated Successfull",
-          icon: "success",
-          position: "top-end",
-          button: false,
-          timer: 1500,
-        });
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        if (error.response.status == 401) {
-          navigate("/login");
-        }
-        swal({
-          text: error.response.data.detail,
-          icon: "error",
-          position: "top-end",
-          button: false,
-          timer: 1500,
-        });
-      });
-  };
+  //   const headers = {
+  //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //   };
+  //   axios
+  //     .post(
+  //       `${process.env.REACT_APP_API_URL}merchant-services/update/${servicevalue.id}`,
+  //       mercharDate,
+  //       {
+  //         headers,
+  //       }
+  //     )
+  //     .then((response) => {
+  //       console.log(response);
+  //       setServiceValue({ is_active: false });
+  //       reset();
+  //       getMerchantService();
+  //       swal({
+  //         text: "Updated Successfull",
+  //         icon: "success",
+  //         position: "top-end",
+  //         button: false,
+  //         timer: 1500,
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       console.error("There was an error!", error);
+  //       if (error.response.status == 401) {
+  //         navigate("/login");
+  //       }
+  //       swal({
+  //         text: error.response.data.detail,
+  //         icon: "error",
+  //         position: "top-end",
+  //         button: false,
+  //         timer: 1500,
+  //       });
+  //     });
+  // };
 
   const addService = () => {
     const merchantServiceData = [
@@ -579,7 +591,7 @@ const MerchantServiceUpdate = () => {
             <CCard className="p-4">
               <h6 className="text-center">Update Merchant Service</h6>
               <CCardBody>
-                <CForm onSubmit={handleSubmit(updateMerchantService)}>
+                <CForm>
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Merchant Name
@@ -610,7 +622,7 @@ const MerchantServiceUpdate = () => {
                     <p className="col-sm-3 col-form-label">
                       Select FinTech Name
                     </p>
-                    {/* <CCol sm={9}>
+                    <CCol sm={9}>
                       {merchantList &&
                         getMertchantDetail(
                           marchantDetailList,
@@ -627,9 +639,9 @@ const MerchantServiceUpdate = () => {
                             </p>
                           );
                         })}
-                    </CCol> */}
+                    </CCol>
                   </CRow>
-                  <div hidden={addservice ? true : false}>
+                  {/* <div hidden={addservice ? true : false}>
                     <CRow className="mb-3">
                       <CCol sm={3}>
                         <CFormSelect
@@ -707,18 +719,18 @@ const MerchantServiceUpdate = () => {
                           >
                             Percentage{" "}
                           </option>
-                          {/* <option
-                          selected={servicevalue.service_charge_type == "S"}
-                          value={"S"}
-                        >
-                          Slab{" "}
-                        </option> */}
-                          {/* <option
-                          selected={servicevalue.service_charge_type == "C"}
-                          value={"C"}
-                        >
-                          Combination{" "}
-                        </option> */}
+                          <option
+                            selected={servicevalue.service_charge_type == "S"}
+                            value={"S"}
+                          >
+                            Slab{" "}
+                          </option>
+                          <option
+                            selected={servicevalue.service_charge_type == "C"}
+                            value={"C"}
+                          >
+                            Combination{" "}
+                          </option>
                         </CFormSelect>
                       </CCol>
                       <CCol sm={1}>
@@ -738,7 +750,7 @@ const MerchantServiceUpdate = () => {
                         </CButton>
                       </CCol>
                     </CRow>
-                  </div>
+                  </div> */}
                 </CForm>
                 <div hidden={!addservice ? true : false}>
                   <CRow className="mb-3">
@@ -752,15 +764,7 @@ const MerchantServiceUpdate = () => {
                         <option>select Bank</option>
                         {getBankOption(bankList) &&
                           getBankOption(bankList).map((bank, index) => (
-                            <option
-                              value={bank.id}
-                              selected={
-                                bank.id === servicevalue.bank_no
-                                  ? "selected"
-                                  : ""
-                              }
-                              key={index}
-                            >
+                            <option value={bank.id} key={index}>
                               {bank.branch_name}
                             </option>
                           ))}
@@ -909,12 +913,12 @@ const MerchantServiceUpdate = () => {
         </CRow>
       </CContainer>
       <div>
-        <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
+        <CModal visible={visible}>
           <CModalHeader onClose={() => closeModal()}>
             <CModalTitle>Update slab Amount</CModalTitle>
           </CModalHeader>
           <CModalBody>
-            <SlabUpdate data={slabService} />
+            <MerchantServiceUpdateModal data={servicevalue} />
           </CModalBody>
         </CModal>
       </div>
