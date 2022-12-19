@@ -7,6 +7,7 @@ import CIcon from "@coreui/icons-react";
 import { cilLowVision } from "@coreui/icons";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { DateTime } from "luxon";
 import {
   CCard,
   CCardBody,
@@ -32,7 +33,7 @@ const BusinessRepresentative = ({ clickNext }) => {
   const [lookupList, setLooupList] = useState();
   const [image, setImage] = useState("");
   const [nid, seNid] = useState();
-  const [dob, seDob] = useState();
+  const [dob, seDob] = useState(null);
   const [nidInfo, setNidInfo] = useState();
   const [nidCopy, setNidCopy] = useState();
 
@@ -47,8 +48,9 @@ const BusinessRepresentative = ({ clickNext }) => {
     e.preventDefault();
     const data = {
       nidNumber: nid,
-      dateOfBirth: dob,
+      dateOfBirth: dob.toISOString().substring(0, 10)
     };
+    // console.log(dob.toISOString().substring(0, 10))
     console.log(data);
 
     const headers = {
@@ -308,8 +310,11 @@ const BusinessRepresentative = ({ clickNext }) => {
                 /> */}
 
                 <DatePicker
-                  onChange={handleDOB}
-                  dateFormat="dd/mm/yyyy"
+                selected={dob}
+                  onChange={data=>seDob(data)}
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="dd/mm/yyy"
+                  className="date-picker-input"
                 />
               </CCol>
               <CCol sm={2}>
