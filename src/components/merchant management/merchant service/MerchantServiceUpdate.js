@@ -34,6 +34,7 @@ const MerchantServiceUpdate = () => {
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
   const location = useLocation();
+
   const [merchantList, setmerchantList] = useState();
   const [bankList, setBankList] = useState();
   const [lookupList, setLooupList] = useState();
@@ -70,6 +71,7 @@ const MerchantServiceUpdate = () => {
         }
       });
   };
+
 
   const getBankList = async () => {
     const headers = {
@@ -581,6 +583,7 @@ const MerchantServiceUpdate = () => {
       await getSlabList();
     };
     getAllData();
+    console.log("adf")
   }, []);
 
   return (
@@ -914,7 +917,7 @@ const MerchantServiceUpdate = () => {
       </CContainer>
       <div>
         <CModal visible={visible}>
-          <CModalHeader onClose={() => closeModal()}>
+          <CModalHeader onClose={() =>setVisible(false) }>
             <CModalTitle>Update slab Amount</CModalTitle>
           </CModalHeader>
           <CModalBody>
