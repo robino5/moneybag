@@ -72,7 +72,6 @@ const MerchantServiceUpdate = () => {
       });
   };
 
-
   const getBankList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -334,7 +333,6 @@ const MerchantServiceUpdate = () => {
     };
     setServiceValue(data);
     setVisible(true);
-
     // setAddService(false);
     // setServiceValue({
     //   id: element.id,
@@ -583,7 +581,7 @@ const MerchantServiceUpdate = () => {
       await getSlabList();
     };
     getAllData();
-    console.log("adf")
+    console.log("adf");
   }, []);
 
   return (
@@ -917,9 +915,6 @@ const MerchantServiceUpdate = () => {
       </CContainer>
       <div>
         <CModal visible={visible}>
-          <CModalHeader onClose={() =>setVisible(false) }>
-            <CModalTitle>Update slab Amount</CModalTitle>
-          </CModalHeader>
           <CModalBody>
             <MerchantServiceUpdateModal data={servicevalue} />
           </CModalBody>

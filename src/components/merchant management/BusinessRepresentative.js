@@ -43,12 +43,13 @@ const BusinessRepresentative = ({ clickNext }) => {
   const handleDOB = (e) => {
     seDob(e.target.value);
   };
+  console.log(dob);
 
   const searchNid = async (e) => {
     e.preventDefault();
     const data = {
       nidNumber: nid,
-      dateOfBirth: dob.toISOString().substring(0, 10)
+      dateOfBirth: dob.toISOString().substring(0, 10),
     };
     // console.log(dob.toISOString().substring(0, 10))
     console.log(data);
@@ -72,105 +73,50 @@ const BusinessRepresentative = ({ clickNext }) => {
   };
 
   const saveBusinessRepresentative = (e) => {
-    const data = {
-      first_name:
-        e.first_name == "" ? nidInfo?.json_log.nid.fullNameEN : e.first_name,
-      last_name: e.last_name,
-      email: e.email,
-      address1:
+    if (e) {
+      swal({
+        position: "top-end",
+        text: "Category Service Created Successfull",
+        icon: "success",
+        button: false,
+        timer: 1500,
+      });
+      localStorage.setItem("business_representative", 1);
+      localStorage.setItem(
+        "first_name",
+        e.first_name == "" ? nidInfo?.json_log.nid.fullNameEN : e.first_name
+      );
+      localStorage.setItem("last_name", e.last_name);
+      localStorage.setItem("email", e.email);
+      localStorage.setItem(
+        "address1",
         e.address_line_1 == ""
           ? nidInfo?.json_log.nid.presentAddressEN
-          : e.address_line_1,
-      address2:
+          : e.address_line_1
+      );
+      localStorage.setItem(
+        "address2",
         e.address_line_2 == ""
           ? nidInfo?.json_log.nid.permenantAddressEN
-          : e.address_line_2,
-      city: e.city,
-      state: e.state,
-      postal_code: parseInt(e.postal_code),
-      nid_number: nid,
-      date_of_birth: dob,
-      merchant_pic: image,
-      nid_picture: nidCopy,
-      merchant_id: localStorage.getItem("merchant_id"),
-      industry_no: localStorage.getItem("indeustry"),
-      category_code: localStorage.getItem("category_code"),
-      website: localStorage.getItem("business_website"),
-      product_desc: localStorage.getItem("description"),
-      is_active: parseInt(localStorage.getItem("status")),
-      country_no: 1001001,
-      business_type: parseInt(localStorage.getItem("business_type")),
-      business_name: localStorage.getItem("business_name"),
-      short_name: localStorage.getItem("business_short_name"),
-      bin: localStorage.getItem("bin"),
-      business_address1: localStorage.getItem("business_address1"),
-      business_address2: localStorage.getItem("business_address2"),
-      business_city: localStorage.getItem("business_city"),
-      business_state: parseInt(localStorage.getItem("business_state")),
-      business_postal_code: localStorage.getItem("business_postal_code"),
-      merchant_phone: localStorage.getItem("business_Phone"),
-      merchant_email: localStorage.getItem("business_email"),
-      file_1: localStorage.getItem("file1"),
-      file_2: localStorage.getItem("file2"),
-    };
-
-    if (!localStorage.getItem("file2")) {
-      delete data.file_2;
-    }
-
-    console.log(data);
-
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-
-    axios
-      .post(`${process.env.REACT_APP_API_URL}marchants/`, data, {
-        headers,
-      })
-      .then((response) => {
-        console.log(response);
-        localStorage.setItem("merchant_no", response.data.id);
-        swal({
-          position: "top-end",
-          text: "Save Successfull",
-          icon: "success",
-          button: false,
-          timer: 1500,
-        });
-        reset();
-        localStorage.setItem("isSubmitBusiness", 1);
-        localStorage.removeItem("country_no");
-        localStorage.removeItem("business_type");
-        localStorage.removeItem("business_name");
-        localStorage.removeItem("bin");
-        localStorage.removeItem("business_address1");
-        localStorage.removeItem("business_address2");
-        localStorage.removeItem("business_city");
-        localStorage.removeItem("business_state");
-        localStorage.removeItem("business_postal_code");
-        localStorage.removeItem("business_Phone");
-        localStorage.removeItem("business_email");
-        localStorage.removeItem("merchant_id");
-        localStorage.removeItem("indeustry");
-        localStorage.removeItem("category_code");
-        localStorage.removeItem("business_website");
-        localStorage.removeItem("description"),
-          localStorage.removeItem("business_short_name");
-        localStorage.removeItem("file1");
-        localStorage.removeItem("file2");
-        clickNext(1);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        swal({
-          position: "top-end",
-          text: error.response.data.detail,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
+          : e.address_line_2
+      );
+      localStorage.setItem("city", e.city);
+      localStorage.setItem("state", e.state);
+      localStorage.setItem("postal_code", parseInt(e.postal_code));
+      localStorage.setItem("nid_number", nid);
+      localStorage.setItem("date_of_birth", dob);
+      localStorage.setItem("merchant_pic", image);
+      localStorage.setItem("nid_picture", nidCopy);
+      reset();
+    } else {
+      swal({
+        position: "top-end",
+        text: "Faild",
+        icon: "error",
+        button: false,
+        timer: 1500,
       });
+    }
   };
 
   const getLookupList = () => {
@@ -310,8 +256,8 @@ const BusinessRepresentative = ({ clickNext }) => {
                 /> */}
 
                 <DatePicker
-                selected={dob}
-                  onChange={data=>seDob(data)}
+                  selected={dob}
+                  onChange={(data) => seDob(data)}
                   dateFormat="dd/MM/yyyy"
                   placeholderText="dd/mm/yyy"
                   className="date-picker-input"
@@ -522,9 +468,9 @@ const BusinessRepresentative = ({ clickNext }) => {
           <CButton color="success" type="submit" className="mx-3">
             Save
           </CButton>
-          {/* <CButton color="primary" onClick={() => clickNext(1)}>
+          <CButton color="primary" onClick={() => clickNext(1)}>
             Next
-          </CButton> */}
+          </CButton>
         </div>
       </CForm>
     </div>

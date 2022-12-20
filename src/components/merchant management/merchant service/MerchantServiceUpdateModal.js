@@ -15,6 +15,7 @@ import {
   CRow,
   CFormCheck,
   CButton,
+  CModal,
 } from "@coreui/react";
 
 const MerchantServiceUpdateModal = (props) => {
@@ -131,9 +132,7 @@ const MerchantServiceUpdateModal = (props) => {
       .then((response) => {
         console.log(response);
         reset();
-        navigate("/merchant-service/update-merchant-service", {
-          state: props.data.merchant_no,
-        });
+        handleCloseModal();
         swal({
           text: "Updated Successfull",
           icon: "success",
@@ -157,6 +156,13 @@ const MerchantServiceUpdateModal = (props) => {
       });
   };
 
+  const handleCloseModal = () => {
+    navigate("/merchant-service-id", {
+      state: props.data.merchant_no,
+    });
+    // window.location.reload();
+  };
+
   useEffect(() => {
     const getAllData = async () => {
       await getBankList();
@@ -171,6 +177,8 @@ const MerchantServiceUpdateModal = (props) => {
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={12}>
+            <h6 className="text-center">Update Merchant Service</h6>
+            <br></br>
             <CForm onSubmit={handleSubmit(updateMerchantService)}>
               <CRow className="mb-3">
                 <CFormLabel className="col-sm-3 col-form-label">
@@ -278,6 +286,13 @@ const MerchantServiceUpdateModal = (props) => {
               <div className="text-center ">
                 <CButton type="submit" color="info">
                   Update
+                </CButton>
+                <CButton
+                  color="danger"
+                  onClick={handleCloseModal}
+                  className="mx-2"
+                >
+                  Cancle
                 </CButton>
               </div>
             </CForm>

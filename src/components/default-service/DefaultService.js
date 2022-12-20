@@ -171,73 +171,9 @@ const DefaultService = () => {
   // setDefaultcheck(defaultService && defaultService.is_active);
   // console.log(isCheck);
 
-  // const updateDefaultService = (e) => {
-  //   console.log(e);
-  //   let duplicate = false;
-  //   defaultServiceList?.forEach((element) => {
-  //     if (element.service_no === parseInt(e.service_no)) {
-  //       duplicate = true;
-  //       return false;
-  //     }
-  //   });
-
-  //   if (duplicate) {
-  //     swal({
-  //       position: "top-end",
-  //       text: "You can't duplicate Service Entry!",
-  //       icon: "warning",
-  //       button: false,
-  //       timer: 3000,
-  //     });
-  //   } else {
-  //     let data = {
-  //       service_no:
-  //         e.service_no === ""
-  //           ? defaultService.service_no
-  //           : parseInt(e.service_no),
-  //       bank_no:
-  //         e.bank_no === "" ? defaultService.bank_no : parseInt(e.bank_no),
-  //       is_active: e.active ? 1 : 0,
-  //     };
-  //     console.log(data);
-  //     const headers = {
-  //       Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //     };
-  //     axios
-  //       .post(
-  //         `${process.env.REACT_APP_API_URL}default-services/update/${defaultService.id}`,
-  //         data,
-  //         {
-  //           headers,
-  //         }
-  //       )
-  //       .then((response) => {
-  //         console.log(response);
-  //         getDefaultServiceList();
-  //         reset();
-  //         swal({
-  //           position: "top-end",
-  //           text: "Store Created Successfull",
-  //           icon: "success",
-  //           button: false,
-  //           timer: 1500,
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         console.error("There was an error!", error);
-  //         if (error.response.status == 401) {
-  //           navigate("/login");
-  //         }
-  //         swal({
-  //           position: "top-end",
-  //           text: error.response.data.detail,
-  //           icon: "error",
-  //           button: false,
-  //           timer: 1500,
-  //         });
-  //       });
-  //   }
-  // };
+  const updateDefaultService = (e) => {
+    console.log(e);
+  };
 
   const getServiceOption = (e) => {
     let Date = [];
@@ -368,8 +304,8 @@ const DefaultService = () => {
                       </CButton>
                     </CCol>
                   </CRow>
-                </CForm>
-                <CForm
+                </CForm> */}
+                {/* <CForm
                   hidden={defaultService == null ? true : false}
                   onSubmit={handleSubmit(updateDefaultService)}
                 >
@@ -433,8 +369,8 @@ const DefaultService = () => {
                       </CButton>
                     </CCol>
                   </CRow>
-                </CForm>
-                <DataTable
+                </CForm> */}
+                {/* <DataTable
                   title="Default Service List"
                   columns={comumn}
                   data={defaultServiceList}
@@ -451,22 +387,22 @@ const DefaultService = () => {
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    {getServiceOption(lookupList).map((servie, index) => (
+                    {defaultServiceList?.map((servie, index) => (
                       <CTableRow>
-                        <CTableDataCell>{servie.name}</CTableDataCell>
+                        <CTableDataCell>
+                          {setServiceName(servie.service_no)}
+                        </CTableDataCell>
                         <CTableDataCell>
                           {" "}
-                          <CFormSelect aria-label="Default select example">
+                          <CFormSelect
+                            aria-label="Default select example"
+                            {...register("bank_no")}
+                          >
                             {organizationList &&
                               organizationList.map((organization, index) => (
                                 <option
                                   value={organization.id}
-                                  selected={
-                                    defaultService &&
-                                    defaultService.bank_no === organization.id
-                                      ? "selected"
-                                      : ""
-                                  }
+                                  selected={servie.bank_no == organization.id}
                                   key={index}
                                 >
                                   {organization.name}
@@ -476,7 +412,13 @@ const DefaultService = () => {
                         </CTableDataCell>
                         <CTableDataCell>
                           <CCol sm={2}>
-                            <CFormCheck label="Active" />
+                            <CFormCheck
+                              label="Active"
+                              defaultChecked={
+                                servie.is_active == 1 ? true : false
+                              }
+                              {...register("active")}
+                            />
                           </CCol>
                         </CTableDataCell>
                         <CTableDataCell>

@@ -66,14 +66,13 @@ const BusinessDetails = ({ clickNext }) => {
         button: false,
         timer: 1500,
       });
-      localStorage.setItem("merchant_id", e.merchant_id);
+      localStorage.setItem("business_details", 1);
       localStorage.setItem("business_type", parseInt(e.type_of_business));
       localStorage.setItem("indeustry", e.industry);
       localStorage.setItem("category_code", getCetagoryCode(businessType));
       localStorage.setItem("description", e.Product_desc);
       localStorage.setItem("status", e.status ? 1 : 0);
       reset();
-      clickNext(1);
     } else {
       swal({
         position: "top-end",
@@ -84,37 +83,6 @@ const BusinessDetails = ({ clickNext }) => {
       });
     }
   };
-
-  // const Data = {
-  //   first_name: localStorage.getItem("first_name"),
-  //   last_name: localStorage.getItem("last_name"),
-  //   email: localStorage.getItem("email"),
-  //   address1: localStorage.getItem("address1"),
-  //   address2: localStorage.getItem("address2"),
-  //   city: localStorage.getItem("city"),
-  //   state: parseInt(localStorage.getItem("state")),
-  //   postal_code: localStorage.getItem("postal_code"),
-  //   nid_number: localStorage.getItem("nid_number"),
-  //   country_no: parseInt(localStorage.getItem("country_no")),
-  //   business_type: parseInt(localStorage.getItem("business_type")),
-  //   business_name: localStorage.getItem("business_name"),
-  //   bin: localStorage.getItem("business_no"),
-  //   business_address1: localStorage.getItem("business_address1"),
-  //   business_address2: localStorage.getItem("business_address2"),
-  //   business_city: localStorage.getItem("business_city"),
-  //   business_state: parseInt(localStorage.getItem("business_state")),
-  //   business_postal_code: localStorage.getItem("business_postal_code"),
-  //   marchant_id: e.merchant_id,
-  //   industry_no: parseInt(e.industry),
-  //   category_code: e.cat_code,
-  //   website: e.bussiness_website,
-  //   product_desc: e.Product_desc,
-  //   is_active: e.status ? 1 : 0,
-  //   upload_file: localStorage.getItem("file"),
-  //   merchant_pic: localStorage.getItem("merchant_pic"),
-  // };
-
-  // console.log(Data)
 
   const getLookupList = () => {
     const headers = {
@@ -129,7 +97,7 @@ const BusinessDetails = ({ clickNext }) => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -157,27 +125,11 @@ const BusinessDetails = ({ clickNext }) => {
 
   useEffect(() => {
     getLookupList();
-    // localStorage.setItem("isSubmitBusiness", 0);
   }, []);
 
   return (
     <div>
       <CForm onSubmit={handleSubmit(saveBusinessDetails)}>
-        <CRow className="mb-3">
-          <CFormLabel className="col-sm-4 col-form-label">
-            Merchant ID
-          </CFormLabel>
-          <CCol sm={8}>
-            <CFormInput
-              type="text"
-              {...register("merchant_id", {
-                required: "Please select Merchant ID",
-              })}
-              placeholder="Merchant ID"
-            />
-            <span className="text-danger">{errors.merchant_id?.message}</span>
-          </CCol>
-        </CRow>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label text-right">
             Legal Identity of Company
@@ -256,9 +208,9 @@ const BusinessDetails = ({ clickNext }) => {
           <CButton type="submit" color="success" className="mx-3">
             Save
           </CButton>
-          {/* <CButton color="primary" onClick={() => clickNext(1)}>
+          <CButton color="primary" onClick={() => clickNext(1)}>
             Next
-          </CButton> */}
+          </CButton>
         </div>
       </CForm>
     </div>

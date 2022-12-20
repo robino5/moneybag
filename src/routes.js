@@ -226,6 +226,12 @@ const MerchantUpdate = React.lazy(() =>
   import("./components/merchant management/MerchantUpdate")
 );
 
+const MerchantSericeUpdateUrl = React.lazy(() =>
+  import(
+    "./components/merchant management/merchant service/MerchantSericeUpdateUrl"
+  )
+);
+
 const routes = [
   // { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", element: Dashboard },
@@ -532,6 +538,13 @@ const routes = [
     name: "update-merchant-representative",
     element: BusinessRepresentativeUpdate,
   },
+  {
+    path: "/merchant-service-id",
+    name: "merchant-service-id",
+    element: MerchantSericeUpdateUrl,
+  },
+
+  MerchantSericeUpdateUrl,
 ];
 
 export default routes;

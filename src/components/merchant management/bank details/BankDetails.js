@@ -36,51 +36,31 @@ const BankDetails = ({ clickNext }) => {
   console.log("mr list", marchantDetail);
 
   const saveBusinessDetails = (e) => {
-    const businessDetailData = {
-      merchant_no: localStorage.getItem("merchant_no"),
-      currency_no: parseInt(e.currency),
-      bank_no: parseInt(e.bank_name),
-      branch_no: parseInt(e.branch_name),
-      routing_no: e.routing_no,
-      account_name: e.account_name,
-      account_no: e.account_number,
-    };
-    console.log(businessDetailData);
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}marchant-details/`,
-        businessDetailData,
-        {
-          headers,
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        swal({
-          position: "top-end",
-          text: "Store Created Successfull",
-          icon: "success",
-          button: false,
-          timer: 1500,
-        });
-        localStorage.setItem("isBankDetailDate", 1);
-        reset();
-        getMertchantList();
-        setPageSetup(0);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        swal({
-          position: "top-end",
-          text: error.response.data.detail,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
+    if (e) {
+      swal({
+        position: "top-end",
+        text: "Category Service Created Successfull",
+        icon: "success",
+        button: false,
+        timer: 1500,
       });
+      localStorage.setItem("settlement_bank", 1);
+      localStorage.setItem("currency_no", parseInt(e.currency));
+      localStorage.setItem("bank_no", parseInt(e.bank_name));
+      localStorage.setItem("branch_no", parseInt(e.branch_name));
+      localStorage.setItem("routing_no", e.routing_no);
+      localStorage.setItem("swift_code", e.swift_code);
+      localStorage.setItem("account_name", e.account_name);
+      localStorage.setItem("account_no", e.account_number);
+    } else {
+      swal({
+        position: "top-end",
+        text: "Faild",
+        icon: "error",
+        button: false,
+        timer: 1500,
+      });
+    }
   };
 
   const getMertchantList = async () => {
@@ -231,6 +211,16 @@ const BankDetails = ({ clickNext }) => {
     return routing;
   };
 
+  const setSwiftCode = (e) => {
+    let swift;
+    e?.map((branch) => {
+      if (branch.id == branchId) {
+        swift = branch.swift_code;
+      }
+    });
+    return swift;
+  };
+
   useEffect(() => {
     const getAllDate = async () => {
       await getMertchantList();
@@ -379,6 +369,20 @@ const BankDetails = ({ clickNext }) => {
           </CRow>
           <CRow className="mb-3">
             <CFormLabel className="col-sm-4 col-form-label">
+              Swift Code:
+            </CFormLabel>
+            <CCol sm={8}>
+              <CFormInput
+                disabled={true}
+                type="text"
+                value={setSwiftCode(bankbranchList)}
+                {...register("swift_code")}
+                placeholder="Transit/Routing No:"
+              />
+            </CCol>
+          </CRow>
+          <CRow className="mb-3">
+            <CFormLabel className="col-sm-4 col-form-label">
               Account Name
             </CFormLabel>
             <CCol sm={8}>
@@ -419,20 +423,15 @@ const BankDetails = ({ clickNext }) => {
             <CButton color="success" type="submit" className="mx-3">
               Save
             </CButton>
-            {/* <CButton
-              color="primary"
-              onClick={() =>
-                clickNext(1)
-              }
-            >
+            <CButton color="primary" onClick={() => clickNext(1)}>
               Next
-            </CButton> */}
+            </CButton>
           </div>
         </CForm>
       </div>
       <div>
         <div className="justify-content-centert mb-2"></div>
-        <CRow className="justify-content-center">
+        {/* <CRow className="justify-content-center">
           <CCol md={12}>
             <DataTable
               columns={comumn}
@@ -440,8 +439,8 @@ const BankDetails = ({ clickNext }) => {
               pagination
             />
           </CCol>
-        </CRow>
-        <div className="text-center">
+        </CRow> */}
+        {/* <div className="text-center">
           <CButton
             onClick={() => {
               clickNext(1);
@@ -449,7 +448,7 @@ const BankDetails = ({ clickNext }) => {
           >
             Next
           </CButton>
-        </div>
+        </div> */}
       </div>
     </div>
   );
