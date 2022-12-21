@@ -47,11 +47,12 @@ const BusinessRepresentative = ({ clickNext }) => {
 
   const searchNid = async (e) => {
     e.preventDefault();
+    const givenDateOfBirth = new Date(dob)
+    const isoDate = DateTime.fromISO(givenDateOfBirth.toISOString())
     const data = {
       nidNumber: nid,
-      dateOfBirth: dob.toISOString().substring(0, 10),
+      dateOfBirth: isoDate.toISODate()
     };
-    // console.log(dob.toISOString().substring(0, 10))
     console.log(data);
 
     const headers = {
