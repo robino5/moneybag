@@ -48,8 +48,8 @@ const BankDetails = ({ clickNext }) => {
       localStorage.setItem("currency_no", parseInt(e.currency));
       localStorage.setItem("bank_no", parseInt(e.bank_name));
       localStorage.setItem("branch_no", parseInt(e.branch_name));
-      localStorage.setItem("routing_no", e.routing_no);
-      localStorage.setItem("swift_code", e.swift_code);
+      localStorage.setItem("routing_no", setRoutingNo(bankbranchList));
+      localStorage.setItem("swift_code", setSwiftCode(bankbranchList));
       localStorage.setItem("account_name", e.account_name);
       localStorage.setItem("account_no", e.account_number);
     } else {

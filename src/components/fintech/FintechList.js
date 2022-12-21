@@ -24,7 +24,7 @@ const FintechList = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -43,7 +43,7 @@ const FintechList = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -62,7 +62,7 @@ const FintechList = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
@@ -118,7 +118,7 @@ const FintechList = () => {
         if (element.organization_no === e && element.is_active === 1) {
           lookupList &&
             lookupList.map((e) => {
-              if (e.id === element.category_service_id) {
+              if (e.id === element.service_type) {
                 data.push(e.name, ",");
               }
             });

@@ -126,7 +126,7 @@ const StoreList = () => {
   const getServices = (e) => {
     let data = [];
     MerchantService?.map((service) => {
-      if (service.merchant_no == e) {
+      if (service.merchant_no == e && service.is_active == 1) {
         data.push(service.service_no);
       }
     });

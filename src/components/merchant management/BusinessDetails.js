@@ -68,7 +68,7 @@ const BusinessDetails = ({ clickNext }) => {
       });
       localStorage.setItem("business_details", 1);
       localStorage.setItem("business_type", parseInt(e.type_of_business));
-      localStorage.setItem("indeustry", e.industry);
+      localStorage.setItem("indeustry", parseInt(e.industry));
       localStorage.setItem("category_code", getCetagoryCode(businessType));
       localStorage.setItem("description", e.Product_desc);
       localStorage.setItem("status", e.status ? 1 : 0);

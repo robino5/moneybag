@@ -44,14 +44,16 @@ const BusinessRepresentative = ({ clickNext }) => {
     seDob(e.target.value);
   };
   console.log(dob);
+  const givenDateOfBirth = new Date(dob);
+  const isoDate = DateTime.fromISO(givenDateOfBirth.toISOString());
 
   const searchNid = async (e) => {
     e.preventDefault();
-    const givenDateOfBirth = new Date(dob)
-    const isoDate = DateTime.fromISO(givenDateOfBirth.toISOString())
+    // const givenDateOfBirth = new Date(dob)
+    // const isoDate = DateTime.fromISO(givenDateOfBirth.toISOString())
     const data = {
       nidNumber: nid,
-      dateOfBirth: isoDate.toISODate()
+      dateOfBirth: isoDate.toISODate(),
     };
     console.log(data);
 
@@ -105,7 +107,7 @@ const BusinessRepresentative = ({ clickNext }) => {
       localStorage.setItem("state", e.state);
       localStorage.setItem("postal_code", parseInt(e.postal_code));
       localStorage.setItem("nid_number", nid);
-      localStorage.setItem("date_of_birth", dob);
+      localStorage.setItem("date_of_birth", isoDate.toISODate());
       localStorage.setItem("merchant_pic", image);
       localStorage.setItem("nid_picture", nidCopy);
       reset();
