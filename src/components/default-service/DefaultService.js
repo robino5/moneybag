@@ -42,6 +42,9 @@ const DefaultService = () => {
   // const [serviceList, setServiceList] = useState();
   const [lookupList, setLooupList] = useState();
   const [defaultService, setdefaultService] = useState();
+  const [fintechId, setFintechId] = useState();
+  const [status, setStatus] = useState();
+  console.log(fintechId, status);
 
   const isCheck = true;
 
@@ -205,6 +208,50 @@ const DefaultService = () => {
         }
       });
     return name;
+  };
+
+  const updateDefaulService = (e) => {
+    let active_status = status ? 1 : 0;
+    let data = {
+      service_no: e.service_no,
+      bank_no: fintechId ? parseInt(fintechId) : e.bank_no,
+      is_active: status != undefined ? active_status : e.is_active,
+    };
+    console.log("data", data);
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}default-services/update/${e.id}`,
+        data,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        swal({
+          position: "top-end",
+          text: "Default Service Update Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
+        setFintechId();
+        setStatus();
+        getDefaultServiceList();
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: error.response.data.detail,
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
+      });
   };
 
   console.log("push value:", defaultService);
@@ -387,22 +434,28 @@ const DefaultService = () => {
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    {defaultServiceList?.map((servie, index) => (
+                    {defaultServiceList?.map((service, index) => (
                       <CTableRow>
                         <CTableDataCell>
-                          {setServiceName(servie.service_no)}
+                          {setServiceName(service.service_no)}
                         </CTableDataCell>
                         <CTableDataCell>
                           {" "}
                           <CFormSelect
                             aria-label="Default select example"
-                            {...register("bank_no")}
+                            onChange={(e) => {
+                              setFintechId(e.target.value);
+                            }}
                           >
                             {organizationList &&
                               organizationList.map((organization, index) => (
                                 <option
                                   value={organization.id}
-                                  selected={servie.bank_no == organization.id}
+                                  selected={
+                                    service.bank_no == organization.id
+                                      ? "selected"
+                                      : ""
+                                  }
                                   key={index}
                                 >
                                   {organization.name}
@@ -415,18 +468,21 @@ const DefaultService = () => {
                             <CFormCheck
                               label="Active"
                               defaultChecked={
-                                servie.is_active == 1 ? true : false
+                                service.is_active == 1 ? true : false
                               }
-                              {...register("active")}
+                              onChange={(e) => {
+                                setStatus(e.target.checked);
+                              }}
                             />
                           </CCol>
                         </CTableDataCell>
                         <CTableDataCell>
                           <CButton
                             className="btn-sm"
-                            disabled={!isDirty}
-                            type="submit"
-                            color="success"
+                            color="info"
+                            onClick={() => {
+                              updateDefaulService(service);
+                            }}
                           >
                             Update
                           </CButton>

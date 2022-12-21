@@ -577,11 +577,8 @@ const MerchantServiceUpdate = () => {
       await getMerchantService();
       await getBankList();
       await getLookupList();
-      await getSlabServiceList();
-      await getSlabList();
     };
     getAllData();
-    console.log("adf");
   }, []);
 
   return (
@@ -753,7 +750,7 @@ const MerchantServiceUpdate = () => {
                     </CRow>
                   </div> */}
                 </CForm>
-                <div hidden={!addservice ? true : false}>
+                <div>
                   <CRow className="mb-3">
                     <CCol sm={3}>
                       <CFormSelect
@@ -830,7 +827,7 @@ const MerchantServiceUpdate = () => {
                     </CCol>
                   </CRow>
                 </div>
-                <div className="text-left">
+                {/* <div className="text-left">
                   <CButton
                     onClick={() => {
                       setAddService(true);
@@ -838,7 +835,8 @@ const MerchantServiceUpdate = () => {
                   >
                     Add Service
                   </CButton>
-                </div>
+                </div> */}
+                <hr></hr>
                 {merchantList &&
                   selectMerchatServices(merchantService, location.state).map(
                     (element, index) => {

@@ -388,7 +388,6 @@ const MerchantServiceAdd = () => {
       await getLookupList();
       await getMerchantService();
       await getMertchantDetailList();
-      await getSlabList();
     };
     getAllData();
   }, []);
