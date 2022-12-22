@@ -171,8 +171,16 @@ const MerchantManagement = React.lazy(() =>
   import("./components/merchant management/MerchantManagement")
 );
 
+const MerchantManagementUpdate = React.lazy(() =>
+  import(
+    "./components/merchant management/update merchant/MerchantManagementUpdate"
+  )
+);
+
 const BankDetailsUpdate = React.lazy(() =>
-  import("./components/merchant management/bank details/BankDetailsUpdate")
+  import(
+    "./components/merchant management/update merchant/bank details updata/BankDetailsUpdate"
+  )
 );
 const MerchantStore = React.lazy(() =>
   import("./components/merchant management/merchant store/MerchantStoreList")
@@ -543,8 +551,11 @@ const routes = [
     name: "merchant-service-id",
     element: MerchantSericeUpdateUrl,
   },
-
-  MerchantSericeUpdateUrl,
+  {
+    path: "/merchant/update-merchant-management",
+    name: "update-merchant-management",
+    element: MerchantManagementUpdate,
+  },
 ];
 
 export default routes;

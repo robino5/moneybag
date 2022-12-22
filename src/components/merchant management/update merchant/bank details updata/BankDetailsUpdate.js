@@ -69,8 +69,8 @@ const BankDetailsUpdate = () => {
           button: false,
           timer: 1500,
         });
-        navigate("/merchant_management", {
-          state: 4,
+        navigate("/merchant/update-merchant-management", {
+          id: 4,
         });
       })
       .catch((error) => {

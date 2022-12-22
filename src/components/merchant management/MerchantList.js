@@ -113,7 +113,7 @@ const MerchantList = () => {
             className="btn btn-sm d-inline mx-1"
             color="info"
             onClick={() => {
-              navigate("/merchant/update-merchant", { state: row });
+              navigate("/merchant/update-merchant-management", { state: row });
             }}
           >
             Update
