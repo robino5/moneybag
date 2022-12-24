@@ -4,6 +4,7 @@ import BusinessStructureUpdate from "./BusinessStructureUpdate";
 import BusinessRepresentativeUpdate from "./BusinessRepresentativeUpdate";
 import BusinessDetailsUpdate from "./BusinessDetailsUpdate";
 import BankDetails from "./bank details updata/BankDetails";
+import SummeryUpdate from "./SummeryUpdate";
 import {
   CCard,
   CCardHeader,
@@ -118,9 +119,9 @@ const MerchantManagement = () => {
                 <div hidden={active !== 4 ? true : false}>
                   <BankDetails clickNext={clickNext} data={location.state} />
                 </div>
-                {/* <div hidden={active !== 5 ? true : false}>
-                  <Summery />
-                </div> */}
+                <div hidden={active !== 5 ? true : false}>
+                  <SummeryUpdate data={location.state} />
+                </div>
               </CCardBody>
             </CCard>
           </CCol>

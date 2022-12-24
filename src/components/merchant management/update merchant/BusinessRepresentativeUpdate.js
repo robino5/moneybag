@@ -43,7 +43,7 @@ const BusinessRepresentative = ({ clickNext, data }) => {
   const handleDOB = (e) => {
     seDob(e.target.value);
   };
-  console.log(dob);
+  console.log("nid", nidInfo);
   const givenDateOfBirth = new Date(dob);
   const isoDate = DateTime.fromISO(givenDateOfBirth.toISOString());
 
@@ -279,7 +279,9 @@ const BusinessRepresentative = ({ clickNext, data }) => {
                 <CFormInput
                   type="text"
                   defaultValue={
-                    nidInfo ? nidInfo.json_log.nid.fullNameEN : data.first_name
+                    nidInfo == undefined
+                      ? data.first_name
+                      : nidInfo.json_log.nid.fullNameEN
                   }
                   {...register("first_name")}
                   placeholder="Fist Name"
