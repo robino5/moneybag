@@ -41,24 +41,55 @@ const BusinessStructure = ({ clickNext, data }) => {
         timer: 1500,
       });
       localStorage.setItem("business_structure", 1);
-      localStorage.setItem("merchant_id", e.merchant_id);
-      localStorage.setItem("business_name", e.business_name);
-      localStorage.setItem("business_short_name", e.business_short_name);
-      localStorage.setItem("bin", e.business_no);
-      localStorage.setItem("business_address1", e.b_address_line_1);
-      localStorage.setItem("business_address2", e.b_address_line_2);
-      localStorage.setItem("business_city", e.b_city);
-      localStorage.setItem("business_website", e.bussiness_website);
-      localStorage.setItem("business_state", parseInt(e.b_state));
-      localStorage.setItem("business_postal_code", e.b_postel_code);
-      localStorage.setItem("business_Phone", parseInt(e.b_phone));
-      localStorage.setItem("business_email", e.b_email);
-      localStorage.setItem("file1", file1);
-      if (file2) {
-        localStorage.setItem("file2", file2);
+      localStorage.setItem("merchant_id", data.merchant_id);
+      localStorage.setItem(
+        "business_name",
+        e.business_name == "" ? data.business_name : e.business_name
+      );
+      localStorage.setItem(
+        "business_short_name",
+        e.business_short_name == "" ? data.short_name : e.business_short_name
+      );
+      localStorage.setItem(
+        "bin",
+        e.business_no == "" ? data.bin : e.business_no
+      );
+      localStorage.setItem(
+        "business_address1",
+        e.b_address_line_1 == "" ? data.business_address1 : e.b_address_line_1
+      );
+      localStorage.setItem(
+        "business_address2",
+        e.b_address_line_2 == "" ? data.business_address2 : e.b_address_line_2
+      );
+      localStorage.setItem(
+        "business_city",
+        e.b_city == "" ? data.business_city : e.b_city
+      );
+      localStorage.setItem(
+        "business_website",
+        e.bussiness_website == "" ? data.website : e.bussiness_website
+      );
+      localStorage.setItem(
+        "business_state",
+        e.b_state == "" ? data.business_state : parseInt(e.b_state)
+      );
+      localStorage.setItem(
+        "business_postal_code",
+        e.b_postel_code == "" ? data.business_postal_code : e.b_postel_code
+      );
+      localStorage.setItem(
+        "business_Phone",
+        e.b_phone == "" ? data.merchant_phone : parseInt(e.b_phone)
+      );
+      localStorage.setItem(
+        "business_email",
+        e.b_email == "" ? data.merchant_email : e.b_email
+      );
+      localStorage.setItem("file1", data.file_1);
+      if (data.file_2) {
+        localStorage.setItem("file2", data.file_2);
       }
-
-      reset();
     } else {
       swal({
         position: "top-end",
@@ -342,7 +373,6 @@ const BusinessStructure = ({ clickNext, data }) => {
               {...register("b_state")}
               type="number"
             >
-              <option>Select District</option>
               {lookupList &&
                 getStateOption(lookupList).map((country, index) => (
                   <option
@@ -417,8 +447,8 @@ const BusinessStructure = ({ clickNext, data }) => {
 
         <CRow></CRow>
         <div className="text-center ">
-          <CButton color="success" type="submit" className="mx-3">
-            Save
+          <CButton color="info" type="submit" className="mx-3">
+            Updata
           </CButton>
           <CButton color="primary" onClick={() => clickNext(1)}>
             Next

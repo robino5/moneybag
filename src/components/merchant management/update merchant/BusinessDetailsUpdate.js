@@ -57,7 +57,7 @@ const BusinessDetails = ({ clickNext, data }) => {
       return 9997;
     }
   };
-  const saveBusinessDetails = (e) => {
+  const updateBusinessDetails = (e) => {
     if (e) {
       swal({
         position: "top-end",
@@ -67,12 +67,25 @@ const BusinessDetails = ({ clickNext, data }) => {
         timer: 1500,
       });
       localStorage.setItem("business_details", 1);
-      localStorage.setItem("business_type", parseInt(e.type_of_business));
-      localStorage.setItem("indeustry", parseInt(e.industry));
-      localStorage.setItem("category_code", getCetagoryCode(businessType));
-      localStorage.setItem("description", e.Product_desc);
+      localStorage.setItem(
+        "business_type",
+        e.type_of_business == ""
+          ? data.business_type
+          : parseInt(e.type_of_business)
+      );
+      localStorage.setItem(
+        "indeustry",
+        e.industry == "" ? data.industry_no : parseInt(e.industry)
+      );
+      localStorage.setItem(
+        "category_code",
+        businessType ? getCetagoryCode(businessType) : data.category_code
+      );
+      localStorage.setItem(
+        "description",
+        e.Product_desc == "" ? data.product_desc : e.Product_desc
+      );
       localStorage.setItem("status", e.status ? 1 : 0);
-      reset();
     } else {
       swal({
         position: "top-end",
@@ -129,7 +142,7 @@ const BusinessDetails = ({ clickNext, data }) => {
 
   return (
     <div>
-      <CForm onSubmit={handleSubmit(saveBusinessDetails)}>
+      <CForm onSubmit={handleSubmit(updateBusinessDetails)}>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label text-right">
             Legal Identity of Company
@@ -140,7 +153,6 @@ const BusinessDetails = ({ clickNext, data }) => {
               type="number"
               {...register("type_of_business")}
             >
-              <option>Select One</option>
               {lookupList &&
                 getBusinessOption(lookupList).map((country, index) => (
                   <option
@@ -163,15 +175,12 @@ const BusinessDetails = ({ clickNext, data }) => {
           <CCol sm={8}>
             <CFormSelect
               aria-label="Default select example"
-              {...register("industry", {
-                required: "Please select Industry",
-              })}
+              {...register("industry")}
               type="number"
               onChange={(e) => {
                 setBusinessType(e.target.value);
               }}
             >
-              <option>Select Industry/Business</option>
               {lookupList &&
                 getIndustryOption(lookupList).map((country, index) => (
                   <option
@@ -223,8 +232,8 @@ const BusinessDetails = ({ clickNext, data }) => {
           </CCol>
         </CRow>
         <div className="text-center ">
-          <CButton type="submit" color="success" className="mx-3">
-            Save
+          <CButton type="submit" color="info" className="mx-3">
+            Update
           </CButton>
           <CButton color="primary" onClick={() => clickNext(1)}>
             Next

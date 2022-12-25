@@ -69,6 +69,7 @@ const BusinessRepresentative = ({ clickNext, data }) => {
       .then((responce) => {
         setNidInfo(responce.data);
         console.log(responce);
+        reset();
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -76,6 +77,7 @@ const BusinessRepresentative = ({ clickNext, data }) => {
   };
 
   const saveBusinessRepresentative = (e) => {
+    console.log(e);
     if (e) {
       swal({
         position: "top-end",
@@ -87,30 +89,46 @@ const BusinessRepresentative = ({ clickNext, data }) => {
       localStorage.setItem("business_representative", 1);
       localStorage.setItem(
         "first_name",
-        e.first_name == "" ? nidInfo?.json_log.nid.fullNameEN : e.first_name
+        e.first_name == ""
+          ? nidInfo
+            ? nidInfo.json_log.nid.fullNameEN
+            : data.first_name
+          : e.first_name
       );
-      localStorage.setItem("last_name", e.last_name);
-      localStorage.setItem("email", e.email);
+      localStorage.setItem(
+        "last_name",
+        e.last_name == "" ? data.last_name : e.last_name
+      );
+      localStorage.setItem("email", e.email == "" ? data.email : e.email);
       localStorage.setItem(
         "address1",
         e.address_line_1 == ""
-          ? nidInfo?.json_log.nid.presentAddressEN
+          ? nidInfo
+            ? nidInfo.json_log.nid.presentAddressEN
+            : data.address1
           : e.address_line_1
       );
       localStorage.setItem(
         "address2",
         e.address_line_2 == ""
-          ? nidInfo?.json_log.nid.permenantAddressEN
+          ? nidInfo
+            ? nidInfo.json_log.nid.permenantAddressEN
+            : data.address2
           : e.address_line_2
       );
-      localStorage.setItem("city", e.city);
-      localStorage.setItem("state", e.state);
-      localStorage.setItem("postal_code", parseInt(e.postal_code));
-      localStorage.setItem("nid_number", nid);
-      localStorage.setItem("date_of_birth", isoDate.toISODate());
-      localStorage.setItem("merchant_pic", image);
-      localStorage.setItem("nid_picture", nidCopy);
-      reset();
+      localStorage.setItem("city", e.city == "" ? data.city : e.city);
+      localStorage.setItem("state", e.state == "" ? data.city : e.state);
+      localStorage.setItem(
+        "postal_code",
+        e.postal_code ? data.postal_code : parseInt(e.postal_code)
+      );
+      localStorage.setItem("nid_number", nid ? nid : data.nid_number);
+      localStorage.setItem(
+        "date_of_birth",
+        dob ? isoDate.toISODate() : data.date_of_birth
+      );
+      localStorage.setItem("merchant_pic", image ? image : data.merchant_pic);
+      localStorage.setItem("nid_picture", nidCopy ? nidCopy : data.nid_picture);
     } else {
       swal({
         position: "top-end",
@@ -119,6 +137,16 @@ const BusinessRepresentative = ({ clickNext, data }) => {
         button: false,
         timer: 1500,
       });
+    }
+  };
+
+  const getDefaultFirstName = (nid, e) => {
+    if (nid) {
+      console.log("first_name", nid.json_log.nid.fullNameEN);
+      return nid.json_log.nid.fullNameEN;
+    } else {
+      console.log("firtst-name", e);
+      return e;
     }
   };
 
@@ -139,6 +167,22 @@ const BusinessRepresentative = ({ clickNext, data }) => {
           navigate("/login");
         }
       });
+  };
+
+  const srtRepresentativeImage = (e) => {
+    if (nidInfo) {
+      return "";
+    } else {
+      return e;
+    }
+  };
+
+  const setRepresentativeState = (e) => {
+    if (nidInfo) {
+      return "";
+    } else {
+      return e;
+    }
   };
 
   const getStateOption = (e) => {
@@ -268,7 +312,9 @@ const BusinessRepresentative = ({ clickNext, data }) => {
                 />
               </CCol>
               <CCol sm={2}>
-                <CButton onClick={searchNid}>Search</CButton>
+                <CButton type="submit" onClick={searchNid}>
+                  Search
+                </CButton>
               </CCol>
             </CRow>
             <CRow className="mb-3">
@@ -278,11 +324,7 @@ const BusinessRepresentative = ({ clickNext, data }) => {
               <CCol sm={8}>
                 <CFormInput
                   type="text"
-                  defaultValue={
-                    nidInfo == undefined
-                      ? data.first_name
-                      : nidInfo.json_log.nid.fullNameEN
-                  }
+                  defaultValue={getDefaultFirstName(nidInfo, data.first_name)}
                   {...register("first_name")}
                   placeholder="Fist Name"
                 />
@@ -294,7 +336,7 @@ const BusinessRepresentative = ({ clickNext, data }) => {
                 <CFormInput
                   type="text"
                   {...register("last_name")}
-                  defaultValue={data.last_name}
+                  defaultValue={!nidInfo ? data.last_name : ""}
                   placeholder="Last Name"
                 />
               </CCol>
@@ -307,7 +349,7 @@ const BusinessRepresentative = ({ clickNext, data }) => {
                 <CFormInput
                   type="text"
                   {...register("email")}
-                  defaultValue={data.email}
+                  defaultValue={!nidInfo ? data.email : ""}
                   placeholder="Email Address"
                 />
               </CCol>
@@ -330,7 +372,7 @@ const BusinessRepresentative = ({ clickNext, data }) => {
                 <CFormInput
                   type="text"
                   {...register("city")}
-                  defaultValue={data.city}
+                  defaultValue={!nidInfo ? data.city : ""}
                   placeholder="City"
                 />
                 <span className="text-danger">{errors.city?.message}</span>
@@ -346,10 +388,17 @@ const BusinessRepresentative = ({ clickNext, data }) => {
                   {...register("state")}
                   type="number"
                 >
-                  <option>Select District</option>
                   {lookupList &&
                     getStateOption(lookupList).map((country, index) => (
-                      <option value={country.id} key={index}>
+                      <option
+                        value={country.id}
+                        selected={
+                          country.id == setRepresentativeState(data.state)
+                            ? "selected"
+                            : ""
+                        }
+                        key={index}
+                      >
                         {country.name}
                       </option>
                     ))}
@@ -365,7 +414,7 @@ const BusinessRepresentative = ({ clickNext, data }) => {
                 <CFormInput
                   type="text"
                   {...register("postal_code")}
-                  defaultValue={data.postal_code}
+                  defaultValue={!nidInfo ? data.postal_code : ""}
                   placeholder="Postal Code"
                 />
               </CCol>
@@ -387,7 +436,7 @@ const BusinessRepresentative = ({ clickNext, data }) => {
                 <div className="merchant_img text-center">
                   <img
                     src={`${process.env.REACT_APP_API_URL}uploads/uploads/get/${
-                      image ? image : data.merchant_pic
+                      image ? image : srtRepresentativeImage(data.merchant_pic)
                     }`}
                   />
                 </div>
@@ -478,8 +527,8 @@ const BusinessRepresentative = ({ clickNext, data }) => {
           </CCol>
         </CRow>
         <div className="text-center ">
-          <CButton color="success" type="submit" className="mx-3">
-            Save
+          <CButton color="info" type="submit" className="mx-3">
+            Update
           </CButton>
           <CButton color="primary" onClick={() => clickNext(1)}>
             Next

@@ -6,99 +6,126 @@ import { cilCheck, cilX } from "@coreui/icons";
 import swal from "sweetalert";
 import axios from "axios";
 
-const Summery = () => {
+const SummeryUpdate = ({ data }) => {
   const navigate = useNavigate();
+  console.log("data=", data.first_name);
 
-  const saveMerchant = () => {
-    const data = {
-      first_name: localStorage.getItem("first_name"),
-      last_name: localStorage.getItem("last_name"),
-      email: localStorage.getItem("email"),
-      address1: localStorage.getItem("address1"),
-      address2: localStorage.getItem("address2"),
-      city: localStorage.getItem("city"),
-      state: localStorage.getItem("state"),
-      postal_code: localStorage.getItem("postal_code"),
-      nid_number: localStorage.getItem("nid_number"),
-      date_of_birth: localStorage.getItem("date_of_birth"),
-      merchant_pic: localStorage.getItem("merchant_pic"),
-      nid_picture: localStorage.getItem("nid_picture"),
-      merchant_id: localStorage.getItem("merchant_id"),
-      industry_no: parseInt(localStorage.getItem("indeustry")),
-      category_code: localStorage.getItem("category_code"),
-      website: localStorage.getItem("business_website"),
-      product_desc: localStorage.getItem("description"),
-      is_active: parseInt(localStorage.getItem("status")),
+  const updateMerchant = () => {
+    const updatedata = {
+      first_name: localStorage.getItem("first_name")
+        ? localStorage.getItem("first_name")
+        : data.first_name,
+      last_name: localStorage.getItem("last_name")
+        ? localStorage.getItem("last_name")
+        : data.last_name,
+      email: localStorage.getItem("email")
+        ? localStorage.getItem("email")
+        : data.email,
+      address1: localStorage.getItem("address1")
+        ? localStorage.getItem("address1")
+        : data.address1,
+      address2: localStorage.getItem("address2")
+        ? localStorage.getItem("address2")
+        : data.address2,
+      city: localStorage.getItem("city")
+        ? localStorage.getItem("city")
+        : data.city,
+      state: localStorage.getItem("state")
+        ? localStorage.getItem("state")
+        : data.state,
+      postal_code: localStorage.getItem("postal_code")
+        ? localStorage.getItem("postal_code")
+        : data.postal_code,
+      nid_number: localStorage.getItem("nid_number")
+        ? localStorage.getItem("nid_number")
+        : data.nid_number,
+      date_of_birth: localStorage.getItem("date_of_birth")
+        ? localStorage.getItem("date_of_birth")
+        : data.date_of_birth,
+      merchant_pic: localStorage.getItem("merchant_pic")
+        ? localStorage.getItem("merchant_pic")
+        : data.merchant_pic,
+      nid_picture: localStorage.getItem("nid_picture")
+        ? localStorage.getItem("nid_picture")
+        : data.nid_picture,
+      merchant_id: localStorage.getItem("merchant_id")
+        ? localStorage.getItem("merchant_id")
+        : data.merchant_id,
+      industry_no: localStorage.getItem("indeustry")
+        ? parseInt(localStorage.getItem("indeustry"))
+        : data.industry_no,
+      category_code: localStorage.getItem("category_code")
+        ? localStorage.getItem("category_code")
+        : data.category_code,
+      website: localStorage.getItem("business_website")
+        ? localStorage.getItem("business_website")
+        : data.website,
+      product_desc: localStorage.getItem("description")
+        ? localStorage.getItem("description")
+        : data.product_desc,
+      is_active: localStorage.getItem("status")
+        ? parseInt(localStorage.getItem("status"))
+        : data.is_active,
       country_no: 1001001,
-      business_type: parseInt(localStorage.getItem("business_type")),
-      business_name: localStorage.getItem("business_name"),
-      short_name: localStorage.getItem("business_short_name"),
-      bin: localStorage.getItem("bin"),
-      business_address1: localStorage.getItem("business_address1"),
-      business_address2: localStorage.getItem("business_address2"),
-      business_city: localStorage.getItem("business_city"),
-      business_state: parseInt(localStorage.getItem("business_state")),
-      business_postal_code: localStorage.getItem("business_postal_code"),
-      merchant_phone: localStorage.getItem("business_Phone"),
-      merchant_email: localStorage.getItem("business_email"),
-      file_1: localStorage.getItem("file1"),
-      file_2: localStorage.getItem("file2"),
+      business_type: localStorage.getItem("business_type")
+        ? parseInt(localStorage.getItem("business_type"))
+        : data.business_type,
+      business_name: localStorage.getItem("business_name")
+        ? localStorage.getItem("business_name")
+        : data.business_name,
+      short_name: localStorage.getItem("business_short_name")
+        ? localStorage.getItem("business_short_name")
+        : short_name,
+      bin: localStorage.getItem("bin") ? localStorage.getItem("bin") : data.bin,
+      business_address1: localStorage.getItem("business_address1")
+        ? localStorage.getItem("business_address1")
+        : data.business_address1,
+      business_address2: localStorage.getItem("business_address2")
+        ? localStorage.getItem("business_address2")
+        : data.business_address2,
+      business_city: localStorage.getItem("business_city")
+        ? localStorage.getItem("business_city")
+        : data.business_city,
+      business_state: localStorage.getItem("business_state")
+        ? parseInt(localStorage.getItem("business_state"))
+        : data.business_state,
+      business_postal_code: localStorage.getItem("business_postal_code")
+        ? localStorage.getItem("business_postal_code")
+        : data.business_postal_code,
+      merchant_phone: localStorage.getItem("business_Phone")
+        ? localStorage.getItem("business_Phone")
+        : data.merchant_phone,
+      merchant_email: localStorage.getItem("business_email")
+        ? localStorage.getItem("business_email")
+        : data.merchant_email,
+      file_1: localStorage.getItem("file1")
+        ? localStorage.getItem("file1")
+        : data.file_1,
+      file_2: localStorage.getItem("file2")
+        ? localStorage.getItem("file2")
+        : data.file_2,
     };
     if (!data.file_2) {
       delete data.file_2;
     }
-    console.log(data);
+    console.log(updatedata);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .post(`${process.env.REACT_APP_API_URL}marchants/`, data, {
-        headers,
-      })
-      .then((response) => {
-        console.log(response);
-        saveSettlementBank(response.data.id);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        if (error.response.status == 401) {
-          navigate("/login");
+      .post(
+        `${process.env.REACT_APP_API_URL}marchants/update/${data.id}`,
+        updatedata,
+        {
+          headers,
         }
-        swal({
-          position: "top-end",
-          text: error.response.data.detail,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
-      });
-  };
-
-  const saveSettlementBank = (e) => {
-    const data2 = {
-      currency_no: parseInt(localStorage.getItem("currency_no")),
-      bank_no: parseInt(localStorage.getItem("bank_no")),
-      branch_no: parseInt(localStorage.getItem("branch_no")),
-      routing_no: localStorage.getItem("routing_no"),
-      swift_code: localStorage.getItem("swift_code"),
-      account_no: localStorage.getItem("account_no"),
-      account_name: localStorage.getItem("account_name"),
-      merchant_no: e,
-    };
-    console.log(data2);
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .post(`${process.env.REACT_APP_API_URL}marchant-details/`, data2, {
-        headers,
-      })
+      )
       .then((response) => {
         console.log(response);
         swal({
-          position: "top-end",
-          text: "Merchant Created Successfull",
+          text: "Organization Updated Successfull",
           icon: "success",
+          position: "top-end",
           button: false,
           timer: 1500,
         });
@@ -108,15 +135,12 @@ const Summery = () => {
       .catch((error) => {
         console.error("There was an error!", error);
         swal({
-          position: "top-end",
           text: error.response.data.detail,
           icon: "error",
+          position: "top-end",
           button: false,
           timer: 1500,
         });
-        if (error.response.status == 401) {
-          navigate("/login");
-        }
       });
   };
 
@@ -241,12 +265,8 @@ const Summery = () => {
             </CRow>
             <CRow>
               <CCol md={12}>
-                <CButton
-                  disabled={disableSaveMerchantButton()}
-                  className="form-control"
-                  onClick={saveMerchant}
-                >
-                  Save
+                <CButton className="form-control" onClick={updateMerchant}>
+                  Update
                 </CButton>
               </CCol>
             </CRow>
@@ -257,4 +277,4 @@ const Summery = () => {
   );
 };
 
-export default Summery;
+export default SummeryUpdate;

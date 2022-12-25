@@ -197,6 +197,7 @@ const BankDetails = ({ clickNext, data }) => {
           timer: 1500,
         });
         getMertchantList();
+        localStorage.setItem("settlement_bank", 1);
         setPageSetup(1);
       })
       .catch((error) => {
