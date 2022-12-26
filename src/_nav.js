@@ -136,6 +136,26 @@ const _nav = [
         name: "Statement",
         to: "/statement",
       },
+      {
+        component: CNavItem,
+        name: "Dispute",
+        to: "/dispute",
+      },
+      {
+        component: CNavItem,
+        name: "Transaction List",
+        to: "/transaction",
+      },
+      {
+        component: CNavItem,
+        name: "Process Settlememt",
+        to: "/process-settlement",
+      },
+      {
+        component: CNavItem,
+        name: "Settlement Report",
+        to: "/settlement-report",
+      },
     ],
   },
 

@@ -240,6 +240,11 @@ const MerchantSericeUpdateUrl = React.lazy(() =>
   )
 );
 
+const DisputeAdd = React.lazy(() => import("./components/dispute/DisputeAdd"));
+// const TransactionList = React.lazy(() =>
+//   import("./components/statement/TransactionList")
+// );
+
 const routes = [
   // { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", element: Dashboard },
@@ -556,6 +561,16 @@ const routes = [
     name: "update-merchant-management",
     element: MerchantManagementUpdate,
   },
+  {
+    path: "/dispute",
+    name: "dispute",
+    element: DisputeAdd,
+  },
+  // {
+  //   path: "/transaction",
+  //   name: "transaction",
+  //   element: TransactionList,
+  // },
 ];
 
 export default routes;

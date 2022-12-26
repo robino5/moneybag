@@ -19,6 +19,15 @@ const Page500 = React.lazy(() => import("./views/pages/page500/Page500"));
 const Fees = React.lazy(() => import("./views/payment/Fees"));
 const Payment = React.lazy(() => import("./views/payment/Payment"));
 const Statement = React.lazy(() => import("./components/statement/Statement"));
+const TransactionList = React.lazy(() =>
+  import("./components/statement/TransactionList")
+);
+const SettlementReport = React.lazy(() =>
+  import("./components/statement/SettlementReport")
+);
+const ProcessSettlement = React.lazy(() =>
+  import("./components/statement/ProcessSettlement")
+);
 // const Description = React.lazy(() =>
 //   import("./components/statement/Description")
 // );
@@ -56,8 +65,26 @@ class App extends Component {
             <Route
               exact
               path="/statement"
-              name="Page 500"
+              name="statement"
               element={<Statement />}
+            />
+            <Route
+              exact
+              path="/transaction"
+              name="transaction"
+              element={<TransactionList />}
+            />
+            <Route
+              exact
+              path="/settlement-report"
+              name="settlement-report"
+              element={<SettlementReport />}
+            />
+            <Route
+              exact
+              path="/process-settlement"
+              name="process-settlement"
+              element={<ProcessSettlement />}
             />
             {/* <Route
               exact
