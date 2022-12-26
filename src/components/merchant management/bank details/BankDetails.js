@@ -45,7 +45,7 @@ const BankDetails = ({ clickNext }) => {
         timer: 1500,
       });
       localStorage.setItem("settlement_bank", 1);
-      localStorage.setItem("currency_no", parseInt(e.currency));
+      localStorage.setItem("currency_no", 5001001);
       localStorage.setItem("bank_no", parseInt(e.bank_name));
       localStorage.setItem("branch_no", parseInt(e.branch_name));
       localStorage.setItem("routing_no", setRoutingNo(bankbranchList));
@@ -283,7 +283,7 @@ const BankDetails = ({ clickNext }) => {
     <div>
       <div>
         <CForm onSubmit={handleSubmit(saveBusinessDetails)}>
-          <CRow className="mb-3">
+          {/* <CRow className="mb-3">
             <CFormLabel className="col-sm-4 col-form-label">
               Currency
             </CFormLabel>
@@ -302,7 +302,7 @@ const BankDetails = ({ clickNext }) => {
                   ))}
               </CFormSelect>
             </CCol>
-          </CRow>
+          </CRow> */}
           <CRow className="mb-3">
             <CFormLabel className="col-sm-4 col-form-label">
               Bank Name
@@ -317,7 +317,7 @@ const BankDetails = ({ clickNext }) => {
                   setBankID(e.target.value);
                 }}
               >
-                <option>Select Bank</option>
+                <option value={""}>Select Bank</option>
                 {getBankOption(bankbranchList) &&
                   getBankOption(bankbranchList).map((bank, index) => (
                     <option value={bank.id} key={index}>
@@ -336,13 +336,13 @@ const BankDetails = ({ clickNext }) => {
               <CFormSelect
                 aria-label="Default select example"
                 {...register("branch_name", {
-                  required: "Please select Industry",
+                  required: "Please select Branch",
                 })}
                 onChange={(e) => {
                   setBrunchID(e.target.value);
                 }}
               >
-                <option>Select Branch</option>
+                <option value={""}>Select Branch</option>
                 {getBranchOption(bankbranchList) &&
                   getBranchOption(bankbranchList).map((bank, index) => (
                     <option value={bank.id} key={index}>
@@ -350,7 +350,7 @@ const BankDetails = ({ clickNext }) => {
                     </option>
                   ))}
               </CFormSelect>
-              <span className="text-danger">{errors.first_name?.message}</span>
+              <span className="text-danger">{errors.branch_name?.message}</span>
             </CCol>
           </CRow>
           <CRow className="mb-3">
@@ -420,6 +420,9 @@ const BankDetails = ({ clickNext }) => {
             </CCol>
           </CRow>
           <div className="text-center ">
+            <Link to="/merchant">
+              <CButton color="danger">Cancle</CButton>
+            </Link>
             <CButton color="success" type="submit" className="mx-3">
               Save
             </CButton>

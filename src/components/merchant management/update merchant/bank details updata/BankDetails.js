@@ -161,8 +161,7 @@ const BankDetails = ({ clickNext, data }) => {
 
   const updateBusinessDetails = (e) => {
     const businessDetailData = {
-      currency_no:
-        e.currency === "" ? settlementBank.currency_no : parseInt(e.currency),
+      currency_no: settlementBank.currency_no,
       bank_no:
         e.bank_name === "" ? settlementBank.bank_no : parseInt(e.bank_name),
       branch_no:
@@ -323,7 +322,7 @@ const BankDetails = ({ clickNext, data }) => {
                   <CCard className="p-4">
                     <CCardBody>
                       <CForm onSubmit={handleSubmit(updateBusinessDetails)}>
-                        <CRow className="mb-3">
+                        {/* <CRow className="mb-3">
                           <CFormLabel className="col-sm-3 col-form-label">
                             Currency
                           </CFormLabel>
@@ -352,7 +351,7 @@ const BankDetails = ({ clickNext, data }) => {
                                 )}
                             </CFormSelect>
                           </CCol>
-                        </CRow>
+                        </CRow> */}
                         <CRow className="mb-3">
                           <CFormLabel className="col-sm-3 col-form-label">
                             Bank Name
@@ -422,6 +421,7 @@ const BankDetails = ({ clickNext, data }) => {
                           <CCol sm={9}>
                             <CFormInput
                               type="text"
+                              className="bg-secondary"
                               value={setRoutingNo(bankbranchList)}
                               {...register("routing_no")}
                               placeholder="Transit/Routing No:"
@@ -435,6 +435,7 @@ const BankDetails = ({ clickNext, data }) => {
                           <CCol sm={9}>
                             <CFormInput
                               type="text"
+                              className="bg-secondary"
                               value={setSwiftCode(bankbranchList)}
                               {...register("swift_code")}
                               placeholder="Transit/Routing No:"
@@ -501,7 +502,11 @@ const BankDetails = ({ clickNext, data }) => {
             </CCol>
           </CRow>
           <div className="text-center">
+            <Link to="/merchant">
+              <CButton color="danger">Cancle</CButton>
+            </Link>
             <CButton
+              className="mx-3"
               onClick={() => {
                 clickNext(1);
               }}

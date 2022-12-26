@@ -207,7 +207,7 @@ const FintechList = () => {
         <CRow className="justify-content-center">
           <CCol md={12}>
             <DataTable
-              title="Financial Organization List"
+              title="Fintech List"
               columns={comumn}
               data={organizationList}
               pagination

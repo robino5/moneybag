@@ -247,15 +247,15 @@ const FintechAdd = () => {
     return data;
   };
 
-  const getServiceCategoryName=(e)=>{
+  const getServiceCategoryName = (e) => {
     let name;
-    lookupList?.map((element)=>{
-       if(element.id==e){
-        name=element.name;
-       }
-    })
-    return name
-  }
+    lookupList?.map((element) => {
+      if (element.id == e) {
+        name = element.name;
+      }
+    });
+    return name;
+  };
 
   // const getFIlterService=(e)=>{
   //   let data=[];
@@ -327,13 +327,13 @@ const FintechAdd = () => {
 
   // const removeService=(e)=>{
   //    console.log(services)
-     
+
   //    const data=services.splice(e,1)
   //    console.log(services)
   //    setservices(services)
   //    console.log("data",data)
   //   //  setservices(data)
-      
+
   // }
 
   useEffect(() => {
@@ -374,12 +374,14 @@ const FintechAdd = () => {
                       <CFormSelect
                         aria-label="Default select example"
                         type="number"
-                        {...register("fintech_type")}
+                        {...register("fintech_type", {
+                          required: "Please Select The Fintech Type",
+                        })}
                         onChange={(e) => {
                           setFintecType(e.target.value);
                         }}
                       >
-                        <option>Fintech Type</option>
+                        <option value={""}>Fintech Type</option>
                         {lookupList &&
                           getfintechType(lookupList).map((country, index) => (
                             <option value={country.id} key={index}>
@@ -387,6 +389,9 @@ const FintechAdd = () => {
                             </option>
                           ))}
                       </CFormSelect>
+                      <span className="text-danger">
+                        {errors.fintech_type?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -397,7 +402,7 @@ const FintechAdd = () => {
                       <CFormInput
                         type="text"
                         {...register("shortName", {
-                          required: "Please provide Short Name",
+                          required: "Please Provide Fintech Short Name",
                         })}
                         placeholder=" Short Name"
                       />
@@ -414,9 +419,11 @@ const FintechAdd = () => {
                       <CFormSelect
                         aria-label="Default select example"
                         type="number"
-                        {...register("country")}
+                        {...register("country", {
+                          required: "Please Select Your Country",
+                        })}
                       >
-                        <option>Select Country</option>
+                        <option value={""}>Select Country</option>
                         {lookupList &&
                           getCountryOption(lookupList).map((country, index) => (
                             <option value={country.id} key={index}>
@@ -424,6 +431,9 @@ const FintechAdd = () => {
                             </option>
                           ))}
                       </CFormSelect>
+                      <span className="text-danger">
+                        {errors.country?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -433,9 +443,14 @@ const FintechAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("address_line_1")}
+                        {...register("address_line_1", {
+                          required: "Please Provide Your Address",
+                        })}
                         placeholder="Address Line 1"
                       />
+                      <span className="text-danger">
+                        {errors.address_line_1?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -455,9 +470,14 @@ const FintechAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("city")}
+                        {...register("city", {
+                          required: "Please Provide Your City",
+                        })}
                         placeholder="City"
                       />
+                      <span className="text-danger">
+                        {errors.city?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -467,10 +487,12 @@ const FintechAdd = () => {
                     <CCol sm={9}>
                       <CFormSelect
                         aria-label="Default select example"
-                        {...register("state")}
+                        {...register("state", {
+                          required: "Please Select Your State",
+                        })}
                         type="number"
                       >
-                        <option>Select District</option>
+                        <option value={""}>Select District</option>
                         {lookupList &&
                           getStateOption(lookupList).map((country, index) => (
                             <option value={country.id} key={index}>
@@ -478,6 +500,9 @@ const FintechAdd = () => {
                             </option>
                           ))}
                       </CFormSelect>
+                      <span className="text-danger">
+                        {errors.state?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -487,12 +512,17 @@ const FintechAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("postal_code")}
+                        {...register("postal_code", {
+                          required: "Please Provide Your Postal Code",
+                        })}
                         placeholder="Postal Code"
                       />
+                      <span className="text-danger">
+                        {errors.postal_code?.message}
+                      </span>
                     </CCol>
                   </CRow>
-                  <div hidden={fintechType != 8001001 ? true : false}>
+                  {/* <div hidden={fintechType != 8001001 ? true : false}>
                     <CRow className="mb-3">
                       <CFormLabel className="col-sm-3 col-form-label">
                         Swift Code
@@ -505,7 +535,7 @@ const FintechAdd = () => {
                         />
                       </CCol>
                     </CRow>
-                  </div>
+                  </div> */}
 
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
@@ -647,7 +677,6 @@ const FintechAdd = () => {
                       </CButton>
                     </CCol>
                   </CRow>
-          
 
                   {/* <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">

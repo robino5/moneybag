@@ -42,18 +42,9 @@ const BusinessStructure = ({ clickNext, data }) => {
       });
       localStorage.setItem("business_structure", 1);
       localStorage.setItem("merchant_id", data.merchant_id);
-      localStorage.setItem(
-        "business_name",
-        e.business_name == "" ? data.business_name : e.business_name
-      );
-      localStorage.setItem(
-        "business_short_name",
-        e.business_short_name == "" ? data.short_name : e.business_short_name
-      );
-      localStorage.setItem(
-        "bin",
-        e.business_no == "" ? data.bin : e.business_no
-      );
+      localStorage.setItem("business_name", data.business_name);
+      localStorage.setItem("business_short_name", data.short_name);
+      localStorage.setItem("bin", data.bin);
       localStorage.setItem(
         "business_address1",
         e.b_address_line_1 == "" ? data.business_address1 : e.b_address_line_1
@@ -237,6 +228,7 @@ const BusinessStructure = ({ clickNext, data }) => {
           <CCol sm={8}>
             <CFormInput
               type="text"
+              disabled={true}
               {...register("merchant_id")}
               value={data.merchant_id}
               placeholder="Merchant ID"
@@ -251,6 +243,7 @@ const BusinessStructure = ({ clickNext, data }) => {
           <CCol sm={8}>
             <CFormInput
               type="text"
+              disabled={true}
               {...register("business_name")}
               defaultValue={data.business_name}
               placeholder="Business Name"
@@ -265,6 +258,7 @@ const BusinessStructure = ({ clickNext, data }) => {
           <CCol sm={8}>
             <CFormInput
               type="text"
+              disabled={true}
               {...register("business_short_name")}
               defaultValue={data.short_name}
               placeholder="Business Short Name"
@@ -280,6 +274,7 @@ const BusinessStructure = ({ clickNext, data }) => {
           <CCol sm={8}>
             <CFormInput
               type="text"
+              disabled={true}
               defaultValue={data.bin}
               {...register("business_no")}
             />
@@ -402,7 +397,7 @@ const BusinessStructure = ({ clickNext, data }) => {
             />
           </CCol>
         </CRow>
-        <CRow className="mb-3">
+        {/* <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label">
             {getFileLebel(localStorage.getItem("business_type"))}
           </CFormLabel>
@@ -419,8 +414,8 @@ const BusinessStructure = ({ clickNext, data }) => {
               <CIcon icon={cilLowVision}></CIcon>
             </CButton>
           </CCol>
-        </CRow>
-        <div
+        </CRow> */}
+        {/* <div
           hidden={
             localStorage.getItem("business_type") == 2001001 ? true : false
           }
@@ -443,12 +438,15 @@ const BusinessStructure = ({ clickNext, data }) => {
               </CButton>
             </CCol>
           </CRow>
-        </div>
+        </div> */}
 
         <CRow></CRow>
         <div className="text-center ">
+          <Link to="/merchant">
+            <CButton color="danger">Cancle</CButton>
+          </Link>
           <CButton color="info" type="submit" className="mx-3">
-            Updata
+            Update
           </CButton>
           <CButton color="primary" onClick={() => clickNext(1)}>
             Next

@@ -76,7 +76,31 @@ const BusinessRepresentative = ({ clickNext }) => {
   };
 
   const saveBusinessRepresentative = (e) => {
-    if (e) {
+    if (!nid || !dob) {
+      swal({
+        position: "top-end",
+        text: "Plesese Verify Your Nid First!",
+        icon: "warning",
+        button: false,
+        timer: 1500,
+      });
+    } else if (!image) {
+      swal({
+        position: "top-end",
+        text: "Please Provide Your Passport Size Image",
+        icon: "warning",
+        button: false,
+        timer: 1500,
+      });
+    } else if (!nidCopy) {
+      swal({
+        position: "top-end",
+        text: "Please Provide Your NID Copy",
+        icon: "warning",
+        button: false,
+        timer: 1500,
+      });
+    } else if (e) {
       swal({
         position: "top-end",
         text: "Category Service Created Successfull",
@@ -293,6 +317,7 @@ const BusinessRepresentative = ({ clickNext }) => {
                   })}
                   placeholder="Last Name"
                 />
+                <span className="text-danger">{errors.last_name?.message}</span>
               </CCol>
             </CRow>
             <CRow className="mb-3">
@@ -302,9 +327,17 @@ const BusinessRepresentative = ({ clickNext }) => {
               <CCol sm={8}>
                 <CFormInput
                   type="text"
-                  {...register("email")}
+                  {...register("email", {
+                    required: "Please provide E-mail",
+                    pattern: {
+                      value:
+                        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                      message: "Invalid email address",
+                    },
+                  })}
                   placeholder="Email Address"
                 />
+                <span className="text-danger">{errors.email?.message}</span>
               </CCol>
             </CRow>
             {/* <CRow className="mb-3">
@@ -339,10 +372,12 @@ const BusinessRepresentative = ({ clickNext }) => {
               <CCol sm={8}>
                 <CFormSelect
                   aria-label="Default select example"
-                  {...register("state")}
+                  {...register("state", {
+                    required: "Please Select District",
+                  })}
                   type="number"
                 >
-                  <option>Select District</option>
+                  <option value={""}>Select District</option>
                   {lookupList &&
                     getStateOption(lookupList).map((country, index) => (
                       <option value={country.id} key={index}>
@@ -392,6 +427,7 @@ const BusinessRepresentative = ({ clickNext }) => {
             <CRow className="mb-3">
               <CCol sm={12}>
                 <CFormInput type="file" onChange={uploadphoto} />
+                <p>Please attach your recent passport size photograph</p>
               </CCol>
             </CRow>
           </CCol>
@@ -468,6 +504,9 @@ const BusinessRepresentative = ({ clickNext }) => {
           </CCol>
         </CRow>
         <div className="text-center ">
+          <Link to="/merchant">
+            <CButton color="danger">Cancle</CButton>
+          </Link>
           <CButton color="success" type="submit" className="mx-3">
             Save
           </CButton>

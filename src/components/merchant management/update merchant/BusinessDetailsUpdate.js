@@ -67,20 +67,9 @@ const BusinessDetails = ({ clickNext, data }) => {
         timer: 1500,
       });
       localStorage.setItem("business_details", 1);
-      localStorage.setItem(
-        "business_type",
-        e.type_of_business == ""
-          ? data.business_type
-          : parseInt(e.type_of_business)
-      );
-      localStorage.setItem(
-        "indeustry",
-        e.industry == "" ? data.industry_no : parseInt(e.industry)
-      );
-      localStorage.setItem(
-        "category_code",
-        businessType ? getCetagoryCode(businessType) : data.category_code
-      );
+      localStorage.setItem("business_type", data.business_type);
+      localStorage.setItem("indeustry", data.industry_no);
+      localStorage.setItem("category_code", data.category_code);
       localStorage.setItem(
         "description",
         e.Product_desc == "" ? data.product_desc : e.Product_desc
@@ -150,6 +139,7 @@ const BusinessDetails = ({ clickNext, data }) => {
           <CCol sm={8}>
             <CFormSelect
               aria-label="Default select example"
+              disabled={true}
               type="number"
               {...register("type_of_business")}
             >
@@ -175,6 +165,7 @@ const BusinessDetails = ({ clickNext, data }) => {
           <CCol sm={8}>
             <CFormSelect
               aria-label="Default select example"
+              disabled={true}
               {...register("industry")}
               type="number"
               onChange={(e) => {
@@ -202,6 +193,7 @@ const BusinessDetails = ({ clickNext, data }) => {
           <CCol sm={8}>
             <CFormInput
               type="text"
+              disabled={true}
               value={data.category_code}
               {...register("cat_code")}
               placeholder="Merchant Category Code"
@@ -232,6 +224,9 @@ const BusinessDetails = ({ clickNext, data }) => {
           </CCol>
         </CRow>
         <div className="text-center ">
+          <Link to="/merchant">
+            <CButton color="danger">Cancle</CButton>
+          </Link>
           <CButton type="submit" color="info" className="mx-3">
             Update
           </CButton>

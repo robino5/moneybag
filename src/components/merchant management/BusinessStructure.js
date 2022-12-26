@@ -254,6 +254,10 @@ const BusinessStructure = ({ clickNext }) => {
               type="text"
               {...register("business_no", {
                 required: "Please provide Business no",
+                pattern: {
+                  value: /^[0-9]*$/,
+                  message: "Please Provide Number",
+                },
               })}
             />
             <span className="text-danger">{errors.business_no?.message}</span>
@@ -266,9 +270,14 @@ const BusinessStructure = ({ clickNext }) => {
           <CCol sm={8}>
             <CFormInput
               type="text"
-              {...register("b_address_line_1")}
+              {...register("b_address_line_1", {
+                required: "Please provide Address",
+              })}
               placeholder="Address Line 1"
             />
+            <span className="text-danger">
+              {errors.b_address_line_1?.message}
+            </span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -290,10 +299,14 @@ const BusinessStructure = ({ clickNext }) => {
               type="text"
               {...register("b_phone", {
                 required: "Please provide Phone number",
+                pattern: {
+                  value: /^[0-9]*$/,
+                  message: "Please Provide Number",
+                },
               })}
               placeholder="Phone Number"
             />
-            <span className="text-danger">{errors.city?.message}</span>
+            <span className="text-danger">{errors.b_phone?.message}</span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -304,11 +317,16 @@ const BusinessStructure = ({ clickNext }) => {
             <CFormInput
               type="text"
               {...register("b_email", {
-                required: "Please provide Email",
+                required: "Please provide E-mail",
+                pattern: {
+                  value:
+                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                  message: "Invalid email address",
+                },
               })}
               placeholder="Email"
             />
-            <span className="text-danger">{errors.city?.message}</span>
+            <span className="text-danger">{errors.b_email?.message}</span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -335,7 +353,7 @@ const BusinessStructure = ({ clickNext }) => {
               })}
               placeholder="City"
             />
-            <span className="text-danger">{errors.city?.message}</span>
+            <span className="text-danger">{errors.b_city?.message}</span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -350,7 +368,7 @@ const BusinessStructure = ({ clickNext }) => {
               })}
               type="number"
             >
-              <option>Select District</option>
+              <option value={""}>Select District</option>
               {lookupList &&
                 getStateOption(lookupList).map((country, index) => (
                   <option value={country.id} key={index}>
@@ -358,7 +376,7 @@ const BusinessStructure = ({ clickNext }) => {
                   </option>
                 ))}
             </CFormSelect>
-            <span className="text-danger">{errors.state?.message}</span>
+            <span className="text-danger">{errors.b_state?.message}</span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -418,6 +436,9 @@ const BusinessStructure = ({ clickNext }) => {
 
         <CRow></CRow>
         <div className="text-center ">
+          <Link to="/merchant">
+            <CButton color="danger">Cancle</CButton>
+          </Link>
           <CButton color="success" type="submit" className="mx-3">
             Save
           </CButton>

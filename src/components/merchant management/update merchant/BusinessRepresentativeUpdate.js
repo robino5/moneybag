@@ -445,6 +445,7 @@ const BusinessRepresentative = ({ clickNext, data }) => {
             <CRow className="mb-3">
               <CCol sm={12}>
                 <CFormInput type="file" onChange={uploadphoto} />
+                <p>Please attach your recent passport size photograph</p>
               </CCol>
             </CRow>
           </CCol>
@@ -527,6 +528,9 @@ const BusinessRepresentative = ({ clickNext, data }) => {
           </CCol>
         </CRow>
         <div className="text-center ">
+          <Link to="/merchant">
+            <CButton color="danger">Cancle</CButton>
+          </Link>
           <CButton color="info" type="submit" className="mx-3">
             Update
           </CButton>

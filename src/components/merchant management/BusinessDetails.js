@@ -138,9 +138,11 @@ const BusinessDetails = ({ clickNext }) => {
             <CFormSelect
               aria-label="Default select example"
               type="number"
-              {...register("type_of_business")}
+              {...register("type_of_business", {
+                required: "Please select Identity of Company ",
+              })}
             >
-              <option>Select One</option>
+              <option value={""}>Select One</option>
               {lookupList &&
                 getBusinessOption(lookupList).map((country, index) => (
                   <option value={country.id} key={index}>
@@ -148,6 +150,9 @@ const BusinessDetails = ({ clickNext }) => {
                   </option>
                 ))}
             </CFormSelect>
+            <span className="text-danger">
+              {errors.type_of_business?.message}
+            </span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -165,7 +170,7 @@ const BusinessDetails = ({ clickNext }) => {
                 setBusinessType(e.target.value);
               }}
             >
-              <option>Select Industry/Business</option>
+              <option value={""}>Select Industry/Business</option>
               {lookupList &&
                 getIndustryOption(lookupList).map((country, index) => (
                   <option value={country.id} key={index}>
@@ -205,6 +210,9 @@ const BusinessDetails = ({ clickNext }) => {
           </CCol>
         </CRow>
         <div className="text-center ">
+          <Link to="/merchant">
+            <CButton color="danger">Cancle</CButton>
+          </Link>
           <CButton type="submit" color="success" className="mx-3">
             Save
           </CButton>

@@ -275,7 +275,7 @@ const SettelmentAdd = () => {
                           );
                         }}
                       >
-                        <option>Select Fintech</option>
+                        <option value={""}>Select Fintech</option>
                         {getOrganizationOption(organizationList) &&
                           getOrganizationOption(organizationList).map(
                             (org, index) => (
@@ -285,6 +285,9 @@ const SettelmentAdd = () => {
                             )
                           )}
                       </CFormSelect>
+                      <span className="text-danger">
+                        {errors.select_fintech?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -295,13 +298,13 @@ const SettelmentAdd = () => {
                       <CFormSelect
                         aria-label="Default select example"
                         {...register("select_bank_name", {
-                          required: "Please Settelment Bank",
+                          required: "Please Select Settelment Bank",
                         })}
                         onChange={(e) => {
                           setBankId(e.target.value);
                         }}
                       >
-                        <option>Select Settelment Bank</option>
+                        <option value={""}>Select Settelment Bank</option>
                         {getBankOption(bankbranchList) &&
                           getBankOption(bankbranchList).map((bank, index) => (
                             <option value={bank.id} key={index}>
@@ -309,6 +312,9 @@ const SettelmentAdd = () => {
                             </option>
                           ))}
                       </CFormSelect>
+                      <span className="text-danger">
+                        {errors.select_bank_name?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -325,7 +331,7 @@ const SettelmentAdd = () => {
                           setBranchId(e.target.value);
                         }}
                       >
-                        <option>Select Branch</option>
+                        <option value={""}>Select Branch</option>
                         {getBranchOption(bankbranchList) &&
                           getBranchOption(bankbranchList).map((bank, index) => (
                             <option value={bank.id} key={index}>
@@ -333,6 +339,9 @@ const SettelmentAdd = () => {
                             </option>
                           ))}
                       </CFormSelect>
+                      <span className="text-danger">
+                        {errors.select_branch_name?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -454,7 +463,7 @@ const SettelmentAdd = () => {
                         Cancle
                       </CButton>
                     </Link>
-                    <CButton type="submit" disabled={!isDirty} color="success">
+                    <CButton type="submit" color="success">
                       Save
                     </CButton>
                   </div>
