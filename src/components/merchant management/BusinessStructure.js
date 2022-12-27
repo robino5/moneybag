@@ -305,7 +305,14 @@ const BusinessStructure = ({ clickNext }) => {
               type="text"
               {...register("b_phone", {
                 required: "Please provide Phone number",
-                message: "Invalid Phone Number",
+                minLength: {
+                  value: 11,
+                  message: "Invalid Phone Number",
+                },
+                maxLength: {
+                  value: 11,
+                  message: "Invalid Phone Number",
+                },
                 pattern: {
                   value: /^[0-9]*$/,
                   message: "Invalid Phone Number",
