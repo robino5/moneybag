@@ -57,7 +57,7 @@ const Summery = () => {
       })
       .then((response) => {
         console.log(response);
-        saveSettlementBank(response.data.id);
+        saveSettlementBank(response.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -83,7 +83,7 @@ const Summery = () => {
       swift_code: localStorage.getItem("swift_code"),
       account_no: localStorage.getItem("account_no"),
       account_name: localStorage.getItem("account_name"),
-      merchant_no: e,
+      merchant_no: e.id,
     };
     console.log(data2);
     const headers = {
@@ -97,10 +97,10 @@ const Summery = () => {
         console.log(response);
         swal({
           position: "top-end",
-          text: "Merchant Created Successfull",
+          title: "Merchant Created Successfull",
+          text: `Merchant Id:${e.merchant_id} Merchant Name:${e.business_name}`,
           icon: "success",
-          button: false,
-          timer: 1500,
+          button: true,
         });
         clearLocalHost();
         navigate("/merchant");

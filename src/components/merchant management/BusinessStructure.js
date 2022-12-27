@@ -237,10 +237,16 @@ const BusinessStructure = ({ clickNext }) => {
               type="text"
               {...register("business_short_name", {
                 required: "Please provide Business Short Name",
+                pattern: {
+                  value: /^[a-zA-Z]*$/,
+                  message: "No Space allowed",
+                },
               })}
               placeholder="Business Short Name"
             />
-            <span className="text-danger">{errors.business_name?.message}</span>
+            <span className="text-danger">
+              {errors.business_short_name?.message}
+            </span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -299,9 +305,10 @@ const BusinessStructure = ({ clickNext }) => {
               type="text"
               {...register("b_phone", {
                 required: "Please provide Phone number",
+                message: "Invalid Phone Number",
                 pattern: {
                   value: /^[0-9]*$/,
-                  message: "Please Provide Number",
+                  message: "Invalid Phone Number",
                 },
               })}
               placeholder="Phone Number"

@@ -188,6 +188,7 @@ const BusinessDetails = ({ clickNext }) => {
           <CCol sm={8}>
             <CFormInput
               type="text"
+              disabled={true}
               value={getCetagoryCode(businessType)}
               {...register("cat_code")}
               placeholder="Merchant Category Code"
