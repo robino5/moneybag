@@ -350,9 +350,15 @@ const BusinessStructure = ({ clickNext }) => {
           <CCol sm={8}>
             <CFormInput
               type="text"
-              {...register("bussiness_website")}
+              {...register("bussiness_website", {
+                pattern: {
+                  value: /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+                  message: "Invalid Website",
+                },
+              })}
               placeholder="Business website"
             />
+            <span className="text-danger">{errors.bussiness_website?.message}</span>
           </CCol>
         </CRow>
         <CRow className="mb-3">
