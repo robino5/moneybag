@@ -4,6 +4,7 @@ import DataTable from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
 import Description from "./Description";
 import { DateTime } from "luxon";
+import Nav from "../Nav";
 import {
   CCard,
   CCardBody,
@@ -276,6 +277,7 @@ const ProcessSettlement = () => {
 
   return (
     <div className="">
+      <Nav />
       <CRow>
         <CCol md={3}>
           <CCard>

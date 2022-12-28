@@ -3,6 +3,7 @@ import axios from "axios";
 import DataTable from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
 import Description from "./Description";
+import Nav from "../Nav";
 import { DateTime } from "luxon";
 import {
   CCard,
@@ -276,6 +277,7 @@ const TransactionList = () => {
 
   return (
     <div className="">
+      <Nav />
       <CRow>
         <CCol md={3}>
           <CCard>
