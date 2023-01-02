@@ -603,13 +603,13 @@ const FintechAdd = () => {
                           >
                             <option>Service Name</option>
                             {lookupList &&
-                              getServiceOption(lookupList).map(
-                                (country, index) => (
-                                  <option value={country.id} key={index}>
-                                    {country.name}
-                                  </option>
-                                )
-                              )}
+                              setServicesOptions(
+                                getServiceOption(lookupList)
+                              ).map((country, index) => (
+                                <option value={country.id} key={index}>
+                                  {country.name}
+                                </option>
+                              ))}
                           </CFormSelect>
                         </CCol>
                         <CCol sm={2}>

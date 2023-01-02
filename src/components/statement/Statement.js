@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Description from "./Description";
 import { DateTime } from "luxon";
 import Nav from "../Nav";
+import { StatementSidebar, AppFooter, StatementHeader } from "../index.js";
 import {
   CCard,
   CCardBody,
@@ -277,85 +278,97 @@ const Statement = () => {
 
   return (
     <div className="">
-      <Nav />
-      <CRow>
-        <CCol md={3}>
-          <CCard>
-            <CCardBody>
-              <CForm>
-                <CFormLabel>Order Number</CFormLabel>
-                <CFormInput
-                  size="sm"
-                  type="text"
-                  onChange={handleOrderNumber}
-                />
-                <CFormLabel>Merchant Name</CFormLabel>
-                <CFormInput
-                  size="sm"
-                  type="text"
-                  onChange={handleMerchnatName}
-                />
-                <CFormLabel className="mt-2">Period from</CFormLabel>
-                <CFormInput size="sm" type="date" onChange={handlePeriodFrom} />
-                <CFormLabel className="mt-2">Period To</CFormLabel>
-                <CFormInput size="sm" type="date" onChange={handlePeriodTo} />
-                <CFormLabel className="mt-2">Status</CFormLabel>
-                <CFormSelect size="sm" onChange={handleStatus}>
-                  <option>APPROVED</option>
-                  <option>PENDING</option>
-                  <option>REJECTED</option>
-                  <option>CANCELED</option>
-                </CFormSelect>
-                <CFormLabel className="mt-2">Currency</CFormLabel>
-                <CFormSelect size="sm" onChange={handleCurrency}>
-                  <option>ALL</option>
-                  <option>BDT</option>
-                </CFormSelect>
-                <CFormLabel className="mt-2">Amount from</CFormLabel>
-                <CFormInput size="sm" type="text" onChange={handleAmountFrom} />
-                <CFormLabel className="mt-2">Amount To</CFormLabel>
-                <CFormInput size="sm" type="text" onChange={handleAmountTo} />
-                <CFormLabel className="mt-2">Order by</CFormLabel>
-                <CFormSelect size="sm" onChange={handleOrderBy}>
-                  <option>ASC</option>
-                  <option>DESC</option>
-                </CFormSelect>
-                <CButton
-                  className="mt-2"
-                  color="primary"
-                  onClick={searchStatemet}
-                >
-                  Search
-                </CButton>
-                <CButton
-                  className="mt-2 mx-2"
-                  color="danger"
-                  onClick={onCancel}
-                >
-                  Cancel
-                </CButton>
-              </CForm>
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol md={9}>
-          <DataTable
-            title="Statement List"
-            columns={column}
-            data={statement}
-            paginatio={20}
-          />
-        </CCol>
-      </CRow>
-      <div>
-        <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
-          <CModalHeader onClose={() => setVisible(false)}>
-            <CModalTitle>Transection Details</CModalTitle>
-          </CModalHeader>
-          <CModalBody>
-            <Description data={statementdetails} />
-          </CModalBody>
-        </CModal>
+      <StatementSidebar />
+      <div className="wrapper d-flex flex-column min-vh-100 bg-light">
+        <StatementHeader />
+        <CRow>
+          <CCol md={3}>
+            <CCard>
+              <CCardBody>
+                <CForm>
+                  <CFormLabel>Order Number</CFormLabel>
+                  <CFormInput
+                    size="sm"
+                    type="text"
+                    onChange={handleOrderNumber}
+                  />
+                  <CFormLabel>Merchant Name</CFormLabel>
+                  <CFormInput
+                    size="sm"
+                    type="text"
+                    onChange={handleMerchnatName}
+                  />
+                  <CFormLabel className="mt-2">Period from</CFormLabel>
+                  <CFormInput
+                    size="sm"
+                    type="date"
+                    onChange={handlePeriodFrom}
+                  />
+                  <CFormLabel className="mt-2">Period To</CFormLabel>
+                  <CFormInput size="sm" type="date" onChange={handlePeriodTo} />
+                  <CFormLabel className="mt-2">Status</CFormLabel>
+                  <CFormSelect size="sm" onChange={handleStatus}>
+                    <option>APPROVED</option>
+                    <option>PENDING</option>
+                    <option>REJECTED</option>
+                    <option>CANCELED</option>
+                  </CFormSelect>
+                  <CFormLabel className="mt-2">Currency</CFormLabel>
+                  <CFormSelect size="sm" onChange={handleCurrency}>
+                    <option>ALL</option>
+                    <option>BDT</option>
+                  </CFormSelect>
+                  <CFormLabel className="mt-2">Amount from</CFormLabel>
+                  <CFormInput
+                    size="sm"
+                    type="text"
+                    onChange={handleAmountFrom}
+                  />
+                  <CFormLabel className="mt-2">Amount To</CFormLabel>
+                  <CFormInput size="sm" type="text" onChange={handleAmountTo} />
+                  <CFormLabel className="mt-2">Order by</CFormLabel>
+                  <CFormSelect size="sm" onChange={handleOrderBy}>
+                    <option>ASC</option>
+                    <option>DESC</option>
+                  </CFormSelect>
+                  <CButton
+                    className="mt-2"
+                    color="primary"
+                    onClick={searchStatemet}
+                  >
+                    Search
+                  </CButton>
+                  <CButton
+                    className="mt-2 mx-2"
+                    color="danger"
+                    onClick={onCancel}
+                  >
+                    Cancel
+                  </CButton>
+                </CForm>
+              </CCardBody>
+            </CCard>
+          </CCol>
+          <CCol md={9}>
+            <DataTable
+              title="Statement List"
+              columns={column}
+              data={statement}
+              paginatio={20}
+            />
+          </CCol>
+        </CRow>
+        <div>
+          <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
+            <CModalHeader onClose={() => setVisible(false)}>
+              <CModalTitle>Transection Details</CModalTitle>
+            </CModalHeader>
+            <CModalBody>
+              <Description data={statementdetails} />
+            </CModalBody>
+          </CModal>
+        </div>
+        <AppFooter />
       </div>
     </div>
   );
