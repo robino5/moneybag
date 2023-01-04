@@ -241,6 +241,8 @@ const MerchantSericeUpdateUrl = React.lazy(() =>
 );
 
 const DisputeAdd = React.lazy(() => import("./components/dispute/DisputeAdd"));
+
+const FintechAddAlternative = React.lazy(() => import("./components/fintech/FintechAddAlternative"));
 // const TransactionList = React.lazy(() =>
 //   import("./components/statement/TransactionList")
 // );
@@ -566,6 +568,14 @@ const routes = [
     name: "dispute",
     element: DisputeAdd,
   },
+  {
+    path: "/add-fintechalternative",
+    name: "add-fintechalternative",
+    element: FintechAddAlternative,
+  },
+
+
+  
   // {
   //   path: "/transaction",
   //   name: "transaction",
