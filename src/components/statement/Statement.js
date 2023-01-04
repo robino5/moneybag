@@ -78,20 +78,20 @@ const Statement = () => {
       });
   };
 
-  const getMerchantName = (e) => {
-    let name;
-    merchantList?.map((mercant) => {
-      if (mercant.marchant_id == e) {
-        name = mercant.short_name;
-      }
-    });
-    return name;
-  };
+  // const getMerchantName = (e) => {
+  //   let name;
+  //   merchantList?.map((mercant) => {
+  //     if (mercant.marchant_id == e) {
+  //       name = mercant.business_name;
+  //     }
+  //   });
+  //   return name;
+  // };
 
-  const getSerial = (e) => {
-    setSerial(serial + e);
-    return serial;
-  };
+  // const getSerial = (e) => {
+  //   setSerial(serial + e);
+  //   return serial;
+  // };
 
   const openDetails = async (e) => {
     setStatementDetails(e);
@@ -221,8 +221,7 @@ const Statement = () => {
       name: "Merchant ID",
       sortable: true,
       grow: 2,
-      selector: (row) =>
-        getMerchantName(row.merchant_id) + "(" + row.merchant_id + ")",
+      selector: (row) => row.merchant_name + "(" + row.merchant_id + ")",
     },
 
     {

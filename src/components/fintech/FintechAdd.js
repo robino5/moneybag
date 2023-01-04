@@ -83,7 +83,7 @@ const FintechAdd = () => {
   //   return data;
   // };
 
-  console.log(fields);
+  console.log("field", fields);
 
   const saveFintech = (e) => {
     console.log("element");
@@ -238,6 +238,7 @@ const FintechAdd = () => {
   };
 
   const getServiceOption = (e) => {
+    console.log("test", e);
     let data = [];
     e.forEach((element) => {
       if (element.lov_id === 6001 && element.is_active === 1) {
@@ -670,7 +671,13 @@ const FintechAdd = () => {
                       <CButton
                         color="primary"
                         onClick={() => {
-                          append({});
+                          append({
+                            category_service_id: "",
+                            service_type: "",
+                            rate: "",
+                            rate_type: "",
+                            is_active: "",
+                          });
                         }}
                       >
                         Add Service
