@@ -44,6 +44,7 @@ const FintechAdd = () => {
   const [rateType, setRateType] = useState();
   const [rate, setRate] = useState();
   const [status, setStatus] = useState();
+  console.log("service:", serviceType);
   // serviceID = [6001001,]
 
   // const isServiceAlreadyExists = () => {
@@ -238,7 +239,6 @@ const FintechAdd = () => {
   };
 
   const getServiceOption = (e) => {
-    console.log("test", e);
     let data = [];
     e.forEach((element) => {
       if (element.lov_id === 6001 && element.is_active === 1) {
@@ -247,15 +247,35 @@ const FintechAdd = () => {
     });
     return data;
   };
+  console.log("service ct", serviceCategory);
 
-  const getServiceCategoryName = (e) => {
-    let name;
-    lookupList?.map((element) => {
-      if (element.id == e) {
-        name = element.name;
-      }
-    });
-    return name;
+  const getServicewithCategory = (e) => {
+    let data = [];
+    if (serviceCategory == parseInt(7001002)) {
+      console.log(e);
+      e?.map((element) => {
+        if (
+          element.id == 6001001 ||
+          element.id == 6001002 ||
+          element.id == 6001003 ||
+          element.id == 6001004
+        ) {
+          console.log("test", element);
+          data.push(element);
+        }
+      });
+      return data;
+    } else if (serviceCategory == 7001004) {
+      e?.map((element) => {
+        if (element.id == 6001005 || element.id == 6001006) {
+          data.push(element);
+        }
+      });
+      return data;
+    } else {
+      return e;
+    }
+    return e;
   };
 
   // const getFIlterService=(e)=>{
@@ -336,6 +356,34 @@ const FintechAdd = () => {
   //   //  setservices(data)
 
   // }
+
+  const addSercideRow = () => {
+    if (fields.length > 1) {
+      const currentSelected = [];
+
+      for (let i = 0; i < fields.length - 1; i++) {
+        if (
+          fields[i].service_type !== undefined &&
+          fields[i].service_type.match(numbers)
+        ) {
+          currentSelected.push(Number(fields[i].service_type));
+        }
+      }
+      if (currentSelected.includes(serviceType)) {
+        swal({
+          position: "top-end",
+          text: "You Can't Select Duplicate Service",
+          icon: "warning",
+          button: false,
+          timer: 1500,
+        });
+      } else {
+        append({});
+      }
+    } else {
+      append({});
+    }
+  };
 
   useEffect(() => {
     getLookupList();
@@ -584,6 +632,9 @@ const FintechAdd = () => {
                             {...register(
                               `services.${index}.category_service_id`
                             )}
+                            onChange={(e) => {
+                              setServiceCategory(e.target.value);
+                            }}
                           >
                             <option>Service Category</option>
                             {lookupList &&
@@ -601,16 +652,20 @@ const FintechAdd = () => {
                             aria-label="Default select example"
                             type="number"
                             {...register(`services.${index}.service_type`)}
+                            onChange={(e) => {
+                              setServiceType(parseInt(e.target.value));
+                              setServiceCategory();
+                            }}
                           >
                             <option>Service Name</option>
                             {lookupList &&
-                              setServicesOptions(
-                                getServiceOption(lookupList)
-                              ).map((country, index) => (
-                                <option value={country.id} key={index}>
-                                  {country.name}
-                                </option>
-                              ))}
+                              getServiceOption(lookupList).map(
+                                (country, index) => (
+                                  <option value={country.id} key={index}>
+                                    {country.name}
+                                  </option>
+                                )
+                              )}
                           </CFormSelect>
                         </CCol>
                         <CCol sm={2}>
@@ -668,18 +723,7 @@ const FintechAdd = () => {
 
                   <CRow>
                     <CCol sm={2}>
-                      <CButton
-                        color="primary"
-                        onClick={() => {
-                          append({
-                            category_service_id: "",
-                            service_type: "",
-                            rate: "",
-                            rate_type: "",
-                            is_active: "",
-                          });
-                        }}
-                      >
+                      <CButton color="primary" onClick={addSercideRow}>
                         Add Service
                       </CButton>
                     </CCol>
