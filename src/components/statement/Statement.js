@@ -350,7 +350,7 @@ const Statement = () => {
           </CCol>
           <CCol md={9}>
             <DataTable
-              title="Statement List"
+              title="Transection List"
               columns={column}
               data={statement}
               paginatio={20}

@@ -36,8 +36,9 @@ const SettlementReport = () => {
   const [amontFrom, setAmountFrom] = useState("");
   const [amontTo, setAmountTo] = useState("");
   const [orderby, setOrderBy] = useState("");
-  const [statement, setStatement] = useState();
+  const [Settlements, setSettlements] = useState();
   const [statementdetails, setStatementDetails] = useState();
+  console.log("setelmsnt", Settlements);
 
   const getMerchantList = async () => {
     const headers = {
@@ -63,11 +64,11 @@ const SettlementReport = () => {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     await axios
-      .get(`${process.env.REACT_APP_API_URL}txn-statements/`, {
+      .get(`${process.env.REACT_APP_API_URL}settlements/`, {
         headers,
       })
       .then((responce) => {
-        console.log(responce.data), setStatement(responce.data);
+        console.log(responce.data), setSettlements(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -85,11 +86,6 @@ const SettlementReport = () => {
       }
     });
     return name;
-  };
-
-  const getSerial = (e) => {
-    setSerial(serial + e);
-    return serial;
   };
 
   const openDetails = async (e) => {
@@ -132,42 +128,18 @@ const SettlementReport = () => {
     e.preventDefault();
 
     const data = {
-      order_id: orderAmount,
-      merchant_name: merchnatName,
-      period_from: `${periodFrom}T00:00:00`,
-      period_to: `${periodTo}T23:59:59`,
-      status: staus,
-      currency: currency,
-      amount_from: amontFrom,
-      amount_to: amontTo,
-      order_by: orderby,
+      merchent_name: merchnatName,
+      period_from: periodFrom,
+      period_to: periodTo,
     };
-    if (!orderAmount) {
-      delete data.order_id;
-    }
     if (!merchnatName) {
-      delete data.merchant_name;
+      delete data.merchent_name;
     }
     if (!periodFrom) {
       delete data.period_from;
     }
     if (!periodTo) {
       delete data.period_to;
-    }
-    if (!staus) {
-      delete data.status;
-    }
-    if (!currency || currency == "ALL") {
-      delete data.currency;
-    }
-    if (!amontFrom) {
-      delete data.amount_from;
-    }
-    if (!amontTo) {
-      delete data.amount_to;
-    }
-    if (!orderby) {
-      delete data.order_by;
     }
 
     const encodeDataToURL = (data) => {
@@ -182,14 +154,12 @@ const SettlementReport = () => {
     };
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}txn-statements?${encodeDataToURL(
-          data
-        )}`,
+        `${process.env.REACT_APP_API_URL}settlements?${encodeDataToURL(data)}`,
         { headers }
       )
       .then((response) => {
         console.log(response);
-        setStatement(response.data);
+        setSettlements(response.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -204,69 +174,46 @@ const SettlementReport = () => {
 
   const column = [
     {
-      name: "SL",
-      selector: (row, index) => index + 1,
-      maxWidth: "15px",
+      name: "Settlement From",
+      selector: (row) =>
+        DateTime.fromISO(row.settlement_from, {
+          zone: "Asia/Dhaka",
+        }).toLocaleString(DateTime.DATETIME_MED),
     },
     {
-      name: "Order ID",
-      selector: (row) => row.merchant_tran_id,
+      name: "settlement_to",
+      selector: (row) =>
+        DateTime.fromISO(row.settlement_to, {
+          zone: "Asia/Dhaka",
+        }).toLocaleString(DateTime.DATETIME_MED),
     },
     {
-      name: "Transection ID",
-      selector: (row) => row.txn_id,
+      name: "Collection Amount",
+      selector: (row) => row.gttl_order_amount,
     },
     {
-      name: "Merchant ID",
-      sortable: true,
+      name: "Bank Fee",
+      selector: (row) => row.gttl_bank_fee,
+    },
+    {
+      name: "PGW Fee",
+      selector: (row) => row.gttl_pgw_fee,
+    },
+    {
+      name: "Settlement Amount",
+      selector: (row) => row.gttl_total_amount,
+    },
+    {
+      name: "Settlement Date",
       grow: 2,
       selector: (row) =>
-        getMerchantName(row.merchant_id) + "(" + row.merchant_id + ")",
-    },
-
-    {
-      name: "Creation date",
-      grow: 2,
-      selector: (row) =>
-        DateTime.fromISO(row.created_at, { zone: "Asia/Dhaka" }).toLocaleString(
-          DateTime.DATETIME_MED
-        ),
+        DateTime.fromISO(row.settlement_date, {
+          zone: "Asia/Dhaka",
+        }).toLocaleString(DateTime.DATETIME_MED),
     },
     {
-      name: "Amount",
-      selector: (row) => row.merchant_order_amount,
-    },
-    {
-      name: "Refund Amount",
-      selector: (row) => 0,
-    },
-    {
-      name: "Final Amountt",
-      selector: (row) => row.merchant_order_amount + row.merchant_charge_amount,
-    },
-    {
-      name: "Order Status",
-      selector: (row) => row.gw_order_status,
-    },
-    {
-      name: "Description",
-      selector: (row) => row.merchant_description,
-    },
-    {
-      name: "Action",
-      selector: (row) => (
-        <div className="d-flex justify-content-center">
-          <CButton
-            className="btn btn-sm d-inline mx-1"
-            CColor="info"
-            onClick={() => {
-              openDetails(row);
-            }}
-          >
-            Detail
-          </CButton>
-        </div>
-      ),
+      name: "Employee ID",
+      selector: (row) => row.created_by,
     },
   ];
 
@@ -321,10 +268,20 @@ const SettlementReport = () => {
                   <option>ASC</option>
                   <option>DESC</option>
                 </CFormSelect> */}
-                <CButton className="mt-2 mx-2" color="primary">
+                <CButton
+                  className="mt-2 mx-2"
+                  color="primary"
+                  onClick={searchStatemet}
+                >
                   Search
                 </CButton>
-                <CButton className="mt-2" color="warning">
+                <CButton
+                  className="mt-2"
+                  color="warning"
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                >
                   Reset
                 </CButton>
                 <CButton
@@ -339,7 +296,12 @@ const SettlementReport = () => {
           </CCard>
         </CCol>
         <CCol md={9}>
-          <DataTable title="Settlement Report" paginatio={20} />
+          <DataTable
+            title="Settlement Report"
+            columns={column}
+            data={Settlements}
+            paginatio={20}
+          />
         </CCol>
       </CRow>
       <div>

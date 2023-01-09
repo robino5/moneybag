@@ -4,6 +4,7 @@ import DataTable from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
 import Description from "./Description";
 import { DateTime } from "luxon";
+import swal from "sweetalert";
 import Nav from "../Nav";
 import { StatementSidebar, AppFooter, StatementHeader } from "../index.js";
 import {
@@ -27,7 +28,6 @@ import { render } from "@testing-library/react";
 const ProcessSettlement = () => {
   const navigate = useNavigate();
   const [merchantList, setMerchantList] = useState();
-  console.log(merchantList);
   const [visible, setVisible] = useState(false);
   // const [orderAmount, setOrderAmount] = useState("");
   const [merchnatName, setMerchantName] = useState("");
@@ -137,6 +137,7 @@ const ProcessSettlement = () => {
     const data = {
       merchant_name: merchnatName,
       gw_txn_date: periodFrom,
+      settlement_query: true,
     };
 
     if (!merchnatName) {
@@ -188,6 +189,46 @@ const ProcessSettlement = () => {
         }
       });
     setApprovedAmount(sum);
+  };
+
+  const saveApprovedTransection = () => {
+    let data = [];
+    statement &&
+      statement.map((element) => {
+        if (element.gw_order_status == "APPROVED") {
+          data.push(element);
+        }
+      });
+    console.log(data);
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .post(`${process.env.REACT_APP_API_URL}settlements/`, data, {
+        headers,
+      })
+      .then((response) => {
+        console.log(response);
+        setApprovedAmount(0);
+        getStatementList();
+        swal({
+          position: "top-end",
+          text: "Approved Transection Save Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        swal({
+          position: "top-end",
+          text: error.response.data.detail,
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
+      });
   };
 
   const column = [
@@ -328,7 +369,12 @@ const ProcessSettlement = () => {
                   <option>ASC</option>
                   <option>DESC</option>
                 </CFormSelect> */}
-                  <CButton className="mt-2" color="info">
+                  <CButton
+                    className="mt-2"
+                    color="info"
+                    disabled={approvedAmount <= 0 ? true : false}
+                    onClick={saveApprovedTransection}
+                  >
                     Process
                   </CButton>
                   <CButton

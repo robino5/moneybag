@@ -128,12 +128,12 @@ const _nav = [
 
   {
     component: CNavGroup,
-    name: "Statement",
-    to: "/statement",
+    name: "Statements",
+    to: "",
     items: [
       {
         component: CNavItem,
-        name: "Statement",
+        name: "Transaction List",
         to: "/statement",
       },
       {
@@ -141,11 +141,11 @@ const _nav = [
         name: "Dispute",
         to: "/dispute",
       },
-      {
-        component: CNavItem,
-        name: "Transaction List",
-        to: "/transaction",
-      },
+      // {
+      //   component: CNavItem,
+      //   name: "Transaction List",
+      //   to: "/transaction",
+      // },
       {
         component: CNavItem,
         name: "Process Settlememt",
