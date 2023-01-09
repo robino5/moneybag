@@ -40,7 +40,6 @@ const BusinessStructure = ({ clickNext }) => {
         timer: 1500,
       });
       localStorage.setItem("business_structure", 1);
-      localStorage.setItem("merchant_id", e.merchant_id);
       localStorage.setItem("business_name", e.business_name);
       localStorage.setItem("business_short_name", e.business_short_name);
       localStorage.setItem("bin", e.business_no);
@@ -198,7 +197,7 @@ const BusinessStructure = ({ clickNext }) => {
   return (
     <div>
       <CForm onSubmit={handleSubmit(saveBusinessStructure)}>
-        <CRow className="mb-3">
+        {/* <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label">
             Merchant ID
           </CFormLabel>
@@ -212,7 +211,7 @@ const BusinessStructure = ({ clickNext }) => {
             />
             <span className="text-danger">{errors.merchant_id?.message}</span>
           </CCol>
-        </CRow>
+        </CRow> */}
         <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label text-right">
             Business Name
@@ -352,13 +351,16 @@ const BusinessStructure = ({ clickNext }) => {
               type="text"
               {...register("bussiness_website", {
                 pattern: {
-                  value: /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+                  value:
+                    /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
                   message: "Invalid Website",
                 },
               })}
               placeholder="Business website"
             />
-            <span className="text-danger">{errors.bussiness_website?.message}</span>
+            <span className="text-danger">
+              {errors.bussiness_website?.message}
+            </span>
           </CCol>
         </CRow>
         <CRow className="mb-3">

@@ -23,7 +23,6 @@ const Summery = () => {
       date_of_birth: localStorage.getItem("date_of_birth"),
       merchant_pic: localStorage.getItem("merchant_pic"),
       nid_picture: localStorage.getItem("nid_picture"),
-      merchant_id: localStorage.getItem("merchant_id"),
       industry_no: parseInt(localStorage.getItem("indeustry")),
       category_code: localStorage.getItem("category_code"),
       website: localStorage.getItem("business_website"),
@@ -133,7 +132,6 @@ const Summery = () => {
     localStorage.removeItem("date_of_birth");
     localStorage.removeItem("merchant_pic");
     localStorage.removeItem("nid_picture");
-    localStorage.removeItem("merchant_id");
     localStorage.removeItem("indeustry");
     localStorage.removeItem("category_code");
     localStorage.removeItem("business_website");
