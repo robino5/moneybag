@@ -184,9 +184,7 @@ const ProcessSettlement = () => {
     let sum = 0;
     e &&
       e.map((element) => {
-        if (element.gw_order_status == "APPROVED") {
-          sum += element.merchant_order_amount + element.merchant_charge_amount;
-        }
+        sum += element.merchant_order_amount;
       });
     setApprovedAmount(sum);
   };
@@ -195,10 +193,9 @@ const ProcessSettlement = () => {
     let data = [];
     statement &&
       statement.map((element) => {
-        if (element.gw_order_status == "APPROVED") {
-          data.push(element);
-        }
+        data.push(element);
       });
+
     console.log(data);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -341,6 +338,7 @@ const ProcessSettlement = () => {
                   >
                     Reset
                   </CButton>
+                  <br></br>
                   {/* <CFormLabel className="mt-2">Period To</CFormLabel>
                 <CFormInput size="sm" type="date" onChange={handlePeriodTo} />
                 <CFormLabel className="mt-2">Status</CFormLabel>
