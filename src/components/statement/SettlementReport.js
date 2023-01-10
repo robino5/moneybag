@@ -4,6 +4,7 @@ import DataTable from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
 import Description from "./Description";
 import Nav from "../Nav";
+import { StatementSidebar, AppFooter, StatementHeader } from "../index.js";
 import { DateTime } from "luxon";
 import {
   CCard,
@@ -38,7 +39,7 @@ const SettlementReport = () => {
   const [orderby, setOrderBy] = useState("");
   const [Settlements, setSettlements] = useState();
   const [statementdetails, setStatementDetails] = useState();
-  console.log("setelmsnt", Settlements);
+  const [userList, setUserList] = useState();
 
   const getMerchantList = async () => {
     const headers = {
@@ -56,6 +57,20 @@ const SettlementReport = () => {
         if (error.response.status == 401) {
           navigate("/login");
         }
+      });
+  };
+
+  const getUser = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}users/list-users`, { headers })
+      .then((responce) => {
+        console.log(responce.data), setUserList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
       });
   };
 
@@ -87,6 +102,16 @@ const SettlementReport = () => {
     });
     return name;
   };
+
+  const getUserId=(e)=>{
+    let name
+    userList&&userList.map((user)=>{
+      if(user.id==e){
+        name=user.user_id
+      }
+    })
+    return name;
+  }
 
   const openDetails = async (e) => {
     setStatementDetails(e);
@@ -128,13 +153,9 @@ const SettlementReport = () => {
     e.preventDefault();
 
     const data = {
-      merchent_name: merchnatName,
       period_from: periodFrom,
       period_to: periodTo,
     };
-    if (!merchnatName) {
-      delete data.merchent_name;
-    }
     if (!periodFrom) {
       delete data.period_from;
     }
@@ -154,7 +175,7 @@ const SettlementReport = () => {
     };
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}settlements?${encodeDataToURL(data)}`,
+        `${process.env.REACT_APP_API_URL}settlements/${merchnatName}?${encodeDataToURL(data)}`,
         { headers }
       )
       .then((response) => {
@@ -213,18 +234,20 @@ const SettlementReport = () => {
     },
     {
       name: "Employee ID",
-      selector: (row) => row.created_by,
+      selector: (row) => getUserId(row.created_by),
     },
   ];
 
   useEffect(() => {
     getMerchantList();
-    getStatementList();
+    getUser();
   }, []);
 
   return (
     <div className="">
-      <Nav />
+          <StatementSidebar />
+      <div className="wrapper d-flex flex-column min-vh-100 bg-light">
+        <StatementHeader />
       <CRow>
         <CCol md={3}>
           <CCard>
@@ -271,6 +294,7 @@ const SettlementReport = () => {
                 <CButton
                   className="mt-2 mx-2"
                   color="primary"
+                  disabled={merchnatName==""||!periodFrom||!periodTo?true:false}
                   onClick={searchStatemet}
                 >
                   Search
@@ -314,6 +338,7 @@ const SettlementReport = () => {
           </CModalBody>
         </CModal>
       </div>
+    </div>
     </div>
   );
 };
