@@ -34,6 +34,7 @@ const FintechUpdate = () => {
   const location = useLocation();
   const [lookupList, setLooupList] = useState();
   const [serviceList, setServiceList] = useState();
+  const [serviceType, setServiceType] = useState();
   // const [service, setService] = useState({});
   // const [updatedService, setUpdatedService] = useState({
   //   organization_no: service.organization_no,
@@ -110,7 +111,7 @@ const FintechUpdate = () => {
             service_type: parseInt(element.service_type),
             end_point_url: "Test",
             call_back_url: "Test",
-            rate: parseInt(element.rate),
+            rate: parseFloat(element.rate).toFixed(2),
             rate_type: element.rate_type,
             is_active: element.is_active ? 1 : 0,
           });
@@ -150,7 +151,7 @@ const FintechUpdate = () => {
               category_service_id: parseInt(element.category_service_id),
               service_type: parseInt(element.service_type),
               end_point_url: "Test",
-              rate: parseInt(element.rate),
+              rate: parseFloat(element.rate).toFixed(2),
               rate_type: element.rate_type,
               call_back_url: "Test",
               is_active: element.is_active ? 1 : 0,
@@ -292,6 +293,40 @@ const FintechUpdate = () => {
         }
       });
     return data;
+  };
+
+  const addSercideRow = () => {
+    if (fields.length > 0) {
+      const currentSelected = [];
+
+      for (let i = 0; i < fields.length - 1; i++) {
+        if (
+          fields[i].service_type !== undefined &&
+          fields[i].service_type.match(numbers)
+        ) {
+          currentSelected.push(Number(fields[i].service_type));
+        }
+      }
+
+      serviceList &&
+        serviceList.map((service) => {
+          currentSelected.push(Number(service.service_type));
+        });
+      console.log(currentSelected);
+      if (currentSelected.includes(serviceType)) {
+        swal({
+          position: "top-end",
+          text: "You Can't Select Duplicate Service",
+          icon: "warning",
+          button: false,
+          timer: 1500,
+        });
+      } else {
+        append({});
+      }
+    } else {
+      append({});
+    }
   };
 
   // const updateData = () => {
@@ -684,6 +719,9 @@ const FintechUpdate = () => {
                             aria-label="Default select example"
                             type="number"
                             {...register(`addServices.${index}.service_type`)}
+                            onChange={(e) => {
+                              setServiceType(parseInt(e.target.value));
+                            }}
                           >
                             <option>Service Name</option>
                             {lookupList &&
@@ -751,12 +789,7 @@ const FintechUpdate = () => {
 
                   <CRow>
                     <CCol sm={2}>
-                      <CButton
-                        color="primary"
-                        onClick={() => {
-                          append({});
-                        }}
-                      >
+                      <CButton color="primary" onClick={addSercideRow}>
                         Add Service
                       </CButton>
                     </CCol>
