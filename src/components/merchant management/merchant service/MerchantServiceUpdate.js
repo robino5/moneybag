@@ -600,7 +600,7 @@ const MerchantServiceUpdate = () => {
                         {...register("merchant_name")}
                         disabled="true"
                       >
-                        <option>select Merchant Name</option>
+                        <option>Select Merchant Name</option>
                         {merchantList &&
                           merchantList.map((merchant, index) => (
                             <option
@@ -618,9 +618,9 @@ const MerchantServiceUpdate = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <p className="col-sm-3 col-form-label">
-                      Select FinTech Name
+                      Select Service Name
                     </p>
-                    <CCol sm={9}>
+                    {/* <CCol sm={9}>
                       {merchantList &&
                         getMertchantDetail(
                           marchantDetailList,
@@ -637,7 +637,7 @@ const MerchantServiceUpdate = () => {
                             </p>
                           );
                         })}
-                    </CCol>
+                    </CCol> */}
                   </CRow>
                   {/* <div hidden={addservice ? true : false}>
                     <CRow className="mb-3">
@@ -752,7 +752,7 @@ const MerchantServiceUpdate = () => {
                 </CForm>
                 <div>
                   <CRow className="mb-3">
-                    <CCol sm={3}>
+                    {/* <CCol sm={3}>
                       <CFormSelect
                         aria-label="Default select example"
                         onChange={(e) => {
@@ -767,7 +767,7 @@ const MerchantServiceUpdate = () => {
                             </option>
                           ))}
                       </CFormSelect>
-                    </CCol>
+                    </CCol> */}
                     <CCol sm={3}>
                       <CFormSelect
                         aria-label="Default select example"
@@ -775,7 +775,7 @@ const MerchantServiceUpdate = () => {
                           setservice(e.target.value);
                         }}
                       >
-                        <option>select Service</option>
+                        <option>Select Service</option>
                         {lookupList &&
                           setServicesOptions(getServiceOption(lookupList)).map(
                             (service, index) => (
@@ -786,7 +786,7 @@ const MerchantServiceUpdate = () => {
                           )}
                       </CFormSelect>
                     </CCol>
-                    <CCol sm={2}>
+                    <CCol sm={3}>
                       <CFormInput
                         type="text"
                         placeholder="Rate"
@@ -795,7 +795,7 @@ const MerchantServiceUpdate = () => {
                         }}
                       />
                     </CCol>
-                    <CCol sm={2}>
+                    <CCol sm={3}>
                       <CFormSelect
                         aria-label="Default select example"
                         onChange={(e) => {
@@ -816,12 +816,8 @@ const MerchantServiceUpdate = () => {
                         }}
                       />
                     </CCol>
-                    <CCol sm={1}>
-                      <CButton
-                        className="btn-sm"
-                        color="success"
-                        onClick={addService}
-                      >
+                    <CCol sm={2}>
+                      <CButton color="success" onClick={addService}>
                         Save
                       </CButton>
                     </CCol>
@@ -844,13 +840,13 @@ const MerchantServiceUpdate = () => {
                       return (
                         <div>
                           <CRow className="mb-3">
-                            <CCol sm={3}>
+                            {/* <CCol sm={3}>
                               <p>{getBankName(element.bank_no)}</p>
-                            </CCol>
+                            </CCol> */}
                             <CCol sm={3}>
                               <p>{getServiceName(element.service_no)}</p>
                             </CCol>
-                            <CCol sm={2}>
+                            <CCol sm={3}>
                               <p>
                                 {element.service_charge_type == "S"
                                   ? getSlabAmount(element.id)
@@ -859,7 +855,7 @@ const MerchantServiceUpdate = () => {
                                     )}
                               </p>
                             </CCol>
-                            <CCol sm={2}>
+                            <CCol sm={3}>
                               <p>
                                 {getChargeType(element.service_charge_type)}
                               </p>

@@ -105,7 +105,6 @@ const MerchantServiceUpdateModal = (props) => {
     console.log(e);
     const mercharDate = {
       merchant_no: props.data.merchant_no,
-      bank_no: props.data.bank_no,
       service_no: props.data.service_no,
       service_charge_type:
         e.service_charge_type == ""
@@ -180,7 +179,7 @@ const MerchantServiceUpdateModal = (props) => {
             <h6 className="text-center">Update Merchant Service</h6>
             <br></br>
             <CForm onSubmit={handleSubmit(updateMerchantService)}>
-              <CRow className="mb-3">
+              {/* <CRow className="mb-3">
                 <CFormLabel className="col-sm-3 col-form-label">
                   Bank name
                 </CFormLabel>
@@ -204,7 +203,7 @@ const MerchantServiceUpdateModal = (props) => {
                       ))}
                   </CFormSelect>
                 </CCol>
-              </CRow>
+              </CRow> */}
               <CRow className="mb-3">
                 <CFormLabel className="col-sm-3 col-form-label">
                   Services

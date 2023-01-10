@@ -421,7 +421,7 @@ const MerchantServiceAdd = () => {
                           );
                         }}
                       >
-                        <option>select Merchant Name</option>
+                        <option>Select Merchant Name</option>
                         {merchantList &&
                           merchantList.map((merchant, index) => (
                             <option value={merchant.id} key={index}>
@@ -433,7 +433,7 @@ const MerchantServiceAdd = () => {
                   </CRow>
                   <CRow className="mb-3">
                     <p className="col-sm-3 col-form-label">
-                      Select FinTech Name
+                      Select Service Name
                     </p>
                     {/* <CCol sm={9}>
                       {marchantDetail &&
@@ -452,7 +452,7 @@ const MerchantServiceAdd = () => {
                     </CCol> */}
                   </CRow>
                   <CRow className="mb-3">
-                    <CCol sm={3}>
+                    {/* <CCol sm={3}>
                       <CFormSelect
                         aria-label="Default select example"
                         {...register("bank_name", {
@@ -467,7 +467,7 @@ const MerchantServiceAdd = () => {
                             </option>
                           ))}
                       </CFormSelect>
-                    </CCol>
+                    </CCol> */}
                     <CCol sm={3}>
                       <CFormSelect
                         aria-label="Default select example"
@@ -475,7 +475,7 @@ const MerchantServiceAdd = () => {
                           required: "Please select Service name",
                         })}
                       >
-                        <option>select Service</option>
+                        <option>Select Service</option>
                         {lookupList &&
                           setServicesOptions(getServiceOption(lookupList)).map(
                             (service, index) => (
@@ -486,14 +486,14 @@ const MerchantServiceAdd = () => {
                           )}
                       </CFormSelect>
                     </CCol>
-                    <CCol sm={2}>
+                    <CCol sm={3}>
                       <CFormInput
                         type="text"
                         {...register("percentage")}
                         placeholder="Rate"
                       />
                     </CCol>
-                    <CCol sm={2}>
+                    <CCol sm={3}>
                       <CFormSelect
                         aria-label="Default select example"
                         {...register("service_charge_type", {
@@ -514,13 +514,13 @@ const MerchantServiceAdd = () => {
                         {...register("status")}
                       />
                     </CCol>
-                    <CCol sm={1}>
+                    <CCol sm={2}>
                       <CButton
-                        className="btn-sm"
                         disabled={!isDirty}
                         type="submit"
+                        color="success"
                       >
-                        <CIcon icon={cilPlus} />
+                        Save
                       </CButton>
                     </CCol>
                   </CRow>
@@ -531,20 +531,20 @@ const MerchantServiceAdd = () => {
                       return (
                         <div>
                           <CRow className="mb-3">
-                            <CCol sm={3}>
+                            {/* <CCol sm={3}>
                               <p>{getBankName(element.bank_no)}</p>
-                            </CCol>
+                            </CCol> */}
                             <CCol sm={3}>
                               <p>{getServiceName(element.service_no)}</p>
                             </CCol>
-                            <CCol sm={2}>
+                            <CCol sm={3}>
                               <p>
                                 {element.service_charge_type == "S"
                                   ? getSlabAmount(element.id)
                                   : element.charge_ammount}
                               </p>
                             </CCol>
-                            <CCol sm={2}>
+                            <CCol sm={3}>
                               <p>
                                 {getChargeType(element.service_charge_type)}
                               </p>
