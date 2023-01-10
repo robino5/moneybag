@@ -18,9 +18,7 @@ import {
 
 const BringDispute = () => {
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row">
-      <CContainer>
-        <CCard>
+         <CCard>
           <CCardBody>
             <CFormCheck label="Apply for dispute" />
             <h5>Dicission Of Dispute</h5>
@@ -62,8 +60,6 @@ const BringDispute = () => {
             </CRow>
           </CCardBody>
         </CCard>
-      </CContainer>
-    </div>
   );
 };
 export default BringDispute;

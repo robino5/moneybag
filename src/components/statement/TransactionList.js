@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
-import Description from "./Description";
+import DisputeAdd from "../dispute/DisputeAdd";
 import Nav from "../Nav";
+import { StatementSidebar, AppFooter, StatementHeader } from "../index.js";
 import { DateTime } from "luxon";
 import {
   CCard,
@@ -87,13 +88,9 @@ const TransactionList = () => {
     return name;
   };
 
-  const getSerial = (e) => {
-    setSerial(serial + e);
-    return serial;
-  };
 
   const openDetails = async (e) => {
-    setStatementDetails(e);
+    // setStatementDetails(e);
     setVisible(!visible);
   };
 
@@ -137,10 +134,8 @@ const TransactionList = () => {
       period_from: `${periodFrom}T00:00:00`,
       period_to: `${periodTo}T23:59:59`,
       status: staus,
-      currency: currency,
       amount_from: amontFrom,
       amount_to: amontTo,
-      order_by: orderby,
     };
     if (!orderAmount) {
       delete data.order_id;
@@ -157,17 +152,11 @@ const TransactionList = () => {
     if (!staus) {
       delete data.status;
     }
-    if (!currency || currency == "ALL") {
-      delete data.currency;
-    }
     if (!amontFrom) {
       delete data.amount_from;
     }
     if (!amontTo) {
       delete data.amount_to;
-    }
-    if (!orderby) {
-      delete data.order_by;
     }
 
     const encodeDataToURL = (data) => {
@@ -204,53 +193,57 @@ const TransactionList = () => {
 
   const column = [
     {
-      name: "SL",
-      selector: (row, index) => index + 1,
-      maxWidth: "15px",
-    },
-    {
       name: "Order ID",
       selector: (row) => row.merchant_tran_id,
+      sortable: true,
     },
     {
       name: "Transection ID",
       selector: (row) => row.txn_id,
-    },
-    {
-      name: "Merchant ID",
       sortable: true,
-      grow: 2,
-      selector: (row) =>
-        getMerchantName(row.merchant_id) + "(" + row.merchant_id + ")",
     },
-
     {
-      name: "Creation date",
-      grow: 2,
+      name: "Merchant Name",
+      sortable: true,
+      selector: (row) => row.merchant_name,
+    },
+    {
+      name: "Transaction Date",
       selector: (row) =>
         DateTime.fromISO(row.created_at, { zone: "Asia/Dhaka" }).toLocaleString(
           DateTime.DATETIME_MED
         ),
+        sortable: true,
     },
     {
-      name: "Amount",
-      selector: (row) => row.merchant_order_amount,
+      name: "Order Amount",
+      selector: (row) =>parseFloat(row.merchant_order_amount).toFixed(2),
+      sortable: true,
+    },
+    {
+      name: "Bank Fee",
+      selector: (row) => 0.00,
+      sortable: true,
+    },
+    {
+      name: "PGW Fee",
+      selector: (row) => 0.00,
+      sortable: true,
     },
     {
       name: "Refund Amount",
-      selector: (row) => 0,
+      selector: (row) => 0.00,
+      sortable: true,
     },
     {
       name: "Final Amountt",
-      selector: (row) => row.merchant_order_amount + row.merchant_charge_amount,
+      selector: (row) => parseFloat(row.merchant_order_amount + row.merchant_charge_amount).toFixed(2),
+      sortable: true,
     },
     {
       name: "Order Status",
       selector: (row) => row.gw_order_status,
-    },
-    {
-      name: "Description",
-      selector: (row) => row.merchant_description,
+      sortable: true,
     },
     {
       name: "Action",
@@ -260,7 +253,7 @@ const TransactionList = () => {
             className="btn btn-sm d-inline mx-1"
             CColor="info"
             onClick={() => {
-              openDetails(row);
+              openDetails();
             }}
           >
             Detail
@@ -277,7 +270,9 @@ const TransactionList = () => {
 
   return (
     <div className="">
-      <Nav />
+            <StatementSidebar />
+      <div className="wrapper d-flex flex-column min-vh-100 bg-light">
+        <StatementHeader />
       <CRow>
         <CCol md={3}>
           <CCard>
@@ -305,6 +300,7 @@ const TransactionList = () => {
                 <CFormInput size="sm" type="text" onChange={handleAmountTo} />
                 <CFormLabel className="mt-2">Status</CFormLabel>
                 <CFormSelect size="sm" onChange={handleStatus}>
+                <option value={""}>Select One</option>
                   <option>APPROVED</option>
                   <option>PENDING</option>
                   <option>REJECTED</option>
@@ -320,10 +316,10 @@ const TransactionList = () => {
                   <option>ASC</option>
                   <option>DESC</option>
                 </CFormSelect> */}
-                <CButton className="mt-2 mx-2" color="primary">
+                <CButton className="mt-2 mx-2" color="primary" onClick={searchStatemet}>
                   Search
                 </CButton>
-                <CButton className="mt-2" color="warning">
+                <CButton className="mt-2" color="warning" onClick={()=>{window.location.reload()}}>
                   Reset
                 </CButton>
                 <CButton
@@ -338,7 +334,10 @@ const TransactionList = () => {
           </CCard>
         </CCol>
         <CCol md={9}>
-          <DataTable title="Transaction List" paginatio={20} />
+          <DataTable title="Transaction List"
+          data={statement}
+          columns={column}
+           paginatio={20} />
         </CCol>
       </CRow>
       <div>
@@ -347,10 +346,12 @@ const TransactionList = () => {
             <CModalTitle>Transection Details</CModalTitle>
           </CModalHeader>
           <CModalBody>
-            <Description data={statementdetails} />
+            <DisputeAdd/>
           </CModalBody>
         </CModal>
       </div>
+    </div>
+    <AppFooter />
     </div>
   );
 };
