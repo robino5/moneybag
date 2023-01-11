@@ -240,6 +240,10 @@ const BusinessStructure = ({ clickNext }) => {
                   value: /^[a-zA-Z]*$/,
                   message: "No Space allowed",
                 },
+                minLength: {
+                  value: 4,
+                  message: "Short name will be Minimum 4 Characters",
+                },
               })}
               placeholder="Business Short Name"
             />
