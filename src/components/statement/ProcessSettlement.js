@@ -7,6 +7,7 @@ import { DateTime } from "luxon";
 import swal from "sweetalert";
 import Nav from "../Nav";
 import { StatementSidebar, AppFooter, StatementHeader } from "../index.js";
+import Select from "react-select";
 import {
   CCard,
   CCardBody,
@@ -41,6 +42,9 @@ const ProcessSettlement = () => {
   const [statement, setStatement] = useState();
   const [statementdetails, setStatementDetails] = useState();
   const [approvedAmount, setApprovedAmount] = useState(0);
+  const [mercantID, setMerchantID] = useState();
+  const [settlementDate, setSettlementDate] = useState();
+  const currentDate = DateTime.now().minus({ days: 1 });
 
   const getMerchantList = async () => {
     const headers = {
@@ -55,6 +59,9 @@ const ProcessSettlement = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if (error.response.status == 401) {
+          navigate("/login");
+        }
         if (error.response.status == 401) {
           navigate("/login");
         }
@@ -80,6 +87,8 @@ const ProcessSettlement = () => {
       });
   };
 
+  console.log(currentDate.toISO().split("T")[0]);
+
   const getMerchantName = (e) => {
     let name;
     merchantList?.map((mercant) => {
@@ -102,6 +111,29 @@ const ProcessSettlement = () => {
 
   const handleOrderNumber = (e) => {
     setOrderAmount(e.target.value);
+  };
+  const handleMerchantID = (e) => {
+    console.log(e);
+    setMerchantID(e.value);
+
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL}settlements/fetch-last-settlement-date/${e.value}`,
+        { headers }
+      )
+      .then((response) => {
+        console.log(response);
+        setSettlementDate(response.data.lastSettlementDate);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        if (error.response.status == 401) {
+          navigate("/login");
+        }
+      });
   };
   const handleMerchnatName = (e) => {
     setMerchantName(e.target.value);
@@ -135,13 +167,13 @@ const ProcessSettlement = () => {
     e.preventDefault();
 
     const data = {
-      merchant_name: merchnatName,
+      merchant_id: mercantID,
       gw_txn_date: periodFrom,
       settlement_query: true,
     };
 
-    if (!merchnatName) {
-      delete data.merchant_name;
+    if (!mercantID) {
+      delete data.merchant_id;
     }
     if (!periodFrom) {
       delete data.gw_txn_date;
@@ -171,6 +203,9 @@ const ProcessSettlement = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if (error.response.status == 401) {
+          navigate("/login");
+        }
       });
 
     // console.log(data);
@@ -218,6 +253,9 @@ const ProcessSettlement = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if (error.response.status == 401) {
+          navigate("/login");
+        }
         swal({
           position: "top-end",
           text: error.response.data.detail,
@@ -226,6 +264,16 @@ const ProcessSettlement = () => {
           timer: 1500,
         });
       });
+  };
+
+  const getmerchantoptions = (merchantList) => {
+    let data = [];
+    merchantList?.map((merchant) => {
+      if (merchant.is_active == 1) {
+        data.push({ value: merchant.id, label: merchant.business_name });
+      }
+    });
+    return data;
   };
 
   const column = [
@@ -242,7 +290,8 @@ const ProcessSettlement = () => {
     {
       name: "Merchant Short Name",
       sortable: true,
-      selector: (row) => row.merchant_name+"-"+getMerchantName(row.merchant_id) ,
+      selector: (row) =>
+        row.merchant_name + "-" + getMerchantName(row.merchant_id),
     },
 
     {
@@ -311,15 +360,32 @@ const ProcessSettlement = () => {
                   onChange={handleOrderNumber}
                 /> */}
                   <CFormLabel>Merchant Name</CFormLabel>
-                  <CFormInput
+                  <Select
+                    className="basic-single"
+                    classNamePrefix="select"
+                    isSearchable={true}
+                    options={getmerchantoptions(merchantList)}
+                    onChange={handleMerchantID}
+                  />
+                  {/* <CFormInput
                     size="sm"
                     type="text"
                     onChange={handleMerchnatName}
+                  /> */}
+                  <CFormLabel className="mt-2">Last Settlement Date</CFormLabel>
+                  <CFormInput
+                    size="sm"
+                    disabled={true}
+                    type="date"
+                    value={settlementDate ? settlementDate : ""}
                   />
+
                   <CFormLabel className="mt-2">Settlement Date</CFormLabel>
                   <CFormInput
                     size="sm"
                     type="date"
+                    min={settlementDate}
+                    max={currentDate.toISO().split("T")[0]}
                     onChange={handlePeriodFrom}
                   />
                   <CButton

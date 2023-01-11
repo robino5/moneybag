@@ -6,6 +6,9 @@ import DisputeAdd from "../dispute/DisputeAdd";
 import Nav from "../Nav";
 import { StatementSidebar, AppFooter, StatementHeader } from "../index.js";
 import { DateTime } from "luxon";
+import Select from "react-select";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import {
   CCard,
   CCardBody,
@@ -39,6 +42,7 @@ const TransactionList = () => {
   const [orderby, setOrderBy] = useState("");
   const [statement, setStatement] = useState();
   const [statementdetails, setStatementDetails] = useState();
+  const [mercantID, setMerchantID] = useState();
 
   const getMerchantList = async () => {
     const headers = {
@@ -80,7 +84,7 @@ const TransactionList = () => {
 
   const getMerchantName = (e) => {
     let name;
-    
+
     merchantList?.map((mercant) => {
       if (mercant.merchant_id == e) {
         name = mercant.short_name;
@@ -89,7 +93,6 @@ const TransactionList = () => {
     return name;
   };
 
-
   const openDetails = async (e) => {
     // setStatementDetails(e);
     setVisible(!visible);
@@ -97,6 +100,10 @@ const TransactionList = () => {
 
   const handleOrderNumber = (e) => {
     setOrderAmount(e.target.value);
+  };
+  const handleMerchantID = (e) => {
+    console.log(e);
+    setMerchantID(e.value);
   };
   const handleMerchnatName = (e) => {
     setMerchantName(e.target.value);
@@ -131,7 +138,7 @@ const TransactionList = () => {
 
     const data = {
       order_id: orderAmount,
-      merchant_name: merchnatName,
+      merchant_id: mercantID,
       period_from: `${periodFrom}T00:00:00`,
       period_to: `${periodTo}T23:59:59`,
       status: staus,
@@ -141,8 +148,8 @@ const TransactionList = () => {
     if (!orderAmount) {
       delete data.order_id;
     }
-    if (!merchnatName) {
-      delete data.merchant_name;
+    if (!mercantID) {
+      delete data.merchant_id;
     }
     if (!periodFrom) {
       delete data.period_from;
@@ -192,6 +199,16 @@ const TransactionList = () => {
     navigate("/deshbord");
   };
 
+  const getmerchantoptions = (merchantList) => {
+    let data = [];
+    merchantList?.map((merchant) => {
+      if (merchant.is_active == 1) {
+        data.push({ value: merchant.id, label: merchant.business_name });
+      }
+    });
+    return data;
+  };
+
   const column = [
     {
       name: "Order ID",
@@ -206,7 +223,8 @@ const TransactionList = () => {
     {
       name: "Merchant Short Name",
       sortable: true,
-      selector: (row) =>  row.merchant_name+"-"+getMerchantName(row.merchant_id),
+      selector: (row) =>
+        row.merchant_name + "-" + getMerchantName(row.merchant_id),
     },
     {
       name: "Transaction Date",
@@ -214,31 +232,34 @@ const TransactionList = () => {
         DateTime.fromISO(row.created_at, { zone: "Asia/Dhaka" }).toLocaleString(
           DateTime.DATETIME_MED
         ),
-        sortable: true,
+      sortable: true,
     },
     {
       name: "Order Amount",
-      selector: (row) =>parseFloat(row.merchant_order_amount).toFixed(2),
+      selector: (row) => parseFloat(row.merchant_order_amount).toFixed(2),
       sortable: true,
     },
     {
       name: "Bank Fee",
-      selector: (row) => 0.00,
+      selector: (row) => 0.0,
       sortable: true,
     },
     {
       name: "PGW Fee",
-      selector: (row) => 0.00,
+      selector: (row) => 0.0,
       sortable: true,
     },
     {
       name: "Refund Amount",
-      selector: (row) => 0.00,
+      selector: (row) => 0.0,
       sortable: true,
     },
     {
       name: "Total Amount",
-      selector: (row) => parseFloat(row.merchant_order_amount + row.merchant_charge_amount).toFixed(2),
+      selector: (row) =>
+        parseFloat(
+          row.merchant_order_amount + row.merchant_charge_amount
+        ).toFixed(2),
       sortable: true,
     },
     {
@@ -264,6 +285,31 @@ const TransactionList = () => {
     },
   ];
 
+  // const dawonloadReport = () => {
+  //   const doc = new jsPDF();
+
+  //   doc.autoTable({
+  //     columns: [
+  //       { header: "Order ID", dataKey: merchant_tran_id },
+  //       { header: "Transaction ID", dataKey: txn_id },
+  //       {
+  //         header: "Transaction Date",
+  //         dataKey: DateTime.fromISO(created_at, {
+  //           zone: "Asia/Dhaka",
+  //         }).toLocaleString(DateTime.DATETIME_MED),
+  //       },
+  //       { header: "Order Amount", dataKey: merchant_order_amount },
+  //       { header: "Bank Fee", dataKey: 0 },
+  //       { header: "PGW Fee", dataKey: 0 },
+  //       { header: "Refund Amount", dataKey: 0 },
+  //       { header: "Total Amount", dataKey: merchant_charge_amount },
+  //       { header: "Transaction Status", dataKey: gw_order_status },
+  //     ],
+  //     data: statement,
+  //   });
+  //   doc.save("transation.pdf");
+  // };
+
   useEffect(() => {
     getMerchantList();
     getStatementList();
@@ -271,88 +317,122 @@ const TransactionList = () => {
 
   return (
     <div className="">
-            <StatementSidebar />
+      <StatementSidebar />
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <StatementHeader />
-      <CRow>
-        <CCol md={3}>
-          <CCard>
-            <CCardBody>
-              <CForm>
-                <CFormLabel>Order ID</CFormLabel>
-                <CFormInput
-                  size="sm"
-                  type="text"
-                  onChange={handleOrderNumber}
-                />
-                <CFormLabel>Merchant Name</CFormLabel>
-                <CFormInput
+        <CRow>
+          <CCol md={3}>
+            <CCard>
+              <CCardBody>
+                <CForm>
+                  <CFormLabel>Order ID</CFormLabel>
+                  <CFormInput
+                    size="sm"
+                    type="text"
+                    onChange={handleOrderNumber}
+                  />
+                  <CFormLabel>Merchant Name</CFormLabel>
+                  <Select
+                    className="basic-single"
+                    classNamePrefix="select"
+                    isSearchable={true}
+                    options={getmerchantoptions(merchantList)}
+                    onChange={handleMerchantID}
+                  />
+                  {/* <CFormInput
                   size="sm"
                   type="text"
                   onChange={handleMerchnatName}
-                />
-                <CFormLabel className="mt-2">Period from</CFormLabel>
-                <CFormInput size="sm" type="date" onChange={handlePeriodFrom} />
-                <CFormLabel className="mt-2">Period To</CFormLabel>
-                <CFormInput size="sm" type="date" onChange={handlePeriodTo} />
-                <CFormLabel className="mt-2">Amount from</CFormLabel>
-                <CFormInput size="sm" type="text" onChange={handleAmountFrom} />
-                <CFormLabel className="mt-2">Amount To</CFormLabel>
-                <CFormInput size="sm" type="text" onChange={handleAmountTo} />
-                <CFormLabel className="mt-2">Status</CFormLabel>
-                <CFormSelect size="sm" onChange={handleStatus}>
-                <option value={""}>Select One</option>
-                  <option>APPROVED</option>
-                  <option>PENDING</option>
-                  <option>REJECTED</option>
-                  <option>CANCELED</option>
-                </CFormSelect>
-                {/* <CFormLabel className="mt-2">Currency</CFormLabel>
+                /> */}
+                  <CFormLabel className="mt-2">Period from</CFormLabel>
+                  <CFormInput
+                    size="sm"
+                    type="date"
+                    onChange={handlePeriodFrom}
+                  />
+                  <CFormLabel className="mt-2">Period To</CFormLabel>
+                  <CFormInput size="sm" type="date" onChange={handlePeriodTo} />
+                  <CFormLabel className="mt-2">Amount from</CFormLabel>
+                  <CFormInput
+                    size="sm"
+                    type="text"
+                    onChange={handleAmountFrom}
+                  />
+                  <CFormLabel className="mt-2">Amount To</CFormLabel>
+                  <CFormInput size="sm" type="text" onChange={handleAmountTo} />
+                  <CFormLabel className="mt-2">Status</CFormLabel>
+                  <CFormSelect size="sm" onChange={handleStatus}>
+                    <option value={""}>Select One</option>
+                    <option>APPROVED</option>
+                    <option>PENDING</option>
+                    <option>REJECTED</option>
+                    <option>CANCELED</option>
+                  </CFormSelect>
+                  {/* <CFormLabel className="mt-2">Currency</CFormLabel>
                 <CFormSelect size="sm" onChange={handleCurrency}>
                   <option>ALL</option>
                   <option>BDT</option>
                 </CFormSelect> */}
-                {/* <CFormLabel className="mt-2">Order by</CFormLabel> */}
-                {/* <CFormSelect size="sm" onChange={handleOrderBy}>
+                  {/* <CFormLabel className="mt-2">Order by</CFormLabel> */}
+                  {/* <CFormSelect size="sm" onChange={handleOrderBy}>
                   <option>ASC</option>
                   <option>DESC</option>
                 </CFormSelect> */}
-                <CButton className="mt-2 mx-2" color="primary" onClick={searchStatemet}>
-                  Search
-                </CButton>
-                <CButton className="mt-2" color="warning" onClick={()=>{window.location.reload()}}>
-                  Reset
-                </CButton>
-                <CButton
-                  className="mt-2 mx-2"
-                  color="danger"
-                  onClick={onCancel}
-                >
-                  Cancel
-                </CButton>
-              </CForm>
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol md={9}>
-          <DataTable title="Transaction List"
-          data={statement}
-          columns={column}
-           paginatio={20} />
-        </CCol>
-      </CRow>
-      <div>
-        <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
-          <CModalHeader onClose={() => setVisible(false)}>
-            <CModalTitle>Transection Details</CModalTitle>
-          </CModalHeader>
-          <CModalBody>
-            <DisputeAdd/>
-          </CModalBody>
-        </CModal>
+                  <CButton
+                    className="mt-2 mx-2"
+                    color="primary"
+                    onClick={searchStatemet}
+                  >
+                    Search
+                  </CButton>
+                  <CButton
+                    className="mt-2"
+                    color="warning"
+                    onClick={() => {
+                      window.location.reload();
+                    }}
+                  >
+                    Reset
+                  </CButton>
+                  <CButton
+                    className="mt-2 mx-2"
+                    color="danger"
+                    onClick={onCancel}
+                  >
+                    Cancel
+                  </CButton>
+                  {/* <CButton
+                    className="mt-2 mx-2"
+                    color="danger"
+                    onClick={dawonloadReport}
+                  >
+                    Print
+                  </CButton> */}
+                </CForm>
+              </CCardBody>
+            </CCard>
+          </CCol>
+          <CCol md={9}>
+            <DataTable
+              title="Transaction List"
+              data={statement}
+              columns={column}
+              paginatio={20}
+            />
+          </CCol>
+        </CRow>
+        <div>
+          <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
+            <CModalHeader onClose={() => setVisible(false)}>
+              <CModalTitle>Transection Details</CModalTitle>
+            </CModalHeader>
+            <CModalBody>
+              <DisputeAdd />
+            </CModalBody>
+          </CModal>
+        </div>
       </div>
-    </div>
-    <AppFooter />
+      <AppFooter />
     </div>
   );
 };

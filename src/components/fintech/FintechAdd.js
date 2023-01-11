@@ -712,7 +712,7 @@ const FintechAdd = () => {
                             color="danger"
                             onClick={() => {
                               remove(index);
-                              setServiceType()
+                              setServiceType();
                             }}
                           >
                             Remove

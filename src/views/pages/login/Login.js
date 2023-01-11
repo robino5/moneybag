@@ -62,6 +62,11 @@ const Login = () => {
       });
   };
 
+  useEffect(() => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+  }, []);
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>

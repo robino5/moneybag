@@ -6,6 +6,7 @@ import Description from "./Description";
 import { DateTime } from "luxon";
 import Nav from "../Nav";
 import { StatementSidebar, AppFooter, StatementHeader } from "../index.js";
+import Select from "react-select";
 import {
   CCard,
   CCardBody,
@@ -39,6 +40,7 @@ const Statement = () => {
   const [orderby, setOrderBy] = useState("");
   const [statement, setStatement] = useState();
   const [statementdetails, setStatementDetails] = useState();
+  const [mercantID, setMerchantID] = useState();
 
   const getMerchantList = async () => {
     const headers = {
@@ -101,6 +103,10 @@ const Statement = () => {
   const handleOrderNumber = (e) => {
     setOrderAmount(e.target.value);
   };
+  const handleMerchantID = (e) => {
+    console.log(e);
+    setMerchantID(e.value);
+  };
   const handleMerchnatName = (e) => {
     setMerchantName(e.target.value);
   };
@@ -134,7 +140,7 @@ const Statement = () => {
 
     const data = {
       order_id: orderAmount,
-      merchant_name: merchnatName,
+      merchant_id: mercantID,
       period_from: `${periodFrom}T00:00:00`,
       period_to: `${periodTo}T23:59:59`,
       status: staus,
@@ -146,8 +152,8 @@ const Statement = () => {
     if (!orderAmount) {
       delete data.order_id;
     }
-    if (!merchnatName) {
-      delete data.merchant_name;
+    if (!mercantID) {
+      delete data.merchant_id;
     }
     if (!periodFrom) {
       delete data.period_from;
@@ -201,6 +207,16 @@ const Statement = () => {
 
   const onCancel = () => {
     navigate("/deshbord");
+  };
+
+  const getmerchantoptions = (merchantList) => {
+    let data = [];
+    merchantList?.map((merchant) => {
+      if (merchant.is_active == 1) {
+        data.push({ value: merchant.id, label: merchant.business_name });
+      }
+    });
+    return data;
   };
 
   const column = [
@@ -292,11 +308,18 @@ const Statement = () => {
                     onChange={handleOrderNumber}
                   />
                   <CFormLabel>Merchant Name</CFormLabel>
-                  <CFormInput
+                  <Select
+                    className="basic-single"
+                    classNamePrefix="select"
+                    isSearchable={true}
+                    options={getmerchantoptions(merchantList)}
+                    onChange={handleMerchantID}
+                  />
+                  {/* <CFormInput
                     size="sm"
                     type="text"
                     onChange={handleMerchnatName}
-                  />
+                  /> */}
                   <CFormLabel className="mt-2">Period from</CFormLabel>
                   <CFormInput
                     size="sm"

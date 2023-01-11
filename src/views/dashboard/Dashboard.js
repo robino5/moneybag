@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   useEffect(() => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -13,6 +15,9 @@ const Dashboard = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if (error.response.status == 401) {
+          navigate("/login");
+        }
       });
   }, []);
 
