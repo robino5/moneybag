@@ -80,8 +80,9 @@ const TransactionList = () => {
 
   const getMerchantName = (e) => {
     let name;
+    
     merchantList?.map((mercant) => {
-      if (mercant.marchant_id == e) {
+      if (mercant.merchant_id == e) {
         name = mercant.short_name;
       }
     });
@@ -198,14 +199,14 @@ const TransactionList = () => {
       sortable: true,
     },
     {
-      name: "Transection ID",
+      name: "Transaction ID",
       selector: (row) => row.txn_id,
       sortable: true,
     },
     {
-      name: "Merchant Name",
+      name: "Merchant Short Name",
       sortable: true,
-      selector: (row) => row.merchant_name,
+      selector: (row) => getMerchantName(row.merchant_id),
     },
     {
       name: "Transaction Date",
@@ -236,12 +237,12 @@ const TransactionList = () => {
       sortable: true,
     },
     {
-      name: "Final Amountt",
+      name: "Total Amount",
       selector: (row) => parseFloat(row.merchant_order_amount + row.merchant_charge_amount).toFixed(2),
       sortable: true,
     },
     {
-      name: "Order Status",
+      name: "Transaction Status",
       selector: (row) => row.gw_order_status,
       sortable: true,
     },

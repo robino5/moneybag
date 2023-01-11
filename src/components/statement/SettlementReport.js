@@ -202,7 +202,7 @@ const SettlementReport = () => {
         }).toLocaleString(DateTime.DATETIME_MED),
     },
     {
-      name: "settlement_to",
+      name: "Settlement to",
       selector: (row) =>
         DateTime.fromISO(row.settlement_to, {
           zone: "Asia/Dhaka",

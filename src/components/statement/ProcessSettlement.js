@@ -83,7 +83,7 @@ const ProcessSettlement = () => {
   const getMerchantName = (e) => {
     let name;
     merchantList?.map((mercant) => {
-      if (mercant.marchant_id == e) {
+      if (mercant.merchant_id == e) {
         name = mercant.short_name;
       }
     });
@@ -235,14 +235,14 @@ const ProcessSettlement = () => {
       sortable: true,
     },
     {
-      name: "TXN ID",
+      name: "Trn ID",
       selector: (row) => row.txn_id,
       sortable: true,
     },
     {
-      name: "Merchant Name",
+      name: "Merchant Short Name",
       sortable: true,
-      selector: (row) => row.merchant_name,
+      selector: (row) => getMerchantName(row.merchant_id) ,
     },
 
     {
