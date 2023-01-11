@@ -145,7 +145,7 @@ const FintechAdd = () => {
           service_type: parseInt(element.service_type),
           end_point_url: "Test",
           call_back_url: "Test",
-          rate: parseInt(element.rate),
+          rate: parseFloat(element.rate).toFixed(2),
           rate_type: element.rate_type,
           is_active: element.is_active ? 1 : 0,
         });

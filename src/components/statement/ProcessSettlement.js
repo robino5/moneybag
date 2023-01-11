@@ -242,7 +242,7 @@ const ProcessSettlement = () => {
     {
       name: "Merchant Short Name",
       sortable: true,
-      selector: (row) => getMerchantName(row.merchant_id) ,
+      selector: (row) => row.merchant_name+"-"+getMerchantName(row.merchant_id) ,
     },
 
     {
