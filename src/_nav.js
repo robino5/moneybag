@@ -38,6 +38,11 @@ const _nav = [
       },
       {
         component: CNavItem,
+        name: "Merchant User List",
+        to: "/merchant-users",
+      },
+      {
+        component: CNavItem,
         name: "Bank List",
         to: "/bank",
       },
@@ -46,12 +51,6 @@ const _nav = [
         name: "Branch List",
         to: "/branch",
       },
-
-      // {
-      //   component: CNavItem,
-      //   name: "Financial Organization",
-      //   to: "/orgnization",
-      // },
       // {
       //   component: CNavItem,
       //   name: "Partner",

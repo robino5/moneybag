@@ -7,69 +7,62 @@ import axios from "axios";
 
 const UserList = () => {
   const navigate = useNavigate();
-  const [userList, setUserList] = useState();
+  const [meruserList, setMerUserList] = useState();
+  const [merchantList, setmerchantList] = useState();
 
   // Get userList
-  const getUser = () => {
+  const getMerUser = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .get(`${process.env.REACT_APP_API_URL}users/list-users`, { headers })
+      .get(`${process.env.REACT_APP_API_URL}mruser-auth/list-users`, {
+        headers,
+      })
       .then((responce) => {
-        console.log(responce.data), setUserList(responce.data);
+        console.log(responce.data), setMerUserList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        if (error.response.status == 401) {
+          navigate("/login");
+        }
       });
   };
 
-  // delete user
-  const deleteUser = (id, e) => {
+  const getMertchant = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
-    swal({
-      title: "Are you sure?",
-      text: "Do you want to delete the user?",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        axios
-          .delete(`${process.env.REACT_APP_API_URL}users/delete-user/${id}`, {
-            headers,
-          })
-          .then((response) => {
-            console.log(response),
-              swal({
-                position: "top",
-                text: "User Deleted Successfull",
-                icon: "success",
-                button: false,
-                timer: 1500,
-              });
-            getUser();
-          })
-          .catch((error) => {
-            console.log(error);
-            swal({
-              text: error.response.data.detail,
-              icon: "error",
-              button: false,
-              timer: 1500,
-            });
-          });
-      }
-    });
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}marchants/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setmerchantList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        if (error.response.status == 401) {
+          navigate("/login");
+        }
+      });
   };
 
+  const getMerchntName = (e) => {
+    let merchantName;
+    merchantList?.map((mercant) => {
+      if (mercant.id == e) {
+        merchantName = mercant.business_name;
+      }
+    });
+    return merchantName;
+  };
   const comumn = [
     {
-      name: "Name",
+      name: "Merchant Name",
       sortable: true,
-      selector: (row) => row.user_name,
+      selector: (row) => getMerchntName(row.merchant_no),
     },
     {
       name: "User Id",
@@ -87,7 +80,7 @@ const UserList = () => {
             className="btn btn-sm d-inline mx-1"
             color="info"
             onClick={() => {
-              navigate("/users/update-user", { state: row });
+              navigate("/merchant-users/update-merchant-users", { state: row });
               console.log(row);
             }}
           >
@@ -99,7 +92,8 @@ const UserList = () => {
   ];
 
   useEffect(() => {
-    getUser();
+    getMerUser();
+    getMertchant();
   }, []);
 
   return (
@@ -107,7 +101,7 @@ const UserList = () => {
       <CContainer>
         <CRow className="justify-content-center mb-2">
           <CCol md={8}>
-            <Link to="/users/add-user">
+            <Link to="/merchant-users/add-merchant-users">
               <CButton color="primary">Add New</CButton>
             </Link>
           </CCol>
@@ -117,7 +111,7 @@ const UserList = () => {
             <DataTable
               title="User List"
               columns={comumn}
-              data={userList}
+              data={meruserList}
               pagination
             />
           </CCol>

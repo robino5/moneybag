@@ -7,16 +7,18 @@ import { DateTime } from "luxon";
 import {
   CCard,
   CCardBody,
-  CFormSelect,
+  CTableRow,
   CCol,
-  CContainer,
-  CForm,
+  CTableHeaderCell,
+  CTableBody,
   CFormInput,
-  CFormLabel,
+  CTableDataCell,
   CRow,
   CFormCheck,
   CButton,
   CFormTextarea,
+  CTable,
+  CTableHead,
 } from "@coreui/react";
 
 const BringDispute = (props) => {
@@ -25,9 +27,10 @@ const BringDispute = (props) => {
   const [disputeamount, setDisputeAmount] = useState();
   const [disputeType, setDisputeType] = useState();
   const [disputeDescription, setDisputeDescription] = useState();
-  const [disputeList, setDisputeList ] = useState([]);
+  const [disputeList, setDisputeList] = useState();
+  const [userList, setUserList] = useState();
 
-  console.log("ss",disputeList)
+  console.log("ss", disputeList);
 
   const getDisputeList = () => {
     const headers = {
@@ -38,9 +41,8 @@ const BringDispute = (props) => {
         headers,
       })
       .then((responce) => {
-        console.log(responce.data)
-        getTransectionDispute(responce.data)
-        ;
+        console.log(responce.data);
+        getTransectionDispute(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -50,20 +52,34 @@ const BringDispute = (props) => {
       });
   };
 
-  const getTransectionDispute=(dilputes)=>{
-    dilputes?.map((dispute)=>{
-      if(dispute.gw_txn_no==props.data.id){
+  // Get userList
+  const getUser = () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .get(`${process.env.REACT_APP_API_URL}users/list-users`, { headers })
+      .then((responce) => {
+        console.log(responce.data), setUserList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const getTransectionDispute = (dilputes) => {
+    dilputes?.map((dispute) => {
+      if (dispute.gw_txn_no == props.data.id) {
         setDisputeList(dispute);
       }
-    })
-  }
+    });
+  };
 
-  
-  if(disputeApplyCheck&&!disputeApplyDate){
-    const data={
+  if (disputeApplyCheck && !disputeApplyDate) {
+    const data = {
       dispute_type: "P",
-      gw_txn_no: props.data.id
-    }
+      gw_txn_no: props.data.id,
+    };
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
@@ -73,7 +89,7 @@ const BringDispute = (props) => {
       })
       .then((response) => {
         console.log(response);
-        setDisputeApplyData(response.data)
+        setDisputeApplyData(response.data);
       })
       .catch((error) => {
         console.error("There was an error!", error.response.status);
@@ -90,21 +106,25 @@ const BringDispute = (props) => {
       });
   }
 
-  const saveDispute=()=>{
-    let data={
+  const saveDispute = () => {
+    let data = {
       resolve_type: disputeType,
       amount: parseFloat(disputeamount).toFixed(2),
       remarks: disputeDescription,
-      gw_txn_no: props.data.id
-    }
+      gw_txn_no: props.data.id,
+    };
 
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .post(`${process.env.REACT_APP_API_URL}disputes/${disputeApplyDate?.id}`, data, {
-        headers,
-      })
+      .post(
+        `${process.env.REACT_APP_API_URL}disputes/${disputeApplyDate?.id}`,
+        data,
+        {
+          headers,
+        }
+      )
       .then((response) => {
         console.log(response);
         swal({
@@ -114,6 +134,7 @@ const BringDispute = (props) => {
           button: false,
           timer: 1500,
         });
+        getDisputeList();
       })
       .catch((error) => {
         console.error("There was an error!", error.response.status);
@@ -128,101 +149,142 @@ const BringDispute = (props) => {
           timer: 1500,
         });
       });
+  };
 
-  }
+  const getIsoDateTime = (date) => {
+    return DateTime.fromISO(date, { zone: "Asia/Dhaka" }).toLocaleString(
+      DateTime.DATETIME_MED
+    );
+  };
+
+  const getUserName = (e) => {
+    let username;
+    userList?.map((user) => {
+      if (user.id == e) {
+        username = user.user_id;
+      }
+    });
+    return username;
+  };
 
   useEffect(() => {
-    getDisputeList()
+    getDisputeList();
+    getUser();
   }, []);
 
-  const column = [
-    {
-      name: "Dispute Initiate Time",
-      selector: (row) => 
-      DateTime.fromISO(row.dispute_initiate_on, { zone: "Asia/Dhaka" }).toLocaleString(
-        DateTime.DATETIME_MED
-      ),
-    sortable: true,
-    },
-    {
-      name: "Dispute Resolve Time",
-      selector: (row) => 
-      DateTime.fromISO(row.dispute_resolve_on, { zone: "Asia/Dhaka" }).toLocaleString(
-        DateTime.DATETIME_MED
-      ),
-    sortable: true,
-    },
-    {
-      name: "Dispute Status",
-      selector: (row) => row.dispute_type=="A"?"APPROVED":"PENDING",
-    },
-    {
-      name: "Employee ID",
-      selector: (row) => row.created_by,
-    }
-  ];
-
   return (
-         <CCard>
-          <CCardBody>
-            <div>
-            <CFormCheck disabled={disputeApplyCheck?true:false} label="Apply for dispute" onChange={(e)=>{setDisputeApplyCheck(e.target.checked)}} />
-            <h5>Dicission Of Dispute</h5>
-            <CFormInput size="sm" type="text" placeholder="Amount" onChange={(e)=>{setDisputeAmount(e.target.value)}}/>
-            <CFormCheck
-              type="radio"
-              name="dipute_status"
-              id="refund"
-              value="REFUND"
-              label="Refund"
-              onChange={(e)=>{setDisputeType(e.target.value)}}
-            />
-            <CFormCheck
-              type="radio"
-              name="dipute_status"
-              id="reversal"
-              value="REVERSAL"
-              label="Reversal"
-              onChange={(e)=>{setDisputeType(e.target.value)}}
-            />
-            <CFormCheck
-              type="radio"
-              name="dipute_status"
-              id="chargeback"
-              value="CHARGEBACK"
-              label="Chargeback"
-              onChange={(e)=>{setDisputeType(e.target.value)}}
-            />
-            <CFormCheck
-              type="radio"
-              name="dipute_status"
-              id="decline"
-              value="DECLINE"
-              label="Decline"
-              onChange={(e)=>{setDisputeType(e.target.value)}}
-            />
-            <CButton color="primary" onClick={saveDispute}>Resolve</CButton>
-            <CRow>
-              <CCol md={12}>
-                <CFormTextarea
-                  id="exampleFormControlTextarea1"
-                  label="Description"
-                  rows={3}
-                  text="Must be 8-20 words long."
-                  onChange={(e)=>setDisputeDescription(e.target.value)}
-                ></CFormTextarea>
-              </CCol>
-            </CRow>
-            </div>
-           
-             <DataTable
-               title="Dispute List"
-               columns={column}
-               data={disputeList}
-             />
-           
-          </CCardBody>
-        </CCard>
+    <CCard>
+      <CCardBody>
+        <div hidden={disputeList ? true : false}>
+          <CFormCheck
+            disabled={disputeApplyCheck ? true : false}
+            label="Apply for dispute"
+            onChange={(e) => {
+              setDisputeApplyCheck(e.target.checked);
+            }}
+          />
+          <h5>Dicission Of Dispute</h5>
+          <CRow>
+            <CCol md={3}>
+              <CFormInput
+                size="sm"
+                type="text"
+                placeholder="Amount"
+                onChange={(e) => {
+                  setDisputeAmount(e.target.value);
+                }}
+              />
+            </CCol>
+          </CRow>
+          <CFormCheck
+            type="radio"
+            name="dipute_status"
+            id="refund"
+            value="REFUND"
+            label="Refund"
+            onChange={(e) => {
+              setDisputeType(e.target.value);
+            }}
+          />
+          <CFormCheck
+            type="radio"
+            name="dipute_status"
+            id="reversal"
+            value="REVERSAL"
+            label="Reversal"
+            onChange={(e) => {
+              setDisputeType(e.target.value);
+            }}
+          />
+          <CFormCheck
+            type="radio"
+            name="dipute_status"
+            id="chargeback"
+            value="CHARGEBACK"
+            label="Chargeback"
+            onChange={(e) => {
+              setDisputeType(e.target.value);
+            }}
+          />
+          <CFormCheck
+            type="radio"
+            name="dipute_status"
+            id="decline"
+            value="DECLINE"
+            label="Decline"
+            onChange={(e) => {
+              setDisputeType(e.target.value);
+            }}
+          />
+          <CButton color="primary" onClick={saveDispute}>
+            Resolve
+          </CButton>
+          <CRow>
+            <CCol md={12}>
+              <CFormTextarea
+                id="exampleFormControlTextarea1"
+                label="Description"
+                rows={3}
+                text="Must be 8-20 words long."
+                onChange={(e) => setDisputeDescription(e.target.value)}
+              ></CFormTextarea>
+            </CCol>
+          </CRow>
+        </div>
+        <div hidden={!disputeList ? true : false}>
+          <CTable>
+            <CTableHead>
+              <CTableRow>
+                <CTableHeaderCell scope="col">
+                  Dispute Initiate Date
+                </CTableHeaderCell>
+                <CTableHeaderCell scope="col">
+                  Dispute Resolve Date
+                </CTableHeaderCell>
+                <CTableHeaderCell scope="col">Dispute Status</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Employee ID</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              <CTableRow>
+                <CTableDataCell>
+                  {getIsoDateTime(disputeList?.dispute_initiate_on)}
+                </CTableDataCell>
+                <CTableDataCell>
+                  {getIsoDateTime(disputeList?.dispute_resolve_on)}
+                </CTableDataCell>
+                <CTableDataCell>
+                  {disputeList?.dispute_type == "A" ? "Approved" : "Pending"}
+                </CTableDataCell>
+                <CTableDataCell>
+                  {getUserName(disputeList?.created_by)}
+                </CTableDataCell>
+              </CTableRow>
+            </CTableBody>
+          </CTable>
+        </div>
+      </CCardBody>
+    </CCard>
   );
 };
 export default BringDispute;

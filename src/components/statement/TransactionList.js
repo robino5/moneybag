@@ -94,7 +94,7 @@ const TransactionList = () => {
   };
 
   const openDetails = async (e) => {
-    setStatement(e)
+    setStatement(e);
     setVisible(!visible);
   };
 
@@ -209,15 +209,15 @@ const TransactionList = () => {
     return data;
   };
 
-  const getMerchantDetail=(merhcnt)=>{
+  const getMerchantDetail = (merhcnt) => {
     let data;
-    merhcnt?.map((e)=>{
-    if(e.id==mercantID){
-      data=e
-    }
-    })
-    return data
-  }
+    merhcnt?.map((e) => {
+      if (e.id == mercantID) {
+        data = e;
+      }
+    });
+    return data;
+  };
 
   const column = [
     {
@@ -431,10 +431,10 @@ const TransactionList = () => {
         <div>
           <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
             <CModalHeader onClose={() => setVisible(false)}>
-              <CModalTitle>Transection Details</CModalTitle>
+              <CModalTitle>Dispute</CModalTitle>
             </CModalHeader>
             <CModalBody>
-              <DisputeAdd data={statement}/>
+              <DisputeAdd data={statement} />
             </CModalBody>
           </CModal>
         </div>

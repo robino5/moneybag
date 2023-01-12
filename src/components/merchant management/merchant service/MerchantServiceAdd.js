@@ -429,6 +429,9 @@ const MerchantServiceAdd = () => {
                             </option>
                           ))}
                       </CFormSelect>
+                      <span className="text-danger">
+                        {errors.merchant_name?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">

@@ -70,6 +70,7 @@ const UserAdd = () => {
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCard className="p-4">
+              <h6 className="text-center">Add User</h6>
               <CCardBody>
                 <CForm onSubmit={handleSubmit(saveUser)}>
                   <CRow className="mb-3">

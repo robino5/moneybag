@@ -329,9 +329,7 @@ const SettlementReport = () => {
                     className="mt-2 mx-2"
                     color="primary"
                     disabled={
-                      merchnatName == "" || !periodFrom || !periodTo
-                        ? true
-                        : false
+                      !mercantID || !periodFrom || !periodTo ? true : false
                     }
                     onClick={searchStatemet}
                   >

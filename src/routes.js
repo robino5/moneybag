@@ -105,6 +105,16 @@ const Userist = React.lazy(() => import("./components/users/UserList"));
 const UserAdd = React.lazy(() => import("./components/users/UserAdd"));
 const UserUpdate = React.lazy(() => import("./components/users/UserUpdate"));
 
+const MerchantUserList = React.lazy(() =>
+  import("./components/merchnant users/MerchantUserList")
+);
+const MerchantUserAdd = React.lazy(() =>
+  import("./components/merchnant users/MerchantUserAdd")
+);
+const MerchantUserUpdate = React.lazy(() =>
+  import("./components//merchnant users/MerchantUserUpdate")
+);
+
 const FintechList = React.lazy(() =>
   import("./components/fintech/FintechList")
 );
@@ -242,7 +252,9 @@ const MerchantSericeUpdateUrl = React.lazy(() =>
 
 const DisputeAdd = React.lazy(() => import("./components/dispute/DisputeAdd"));
 
-const FintechAddAlternative = React.lazy(() => import("./components/fintech/FintechAddAlternative"));
+const FintechAddAlternative = React.lazy(() =>
+  import("./components/fintech/FintechAddAlternative")
+);
 // const TransactionList = React.lazy(() =>
 //   import("./components/statement/TransactionList")
 // );
@@ -359,6 +371,22 @@ const routes = [
     path: "/users/update-user",
     name: "update-user",
     element: UserUpdate,
+  },
+
+  {
+    path: "/merchant-users",
+    name: "merchant-users",
+    element: MerchantUserList,
+  },
+  {
+    path: "/merchant-users/add-merchant-users",
+    name: "add-merchant-users",
+    element: MerchantUserAdd,
+  },
+  {
+    path: "/merchant-users/update-merchant-users",
+    name: "update-merchant-users",
+    element: MerchantUserUpdate,
   },
 
   { path: "/fintech", name: "fintech", element: FintechList },
@@ -574,8 +602,6 @@ const routes = [
     element: FintechAddAlternative,
   },
 
-
-  
   // {
   //   path: "/transaction",
   //   name: "transaction",
