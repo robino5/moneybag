@@ -72,7 +72,7 @@ const TransactionList = () => {
         headers,
       })
       .then((responce) => {
-        console.log(responce.data), setStatement(responce.data);
+        console.log(responce.data), setStatementDetails(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -94,7 +94,7 @@ const TransactionList = () => {
   };
 
   const openDetails = async (e) => {
-    // setStatementDetails(e);
+    setStatement(e)
     setVisible(!visible);
   };
 
@@ -186,7 +186,7 @@ const TransactionList = () => {
       )
       .then((response) => {
         console.log(response);
-        setStatement(response.data);
+        setStatementDetails(response.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -208,6 +208,16 @@ const TransactionList = () => {
     });
     return data;
   };
+
+  const getMerchantDetail=(merhcnt)=>{
+    let data;
+    merhcnt?.map((e)=>{
+    if(e.id==mercantID){
+      data=e
+    }
+    })
+    return data
+  }
 
   const column = [
     {
@@ -241,17 +251,17 @@ const TransactionList = () => {
     },
     {
       name: "Bank Fee",
-      selector: (row) => 0.0,
+      selector: (row) => row.bank_charge,
       sortable: true,
     },
     {
       name: "PGW Fee",
-      selector: (row) => 0.0,
+      selector: (row) => row.pgw_charge,
       sortable: true,
     },
     {
       name: "Refund Amount",
-      selector: (row) => 0.0,
+      selector: (row) => row.refund_amount,
       sortable: true,
     },
     {
@@ -275,7 +285,7 @@ const TransactionList = () => {
             className="btn btn-sm d-inline mx-1"
             CColor="info"
             onClick={() => {
-              openDetails();
+              openDetails(row);
             }}
           >
             Detail
@@ -287,26 +297,23 @@ const TransactionList = () => {
 
   // const dawonloadReport = () => {
   //   const doc = new jsPDF();
-
   //   doc.autoTable({
   //     columns: [
-  //       { header: "Order ID", dataKey: merchant_tran_id },
-  //       { header: "Transaction ID", dataKey: txn_id },
+  //       { header: "Order ID", dataKey: 'merchant_tran_id' },
+  //       { header: "Transaction ID", dataKey: 'txn_id' },
   //       {
   //         header: "Transaction Date",
-  //         dataKey: DateTime.fromISO(created_at, {
-  //           zone: "Asia/Dhaka",
-  //         }).toLocaleString(DateTime.DATETIME_MED),
+  //         dataKey: 'created_at',
   //       },
-  //       { header: "Order Amount", dataKey: merchant_order_amount },
-  //       { header: "Bank Fee", dataKey: 0 },
-  //       { header: "PGW Fee", dataKey: 0 },
-  //       { header: "Refund Amount", dataKey: 0 },
-  //       { header: "Total Amount", dataKey: merchant_charge_amount },
-  //       { header: "Transaction Status", dataKey: gw_order_status },
+  //       { header: "Order Amount", dataKey: 'merchant_order_amount' },
+  //       { header: "Bank Fee", dataKey: 'bank_charge' },
+  //       { header: "PGW Fee", dataKey: 'pgw_charge' },
+  //       { header: "Refund Amount", dataKey: 'refund_amount' },
+  //       { header: "Total Amount", dataKey: 'merchant_charge_amount' },
+  //       { header: "Transaction Status", dataKey: 'gw_order_status' },
   //     ],
-  //     data: statement,
-  //   });
+  //     body: statement,
+  //   },);
   //   doc.save("transation.pdf");
   // };
 
@@ -415,7 +422,7 @@ const TransactionList = () => {
           <CCol md={9}>
             <DataTable
               title="Transaction List"
-              data={statement}
+              data={statementdetails}
               columns={column}
               paginatio={20}
             />
@@ -427,7 +434,7 @@ const TransactionList = () => {
               <CModalTitle>Transection Details</CModalTitle>
             </CModalHeader>
             <CModalBody>
-              <DisputeAdd />
+              <DisputeAdd data={statement}/>
             </CModalBody>
           </CModal>
         </div>
