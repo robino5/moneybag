@@ -107,7 +107,7 @@ const UserList = () => {
           </CCol>
         </CRow>
         <CRow className="justify-content-center">
-          <CCol md={8}>
+          <CCol md={10}>
             <DataTable
               title="User List"
               columns={comumn}

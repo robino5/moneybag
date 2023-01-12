@@ -314,12 +314,12 @@ const ProcessSettlement = () => {
     },
     {
       name: "PGW Fee",
-      selector: (row) => 0.0,
+      selector: (row) => parseFloat(row.pgw_charge).toFixed(2),
       sortable: true,
     },
     {
       name: "Refund Amount",
-      selector: (row) => 0.0,
+      selector: (row) => parseFloat(row.refund_amount).toFixed(2),
       sortable: true,
     },
     {

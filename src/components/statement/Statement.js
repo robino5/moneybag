@@ -254,7 +254,7 @@ const Statement = () => {
     },
     {
       name: "Refund Amount",
-      selector: (row) => 0,
+      selector: (row) => row.refund_amount,
     },
     {
       name: "Final Amountt",
