@@ -107,48 +107,70 @@ const BringDispute = (props) => {
   }
 
   const saveDispute = () => {
-    let data = {
-      resolve_type: disputeType,
-      amount: parseFloat(disputeamount).toFixed(2),
-      remarks: disputeDescription,
-      gw_txn_no: props.data.id,
-    };
-
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}disputes/${disputeApplyDate?.id}`,
-        data,
-        {
-          headers,
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        swal({
-          position: "top-end",
-          text: "Create Dispute Successull",
-          icon: "success",
-          button: false,
-          timer: 1500,
-        });
-        getDisputeList();
-      })
-      .catch((error) => {
-        console.error("There was an error!", error.response.status);
-        if (error.response.status == 401) {
-          navigate("/login");
-        }
-        swal({
-          position: "top-end",
-          text: error.response.status,
-          icon: "error",
-          button: false,
-          timer: 1500,
-        });
+    if (
+      parseFloat(disputeamount).toFixed(2) >
+      parseFloat(props.data.merchant_order_amount).toFixed(2)
+    ) {
+      swal({
+        position: "top-end",
+        text: "You can't input more than Order amount",
+        icon: "warning",
+        button: false,
+        timer: 1500,
       });
+    } else {
+      let data = {
+        resolve_type: disputeType,
+        amount: parseFloat(disputeamount).toFixed(2),
+        remarks: disputeDescription,
+        gw_txn_no: props.data.id,
+      };
+      if (!disputeamount) {
+        delete data.amount;
+      }
+
+      console.log(data);
+
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      };
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}disputes/${
+            disputeList?.dispute_type == "P"
+              ? disputeList.id
+              : disputeApplyDate?.id
+          }`,
+          data,
+          {
+            headers,
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          swal({
+            position: "top-end",
+            text: "Create Dispute Successull",
+            icon: "success",
+            button: false,
+            timer: 1500,
+          });
+          getDisputeList();
+        })
+        .catch((error) => {
+          console.error("There was an error!", error.response);
+          if (error.response.status == 401) {
+            navigate("/login");
+          }
+          swal({
+            position: "top-end",
+            text: error.response.status,
+            icon: "error",
+            button: false,
+            timer: 1500,
+          });
+        });
+    }
   };
 
   const getIsoDateTime = (date) => {
@@ -167,6 +189,14 @@ const BringDispute = (props) => {
     return username;
   };
 
+  const hiddenDisputeDicission = () => {
+    let hiddenStatus = disputeApplyCheck ? false : true;
+    if (disputeList?.dispute_type == "P") {
+      hiddenStatus = false;
+    }
+    return hiddenStatus;
+  };
+
   useEffect(() => {
     getDisputeList();
     getUser();
@@ -175,81 +205,87 @@ const BringDispute = (props) => {
   return (
     <CCard>
       <CCardBody>
-        <div hidden={disputeList ? true : false}>
-          <CFormCheck
-            disabled={disputeApplyCheck ? true : false}
-            label="Apply for dispute"
-            onChange={(e) => {
-              setDisputeApplyCheck(e.target.checked);
-            }}
-          />
-          <h5>Dicission Of Dispute</h5>
-          <CRow>
-            <CCol md={3}>
-              <CFormInput
-                size="sm"
-                type="text"
-                placeholder="Amount"
-                onChange={(e) => {
-                  setDisputeAmount(e.target.value);
-                }}
-              />
-            </CCol>
-          </CRow>
-          <CFormCheck
-            type="radio"
-            name="dipute_status"
-            id="refund"
-            value="REFUND"
-            label="Refund"
-            onChange={(e) => {
-              setDisputeType(e.target.value);
-            }}
-          />
-          <CFormCheck
-            type="radio"
-            name="dipute_status"
-            id="reversal"
-            value="REVERSAL"
-            label="Reversal"
-            onChange={(e) => {
-              setDisputeType(e.target.value);
-            }}
-          />
-          <CFormCheck
-            type="radio"
-            name="dipute_status"
-            id="chargeback"
-            value="CHARGEBACK"
-            label="Chargeback"
-            onChange={(e) => {
-              setDisputeType(e.target.value);
-            }}
-          />
-          <CFormCheck
-            type="radio"
-            name="dipute_status"
-            id="decline"
-            value="DECLINE"
-            label="Decline"
-            onChange={(e) => {
-              setDisputeType(e.target.value);
-            }}
-          />
-          <CButton color="primary" onClick={saveDispute}>
-            Resolve
-          </CButton>
-          <CRow>
-            <CCol md={12}>
-              <CFormTextarea
-                id="exampleFormControlTextarea1"
-                label="Description"
-                rows={3}
-                text="Must be 8-20 words long."
-                onChange={(e) => setDisputeDescription(e.target.value)}
-              ></CFormTextarea>
-            </CCol>
-          </CRow>
+        <div hidden={disputeList?.dispute_type == "A"}>
+          <div hidden={disputeList?.dispute_type == "P" ? true : false}>
+            <CFormCheck
+              label="Apply for dispute"
+              onChange={(e) => {
+                setDisputeApplyCheck(e.target.checked);
+              }}
+            />
+          </div>
+
+          <div hidden={hiddenDisputeDicission()}>
+            <h5>Dicission Of Dispute</h5>
+            <CRow>
+              <CCol md={2}>
+                <CFormCheck
+                  type="radio"
+                  name="dipute_status"
+                  id="refund"
+                  value="REFUND"
+                  label="Refund"
+                  onChange={(e) => {
+                    setDisputeType(e.target.value);
+                  }}
+                />
+              </CCol>
+              <CCol md={3}>
+                <CFormInput
+                  size="sm"
+                  type="text"
+                  placeholder="Amount"
+                  onChange={(e) => {
+                    setDisputeAmount(e.target.value);
+                  }}
+                />
+              </CCol>
+            </CRow>
+            <CFormCheck
+              type="radio"
+              name="dipute_status"
+              id="reversal"
+              value="REVERSAL"
+              label="Reversal"
+              onChange={(e) => {
+                setDisputeType(e.target.value);
+              }}
+            />
+            <CFormCheck
+              type="radio"
+              name="dipute_status"
+              id="chargeback"
+              value="CHARGEBACK"
+              label="Chargeback"
+              onChange={(e) => {
+                setDisputeType(e.target.value);
+              }}
+            />
+            <CFormCheck
+              type="radio"
+              name="dipute_status"
+              id="decline"
+              value="DECLINE"
+              label="Decline"
+              onChange={(e) => {
+                setDisputeType(e.target.value);
+              }}
+            />
+            <CButton color="primary" onClick={saveDispute}>
+              Resolve
+            </CButton>
+            <CRow>
+              <CCol md={12}>
+                <CFormTextarea
+                  id="exampleFormControlTextarea1"
+                  label="Description"
+                  rows={3}
+                  text="Must be 8-20 words long."
+                  onChange={(e) => setDisputeDescription(e.target.value)}
+                ></CFormTextarea>
+              </CCol>
+            </CRow>
+          </div>
         </div>
         <div hidden={!disputeList ? true : false}>
           <CTable>

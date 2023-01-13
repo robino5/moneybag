@@ -26,6 +26,8 @@ import {
   CModalHeader,
 } from "@coreui/react";
 import { render } from "@testing-library/react";
+import { element } from "prop-types";
+import { Button } from "@coreui/coreui";
 
 const TransactionList = () => {
   const navigate = useNavigate();
@@ -233,8 +235,7 @@ const TransactionList = () => {
     {
       name: "Merchant Short Name",
       sortable: true,
-      selector: (row) =>
-        row.merchant_name + "-" + getMerchantName(row.merchant_id),
+      selector: (row) => getMerchantName(row.merchant_id),
     },
     {
       name: "Transaction Date",
@@ -268,7 +269,9 @@ const TransactionList = () => {
       name: "Total Amount",
       selector: (row) =>
         parseFloat(
-          row.merchant_order_amount + row.merchant_charge_amount
+          row.merchant_order_amount +
+            row.merchant_charge_amount -
+            row.refund_amount
         ).toFixed(2),
       sortable: true,
     },
@@ -284,6 +287,7 @@ const TransactionList = () => {
           <CButton
             className="btn btn-sm d-inline mx-1"
             CColor="info"
+            // disabled={row.gw_order_status == "APPROVED" ? false : true}
             onClick={() => {
               openDetails(row);
             }}
@@ -295,27 +299,146 @@ const TransactionList = () => {
     },
   ];
 
-  // const dawonloadReport = () => {
-  //   const doc = new jsPDF();
-  //   doc.autoTable({
-  //     columns: [
-  //       { header: "Order ID", dataKey: 'merchant_tran_id' },
-  //       { header: "Transaction ID", dataKey: 'txn_id' },
-  //       {
-  //         header: "Transaction Date",
-  //         dataKey: 'created_at',
-  //       },
-  //       { header: "Order Amount", dataKey: 'merchant_order_amount' },
-  //       { header: "Bank Fee", dataKey: 'bank_charge' },
-  //       { header: "PGW Fee", dataKey: 'pgw_charge' },
-  //       { header: "Refund Amount", dataKey: 'refund_amount' },
-  //       { header: "Total Amount", dataKey: 'merchant_charge_amount' },
-  //       { header: "Transaction Status", dataKey: 'gw_order_status' },
-  //     ],
-  //     body: statement,
-  //   },);
-  //   doc.save("transation.pdf");
-  // };
+  const getotalOrderAmount = (e) => {
+    let sumOrderAmount = 0;
+    e.map((element) => {
+      sumOrderAmount += element.merchant_order_amount;
+    });
+    return sumOrderAmount;
+  };
+
+  const getotalBankFee = (e) => {
+    let sumBankFee = 0;
+    e.map((element) => {
+      sumBankFee += element.bank_charge;
+    });
+    return sumBankFee;
+  };
+
+  const getotalPgwFee = (e) => {
+    let sumBankFee = 0;
+    e.map((element) => {
+      sumBankFee += element.pgw_charge;
+    });
+    return sumBankFee;
+  };
+  const getotalrefundAMount = (e) => {
+    let sumBankFee = 0;
+    e.map((element) => {
+      sumBankFee += element.refund_amount;
+    });
+    return sumBankFee;
+  };
+  const getotal = (e) => {
+    let sumBankFee = 0;
+    e.map((element) => {
+      sumBankFee +=
+        element.merchant_order_amount +
+        element.merchant_charge_amount -
+        element.refund_amount;
+    });
+    return sumBankFee;
+  };
+
+  const dawonloadReport = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(8);
+    doc.text(
+      `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
+      15,
+      8
+    );
+    doc.text(
+      `Mercnat Name:${getMerchantDetail(merchantList).business_name}`,
+      65,
+      8
+    );
+    doc.text(
+      `Mercnat Short Name:${getMerchantDetail(merchantList).short_name}`,
+      140,
+      8
+    );
+    doc.text(
+      `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
+      15,
+      12
+    );
+    var pageSize = doc.internal.pageSize;
+    var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+    doc.text(
+      `Print Date & Time:${DateTime.fromISO(DateTime.now(), {
+        zone: "Asia/Dhaka",
+      }).toLocaleString(DateTime.DATETIME_MED)}`,
+      15,
+      pageHeight - 10
+    );
+    doc.text(
+      `Print by:${localStorage.getItem("username")}`,
+      100,
+      pageHeight - 10
+    );
+    doc.text(`Powered By Moneybag`, 165, pageHeight - 10);
+    doc.autoTable({
+      columns: [
+        { header: "Order ID", dataKey: "merchant_tran_id" },
+        { header: "Transaction ID", dataKey: "txn_id" },
+        {
+          header: "Transaction Date",
+          dataKey: "created_at",
+        },
+        { header: "Order Amount", dataKey: "merchant_order_amount" },
+        { header: "Bank Fee", dataKey: "bank_charge" },
+        { header: "PGW Fee", dataKey: "pgw_charge" },
+        { header: "Refund Amount", dataKey: "refund_amount" },
+        { header: "Total Amount", dataKey: "merchant_charge_amount" },
+        { header: "Transaction Status", dataKey: "gw_order_status" },
+      ],
+      body: [
+        ...statementdetails.map((element) => [
+          element.merchant_tran_id,
+          element.txn_id,
+          DateTime.fromISO(element.created_at, {
+            zone: "Asia/Dhaka",
+          }).toLocaleString(DateTime.DATETIME_MED),
+          element.merchant_order_amount,
+          element.bank_charge,
+          element.pgw_charge,
+          element.refund_amount,
+          element.merchant_order_amount +
+            element.merchant_charge_amount -
+            element.refund_amount,
+          element.gw_order_status,
+        ]),
+        [
+          {
+            content: `Total-Amount =                                                                                                         ${getotalOrderAmount(
+              statementdetails
+            )}                        ${getotalBankFee(
+              statementdetails
+            )}                  ${getotalPgwFee(
+              statementdetails
+            )}                   ${getotalrefundAMount(
+              statementdetails
+            )}                        ${getotal(statementdetails)}`,
+            colSpan: 9,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          },
+        ],
+      ],
+      // didDrawPage: function (data) {
+      //   let rows = data.table.body;
+      //   rows.push({
+      //     content: "Total = " + 67890,
+      //     colSpan: 2,
+      //   });
+      // },
+      showHead: "everyPage",
+      styles: { fontSize: 6 },
+    });
+    doc.save("transation.pdf");
+  };
 
   useEffect(() => {
     getMerchantList();
@@ -408,13 +531,6 @@ const TransactionList = () => {
                   >
                     Cancel
                   </CButton>
-                  {/* <CButton
-                    className="mt-2 mx-2"
-                    color="danger"
-                    onClick={dawonloadReport}
-                  >
-                    Print
-                  </CButton> */}
                 </CForm>
               </CCardBody>
             </CCard>
@@ -425,6 +541,16 @@ const TransactionList = () => {
               data={statementdetails}
               columns={column}
               paginatio={20}
+              actions={
+                <CButton
+                  className="btn btn-sm"
+                  color="primary"
+                  disabled={!mercantID ? true : false}
+                  onClick={dawonloadReport}
+                >
+                  Print
+                </CButton>
+              }
             />
           </CCol>
         </CRow>

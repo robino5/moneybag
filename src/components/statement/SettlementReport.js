@@ -7,6 +7,8 @@ import Nav from "../Nav";
 import { StatementSidebar, AppFooter, StatementHeader } from "../index.js";
 import { DateTime } from "luxon";
 import Select from "react-select";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import {
   CCard,
   CCardBody,
@@ -216,6 +218,47 @@ const SettlementReport = () => {
     return data;
   };
 
+  const getMerchantDetail = (merhcnt) => {
+    let data;
+    merhcnt?.map((e) => {
+      if (e.id == mercantID) {
+        data = e;
+      }
+    });
+    return data;
+  };
+
+  const getotalOrderAmount = (e) => {
+    let sumOrderAmount = 0;
+    e.map((element) => {
+      sumOrderAmount += element.gttl_order_amount;
+    });
+    return sumOrderAmount;
+  };
+
+  const getotalBankFee = (e) => {
+    let sumBankFee = 0;
+    e.map((element) => {
+      sumBankFee += element.gttl_bank_fee;
+    });
+    return sumBankFee;
+  };
+
+  const getotalPgwFee = (e) => {
+    let sumBankFee = 0;
+    e.map((element) => {
+      sumBankFee += element.gttl_pgw_fee;
+    });
+    return sumBankFee;
+  };
+  const getotal = (e) => {
+    let sumBankFee = 0;
+    e.map((element) => {
+      sumBankFee += element.gttl_total_amount;
+    });
+    return sumBankFee;
+  };
+
   const column = [
     {
       name: "Settlement From",
@@ -260,6 +303,104 @@ const SettlementReport = () => {
       selector: (row) => getUserId(row.created_by),
     },
   ];
+
+  const dawonloadReport = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(8);
+    doc.text(
+      `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
+      15,
+      8
+    );
+    doc.text(
+      `Mercnat Name:${getMerchantDetail(merchantList).business_name}`,
+      65,
+      8
+    );
+    doc.text(
+      `Mercnat Short Name:${getMerchantDetail(merchantList).short_name}`,
+      140,
+      8
+    );
+    doc.text(
+      `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
+      15,
+      12
+    );
+    var pageSize = doc.internal.pageSize;
+    var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+    doc.text(
+      `Print Date & Time:${DateTime.fromISO(DateTime.now(), {
+        zone: "Asia/Dhaka",
+      }).toLocaleString(DateTime.DATETIME_MED)}`,
+      15,
+      pageHeight - 10
+    );
+    doc.text(
+      `Print by:${localStorage.getItem("username")}`,
+      100,
+      pageHeight - 10
+    );
+    doc.text(`Powered By Moneybag`, 165, pageHeight - 10);
+    doc.autoTable({
+      columns: [
+        { header: "Settlement From", dataKey: "settlement_from" },
+        { header: "Settlement to", dataKey: "settlement_to" },
+        {
+          header: "Collection Amount",
+          dataKey: "gttl_order_amount",
+        },
+        { header: "Bank Fee", dataKey: "gttl_bank_fee" },
+        { header: "PGW Fee", dataKey: "gttl_pgw_fee" },
+        { header: "Settlement Amount", dataKey: "gttl_total_amount" },
+        { header: "Settlement Date", dataKey: "settlement_date" },
+        { header: "Employee ID", dataKey: "created_by" },
+      ],
+      body: [
+        ...Settlements.map((element) => [
+          DateTime.fromISO(element.settlement_from, {
+            zone: "Asia/Dhaka",
+          }).toLocaleString(DateTime.DATETIME_MED),
+          DateTime.fromISO(element.settlement_to, {
+            zone: "Asia/Dhaka",
+          }).toLocaleString(DateTime.DATETIME_MED),
+          element.gttl_order_amount,
+          element.gttl_bank_fee,
+          element.gttl_pgw_fee,
+          element.gttl_total_amount,
+          DateTime.fromISO(element.settlement_date, {
+            zone: "Asia/Dhaka",
+          }).toLocaleString(DateTime.DATETIME_MED),
+          getUserId(element.created_by),
+        ]),
+        [
+          {
+            content: `Total-Amount =                                                                         ${getotalOrderAmount(
+              Settlements
+            )}                                    ${getotalBankFee(
+              Settlements
+            )}                  ${getotalPgwFee(
+              Settlements
+            )}                   ${getotal(Settlements)}`,
+            colSpan: 9,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          },
+        ],
+      ],
+      // didDrawPage: function (data) {
+      //   let rows = data.table.body;
+      //   rows.push({
+      //     content: "Total = " + 67890,
+      //     colSpan: 2,
+      //   });
+      // },
+      showHead: "everyPage",
+      styles: { fontSize: 6 },
+    });
+    doc.save("settlement.pdf");
+  };
 
   useEffect(() => {
     getMerchantList();
@@ -361,6 +502,16 @@ const SettlementReport = () => {
               columns={column}
               data={Settlements}
               paginatio={20}
+              actions={
+                <CButton
+                  className="btn btn-sm"
+                  color="primary"
+                  disabled={!mercantID ? true : false}
+                  onClick={dawonloadReport}
+                >
+                  Print
+                </CButton>
+              }
             />
           </CCol>
         </CRow>
