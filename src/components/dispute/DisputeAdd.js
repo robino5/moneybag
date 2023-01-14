@@ -107,7 +107,7 @@ const BringDispute = (props) => {
   }
 
   const saveDispute = () => {
-    if (disputeType && !disputeamount) {
+    if (disputeType == "REFUND" && !disputeamount) {
       swal({
         position: "top-end",
         text: "Please Provide Dispute Amount",
