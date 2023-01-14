@@ -258,7 +258,7 @@ const Statement = () => {
     },
     {
       name: "Final Amountt",
-      selector: (row) => row.merchant_order_amount + row.merchant_charge_amount,
+      selector: (row) => row.merchant_order_amount - row.refund_amount,
     },
     {
       name: "Order Status",

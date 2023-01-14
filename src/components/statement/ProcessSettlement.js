@@ -323,7 +323,7 @@ const ProcessSettlement = () => {
     e.map((element) => {
       sumBankFee +=
         element.merchant_order_amount +
-        element.merchant_charge_amount -
+        element.pgw_charge -
         element.refund_amount;
     });
     return sumBankFee;
@@ -378,9 +378,7 @@ const ProcessSettlement = () => {
       name: "Total Amount",
       selector: (row) =>
         parseFloat(
-          row.merchant_order_amount +
-            row.merchant_charge_amount -
-            row.refund_amount
+          row.merchant_order_amount + row.pgw_charge - row.refund_amount
         ).toFixed(2),
       sortable: true,
     },
@@ -456,7 +454,7 @@ const ProcessSettlement = () => {
           element.pgw_charge,
           element.refund_amount,
           element.merchant_order_amount +
-            element.merchant_charge_amount -
+            element.pgw_charge -
             element.refund_amount,
           element.gw_order_status,
         ]),

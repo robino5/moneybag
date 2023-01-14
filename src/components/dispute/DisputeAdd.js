@@ -107,69 +107,80 @@ const BringDispute = (props) => {
   }
 
   const saveDispute = () => {
-    if (
-      parseFloat(disputeamount).toFixed(2) >
-      parseFloat(props.data.merchant_order_amount).toFixed(2)
-    ) {
+    if (disputeType && !disputeamount) {
       swal({
         position: "top-end",
-        text: "You can't input more than Order amount",
+        text: "Please Provide Dispute Amount",
         icon: "warning",
         button: false,
         timer: 1500,
       });
     } else {
-      let data = {
-        resolve_type: disputeType,
-        amount: parseFloat(disputeamount).toFixed(2),
-        remarks: disputeDescription,
-        gw_txn_no: props.data.id,
-      };
-      if (!disputeamount) {
-        delete data.amount;
-      }
-
-      console.log(data);
-
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      };
-      axios
-        .post(
-          `${process.env.REACT_APP_API_URL}disputes/${
-            disputeList?.dispute_type == "P"
-              ? disputeList.id
-              : disputeApplyDate?.id
-          }`,
-          data,
-          {
-            headers,
-          }
-        )
-        .then((response) => {
-          console.log(response);
-          swal({
-            position: "top-end",
-            text: "Create Dispute Successull",
-            icon: "success",
-            button: false,
-            timer: 1500,
-          });
-          getDisputeList();
-        })
-        .catch((error) => {
-          console.error("There was an error!", error.response);
-          if (error.response.status == 401) {
-            navigate("/login");
-          }
-          swal({
-            position: "top-end",
-            text: error.response.status,
-            icon: "error",
-            button: false,
-            timer: 1500,
-          });
+      if (
+        disputeamount &&
+        parseFloat(disputeamount).toFixed(2) >
+          parseFloat(props.data.merchant_order_amount).toFixed(2)
+      ) {
+        swal({
+          position: "top-end",
+          text: "You can't input more than Order amount",
+          icon: "warning",
+          button: false,
+          timer: 1500,
         });
+      } else {
+        let data = {
+          resolve_type: disputeType,
+          amount: parseFloat(disputeamount).toFixed(2),
+          remarks: disputeDescription,
+          gw_txn_no: props.data.id,
+        };
+        if (!disputeamount) {
+          delete data.amount;
+        }
+
+        console.log(data);
+
+        const headers = {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        };
+        axios
+          .post(
+            `${process.env.REACT_APP_API_URL}disputes/${
+              disputeList?.dispute_type == "P"
+                ? disputeList.id
+                : disputeApplyDate?.id
+            }`,
+            data,
+            {
+              headers,
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            swal({
+              position: "top-end",
+              text: "Create Dispute Successull",
+              icon: "success",
+              button: false,
+              timer: 1500,
+            });
+            getDisputeList();
+          })
+          .catch((error) => {
+            console.error("There was an error!", error.response);
+            if (error.response.status == 401) {
+              navigate("/login");
+            }
+            swal({
+              position: "top-end",
+              text: error.response.status,
+              icon: "error",
+              button: false,
+              timer: 1500,
+            });
+          });
+      }
     }
   };
 
