@@ -36,6 +36,20 @@ const Description = (props) => {
     getMerchantList();
   }, []);
 
+  const getTransactionStatus = (value) => {
+    if (value.dispute_status == "N") {
+      return value.gw_order_status;
+    } else if ((value.dispute_status = "P")) {
+      return "DISPUTED";
+    } else if ((value.dispute_status = "C")) {
+      return "CHARGEBACK";
+    } else if ((value.dispute_status = "D")) {
+      return "DECLINE";
+    } else if ((value.dispute_status = "R")) {
+      return "REVERSAL";
+    }
+  };
+
   return (
     <div className="d-flex flex-row align-items-center">
       <CTable className="table-borderless">
@@ -48,12 +62,7 @@ const Description = (props) => {
           <tr>
             <td>Merchant</td>
             <td>:</td>
-            <td>
-              {getMchantName(props.data.merchant_id) +
-                "(" +
-                props.data.merchant_id +
-                ")"}
-            </td>
+            <td>{props.data.merchant_name}</td>
           </tr>
           <tr>
             <td>TXN No</td>
@@ -68,7 +77,7 @@ const Description = (props) => {
           <tr>
             <td>Status</td>
             <td>:</td>
-            <td>{props.data.gw_order_status}</td>
+            <td>{getTransactionStatus(props.data)}</td>
           </tr>
           <tr>
             <td>Creation date</td>

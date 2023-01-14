@@ -221,6 +221,20 @@ const TransactionList = () => {
     return data;
   };
 
+  const getTransactionStatus = (value) => {
+    if (value.dispute_status == "N") {
+      return value.gw_order_status;
+    } else if ((value.dispute_status = "P")) {
+      return "DISPUTED";
+    } else if ((value.dispute_status = "C")) {
+      return "CHARGEBACK";
+    } else if ((value.dispute_status = "D")) {
+      return "DECLINE";
+    } else if ((value.dispute_status = "R")) {
+      return "REVERSAL";
+    }
+  };
+
   const column = [
     {
       name: "Order ID",
@@ -275,7 +289,7 @@ const TransactionList = () => {
     },
     {
       name: "Transaction Status",
-      selector: (row) => row.gw_order_status,
+      selector: (row) => getTransactionStatus(row),
       sortable: true,
     },
     {
@@ -405,7 +419,7 @@ const TransactionList = () => {
           element.merchant_order_amount +
             element.pgw_charge -
             element.refund_amount,
-          element.gw_order_status,
+          getTransactionStatus(element),
         ]),
         [
           {

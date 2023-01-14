@@ -100,7 +100,7 @@ const UserList = () => {
     <div className="bg-light min-vh-100 d-flex flex-row">
       <CContainer>
         <CRow className="justify-content-center mb-2">
-          <CCol md={8}>
+          <CCol md={10}>
             <Link to="/merchant-users/add-merchant-users">
               <CButton color="primary">Add New</CButton>
             </Link>

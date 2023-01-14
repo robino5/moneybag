@@ -25,6 +25,8 @@ const UserAdd = () => {
     setValue,
   } = useForm({ mode: "all" });
   const navigate = useNavigate();
+  const [password1, setPassword1] = useState();
+  const [password2, setPassword2] = useState();
 
   const saveUser = (e) => {
     const userData = {
@@ -62,6 +64,30 @@ const UserAdd = () => {
           timer: 1500,
         });
       });
+  };
+
+  const showPassword = () => {
+    var x = document.getElementById("password");
+    if (x.type === "password") {
+      x.type = "text";
+    } else {
+      x.type = "password";
+    }
+  };
+
+  const showPassword2 = () => {
+    var x = document.getElementById("password2");
+    if (x.type === "password") {
+      x.type = "text";
+    } else {
+      x.type = "password";
+    }
+  };
+
+  const getPasswordMatchingMess = () => {
+    if (password2 && password2 != password1) {
+      return "Password Mismatch";
+    }
   };
 
   return (
@@ -117,14 +143,57 @@ const UserAdd = () => {
                       <CFormInput
                         type="password"
                         name="password"
+                        id="password"
                         {...register("password", {
                           required: "Please provide Password",
+                          minLength: {
+                            value: 6,
+                            message: "Password will be Minimum 6 Characters",
+                          },
                         })}
                         placeholder="Password"
+                        onChange={(e) => {
+                          setPassword1(e.target.value);
+                        }}
                       />
                       <span className="text-danger">
                         {errors.password?.message}
                       </span>
+                      <CFormCheck
+                        name="status"
+                        onClick={showPassword}
+                        label="Show Password"
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      Confirm Password
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="password"
+                        name="password"
+                        id="password2"
+                        {...register("confirm-password", {
+                          minLength: {
+                            value: 6,
+                            message: "Password will be Minimum 6 Characters",
+                          },
+                        })}
+                        placeholder="Password"
+                        onChange={(e) => {
+                          setPassword2(e.target.value);
+                        }}
+                      />
+                      <span className="text-danger">
+                        {getPasswordMatchingMess()}
+                      </span>
+                      <CFormCheck
+                        name="status"
+                        onClick={showPassword2}
+                        label="Show Password"
+                      />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">

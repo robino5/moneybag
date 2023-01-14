@@ -44,7 +44,7 @@ const DefaultService = () => {
   const [defaultService, setdefaultService] = useState();
   const [fintechId, setFintechId] = useState();
   const [status, setStatus] = useState();
-  console.log(fintechId, status);
+  console.log(defaultServiceList);
 
   const isCheck = true;
 
@@ -105,63 +105,46 @@ const DefaultService = () => {
 
   console.log("dirty", dirtyFields);
 
-  // const saveDefaultService = (e) => {
-  //   const data = [];
-  //   let duplicate = false;
-  //   defaultServiceList?.forEach((element) => {
-  //     if (element.service_no === parseInt(e.service_name)) {
-  //       duplicate = true;
-  //       return false;
-  //     }
-  //   });
-  //   if (duplicate) {
-  //     swal({
-  //       position: "top-end",
-  //       text: "You can't duplicate Service Entry!",
-  //       icon: "warning",
-  //       button: false,
-  //       timer: 3000,
-  //     });
-  //   } else {
-  //     data.push({
-  //       service_no: parseInt(e.service_name),
-  //       bank_no: parseInt(e.bank_name),
-  //       is_active: e.status ? 1 : 0,
-  //     });
-  //     const headers = {
-  //       Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //     };
-  //     axios
-  //       .post(`${process.env.REACT_APP_API_URL}default-services/`, data, {
-  //         headers,
-  //       })
-  //       .then((response) => {
-  //         console.log(response);
-  //         getDefaultServiceList();
-  //         reset();
-  //         swal({
-  //           position: "top-end",
-  //           text: "Store Created Successfull",
-  //           icon: "success",
-  //           button: false,
-  //           timer: 1500,
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         console.error("There was an error!", error);
-  //         if (error.response.status == 401) {
-  //           navigate("/login");
-  //         }
-  //         swal({
-  //           position: "top-end",
-  //           text: error.response.data.detail,
-  //           icon: "error",
-  //           button: false,
-  //           timer: 1500,
-  //         });
-  //       });
-  //   }
-  // };
+  const saveDefaultService = (e) => {
+    const data = [];
+    data.push({
+      service_no: parseInt(e.service_name),
+      bank_no: parseInt(e.bank_name),
+      is_active: e.status ? 1 : 0,
+    });
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios
+      .post(`${process.env.REACT_APP_API_URL}default-services/`, data, {
+        headers,
+      })
+      .then((response) => {
+        console.log(response);
+        getDefaultServiceList();
+        reset();
+        swal({
+          position: "top-end",
+          text: "Default Service Created Successfull",
+          icon: "success",
+          button: false,
+          timer: 1500,
+        });
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        if (error.response.status == 401) {
+          navigate("/login");
+        }
+        swal({
+          position: "top-end",
+          text: error.response.data.detail,
+          icon: "error",
+          button: false,
+          timer: 1500,
+        });
+      });
+  };
 
   const setDefaultcheck = (e) => {
     if (e === 1) {
@@ -208,6 +191,23 @@ const DefaultService = () => {
         }
       });
     return name;
+  };
+
+  const setServicesOptions = (services) => {
+    const currentSelected = [];
+
+    defaultServiceList?.map((services) => {
+      currentSelected.push(services.service_no);
+    });
+
+    let data = [];
+    for (let i = 0; i < services.length; i++) {
+      console.log("CCC: ", currentSelected);
+      if (!currentSelected.includes(services[i].id)) {
+        data.push(services[i]);
+      }
+    }
+    return data;
   };
 
   const updateDefaulService = (e) => {
@@ -304,31 +304,40 @@ const DefaultService = () => {
             <h4 className="text-center">Assign Default Service for Moneybag</h4>
             <CCard className="p-4">
               <CCardBody>
-                {/* <CForm
+                <CForm
                   hidden={defaultService != null ? true : false}
                   onSubmit={handleSubmit(saveDefaultService)}
                 >
                   <CRow className="mb-3">
                     <CCol sm={4}>
                       <CFormSelect
-                        {...register("service_name")}
+                        {...register("service_name", {
+                          required: "Please Select Service",
+                        })}
                         aria-label="Default select example"
                       >
-                        <option>Select Service</option>
+                        <option value={""}>Select Service</option>
                         {lookupList &&
-                          getServiceOption(lookupList).map((servie, index) => (
-                            <option value={servie.id} key={index}>
-                              {servie.name}
-                            </option>
-                          ))}
+                          setServicesOptions(getServiceOption(lookupList)).map(
+                            (servie, index) => (
+                              <option value={servie.id} key={index}>
+                                {servie.name}
+                              </option>
+                            )
+                          )}
                       </CFormSelect>
+                      <span className="text-danger">
+                        {errors.service_name?.message}
+                      </span>
                     </CCol>
                     <CCol sm={5}>
                       <CFormSelect
-                        {...register("bank_name")}
+                        {...register("bank_name", {
+                          required: "Please Select Fintech",
+                        })}
                         aria-label="Default select example"
                       >
-                        <option>Select Fintech</option>
+                        <option value={""}>Select Fintech</option>
                         {organizationList &&
                           organizationList.map((organization, index) => (
                             <option value={organization.id} key={index}>
@@ -336,6 +345,9 @@ const DefaultService = () => {
                             </option>
                           ))}
                       </CFormSelect>
+                      <span className="text-danger">
+                        {errors.bank_name?.message}
+                      </span>
                     </CCol>
                     <CCol sm={2}>
                       <CFormCheck label="Active" {...register("status")} />
@@ -347,11 +359,11 @@ const DefaultService = () => {
                         type="submit"
                         color="success"
                       >
-                        <CIcon icon={cilPlus} />
+                        Save
                       </CButton>
                     </CCol>
                   </CRow>
-                </CForm> */}
+                </CForm>
                 {/* <CForm
                   hidden={defaultService == null ? true : false}
                   onSubmit={handleSubmit(updateDefaultService)}

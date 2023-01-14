@@ -219,6 +219,20 @@ const Statement = () => {
     return data;
   };
 
+  const getTransactionStatus = (value) => {
+    if (value.dispute_status == "N") {
+      return value.gw_order_status;
+    } else if ((value.dispute_status = "P")) {
+      return "DISPUTED";
+    } else if ((value.dispute_status = "C")) {
+      return "CHARGEBACK";
+    } else if ((value.dispute_status = "D")) {
+      return "DECLINE";
+    } else if ((value.dispute_status = "R")) {
+      return "REVERSAL";
+    }
+  };
+
   const column = [
     {
       name: "SL",
@@ -234,10 +248,10 @@ const Statement = () => {
       selector: (row) => row.txn_id,
     },
     {
-      name: "Merchant ID",
+      name: "Merchant Name",
       sortable: true,
       grow: 2,
-      selector: (row) => row.merchant_name + "(" + row.merchant_id + ")",
+      selector: (row) => row.merchant_name,
     },
 
     {
@@ -262,7 +276,7 @@ const Statement = () => {
     },
     {
       name: "Order Status",
-      selector: (row) => row.gw_order_status,
+      selector: (row) => getTransactionStatus(row),
     },
     {
       name: "Description",
