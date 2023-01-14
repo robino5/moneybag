@@ -169,12 +169,13 @@ const BringDispute = (props) => {
           })
           .catch((error) => {
             console.error("There was an error!", error.response);
+
             if (error.response.status == 401) {
               navigate("/login");
             }
             swal({
               position: "top-end",
-              text: error.response.status,
+              text: error.response.data.msg,
               icon: "error",
               button: false,
               timer: 1500,
