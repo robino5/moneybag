@@ -103,17 +103,15 @@ const Description = (props) => {
             <td>{props.data.merchant_order_amount}</td>
           </tr>
           <tr>
-            <td>Charge</td>
+            <td>Refund Amount</td>
             <td>:</td>
-            <td>{props.data.merchant_charge_amount}</td>
+            <td>{props.data.refund_amount - props.data.pgw_charge}</td>
           </tr>
           <tr>
             <td>Total Amount</td>
             <td>:</td>
-            <td>
-              {props.data.merchant_order_amount +
-                props.data.merchant_charge_amount}
-            </td>
+            <td>{props.data.merchant_order_amount -
+                (props.data.refund_amount - props.data.pgw_charge)}</td>
           </tr>
           <tr>
             <td>Pay Date</td>

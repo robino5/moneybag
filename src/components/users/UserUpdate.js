@@ -140,7 +140,7 @@ const UserUpdate = () => {
                       </span>
                     </CCol>
                   </CRow>
-                  <CRow className="mb-3">
+                  {/* <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Password
                     </CFormLabel>
@@ -199,7 +199,7 @@ const UserUpdate = () => {
                         label="Show Password"
                       />
                     </CCol>
-                  </CRow>
+                  </CRow> */}
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Status

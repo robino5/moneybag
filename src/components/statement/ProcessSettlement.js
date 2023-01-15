@@ -332,16 +332,28 @@ const ProcessSettlement = () => {
   const getTransactionStatus = (value) => {
     if (value.dispute_status == "N") {
       return value.gw_order_status;
-    } else if ((value.dispute_status = "P")) {
+    } else if ((value.dispute_status == "P")) {
       return "DISPUTED";
-    } else if ((value.dispute_status = "C")) {
+    } else if ((value.dispute_status == "C")) {
       return "CHARGEBACK";
-    } else if ((value.dispute_status = "D")) {
+    } else if ((value.dispute_status == "D")) {
       return "DECLINE";
-    } else if ((value.dispute_status = "R")) {
+    } else if ((value.dispute_status == "R")) {
       return "REVERSAL";
     }
   };
+
+ const setTextColor=(e)=>{
+    if(e=="DISPUTED"){
+      return "text-primary"
+    }
+    else if(e=="DECLINE"){
+      return "text-danger"
+    }
+    else{
+      return "text-dark"
+    }
+ }
 
   const column = [
     {
@@ -398,7 +410,7 @@ const ProcessSettlement = () => {
     },
     {
       name: "Transaction Status",
-      selector: (row) => getTransactionStatus(row),
+      selector: (row) => <span className={setTextColor(getTransactionStatus(row))}>{getTransactionStatus(row)}</span>,
       sortable: true,
     },
   ];
