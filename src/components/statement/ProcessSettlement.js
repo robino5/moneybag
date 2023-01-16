@@ -488,13 +488,13 @@ const ProcessSettlement = () => {
           {
             content: `Total-Amount =                                                                                                         ${getotalOrderAmount(
               statement
-            )}                        ${getotalBankFee(
+            )}                      ${getotalBankFee(
               statement
-            )}                  ${getotalPgwFee(
+            )}            ${getotalPgwFee(
               statement
-            )}                   ${getotalrefundAMount(
+            )}              ${getotalrefundAMount(
               statement
-            )}                        ${getotal(statement)}`,
+            )}                     ${getotal(statement)}`,
             colSpan: 9,
             styles: {
               fillColor: [239, 154, 154],
@@ -512,7 +512,7 @@ const ProcessSettlement = () => {
       showHead: "everyPage",
       styles: { fontSize: 6 },
     });
-    doc.save("process_settlement.pdf");
+    doc.save(`process_settlement${Date()}.pdf`);
   };
 
   useEffect(() => {

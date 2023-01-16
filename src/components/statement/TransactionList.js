@@ -386,7 +386,12 @@ const TransactionList = () => {
     doc.text(
       `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
       15,
-      12
+      13
+    );
+    doc.text(
+      `Period:${DateTime.fromISO(periodFrom).toLocaleString()} - ${DateTime.fromISO(periodTo).toLocaleString()}`,
+      85,
+      18
     );
     var pageSize = doc.internal.pageSize;
     var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
@@ -418,6 +423,7 @@ const TransactionList = () => {
         { header: "Total Amount", dataKey: "merchant_charge_amount" },
         { header: "Transaction Status", dataKey: "gw_order_status" },
       ],
+
       body: [
         ...statementdetails.map((element) => [
           element.merchant_tran_id,
@@ -436,20 +442,47 @@ const TransactionList = () => {
         ]),
         [
           {
-            content: `Total-Amount =                                                                                                         ${getotalOrderAmount(
-              statementdetails
-            )}                        ${getotalBankFee(
-              statementdetails
-            )}                  ${getotalPgwFee(
-              statementdetails
-            )}                   ${getotalrefundAMount(
-              statementdetails
-            )}                        ${getotal(statementdetails)}`,
-            colSpan: 9,
+            content: `Total-Amount =`,
+            colSpan: 3,
             styles: {
               fillColor: [239, 154, 154],
             },
           },
+          {
+            content: getotalOrderAmount(statementdetails),
+            colSpan: 1,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          },
+          {
+            content: getotalBankFee(statementdetails),
+            colSpan: 1,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          },
+          {
+            content: getotalPgwFee(statementdetails),
+            colSpan: 1,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          },
+          {
+            content: getotalrefundAMount(statementdetails),
+            colSpan: 1,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          },
+          {
+            content: getotal(statementdetails),
+            colSpan: 2,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          }
         ],
       ],
       // didDrawPage: function (data) {
@@ -461,8 +494,10 @@ const TransactionList = () => {
       // },
       showHead: "everyPage",
       styles: { fontSize: 6 },
-    });
-    doc.save("transation.pdf");
+      margin: { top: 20 }
+    },
+    );
+    doc.save(`transation${Date()}.pdf`);
   };
 
   useEffect(() => {
@@ -570,7 +605,7 @@ const TransactionList = () => {
                 <CButton
                   className="btn btn-sm"
                   color="primary"
-                  disabled={!mercantID ? true : false}
+                  disabled={!mercantID&&!periodFrom&&!periodTo ? true : false}
                   onClick={dawonloadReport}
                 >
                   Print

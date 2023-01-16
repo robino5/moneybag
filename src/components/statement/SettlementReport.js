@@ -379,9 +379,9 @@ const SettlementReport = () => {
               Settlements
             )}                                    ${getotalBankFee(
               Settlements
-            )}                  ${getotalPgwFee(
+            )}                      ${getotalPgwFee(
               Settlements
-            )}                   ${getotal(Settlements)}`,
+            )}                      ${getotal(Settlements)}`,
             colSpan: 9,
             styles: {
               fillColor: [239, 154, 154],
@@ -397,9 +397,9 @@ const SettlementReport = () => {
       //   });
       // },
       showHead: "everyPage",
-      styles: { fontSize: 6 },
+      styles: { fontSize: 6,margin: {top: 50} },
     });
-    doc.save("settlement.pdf");
+    doc.save(`settlement${Date()}.pdf`);
   };
 
   useEffect(() => {
