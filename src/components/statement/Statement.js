@@ -399,7 +399,7 @@ const Statement = () => {
           </CCol>
           <CCol md={9}>
             <DataTable
-              title="Transection List"
+              title="Statements"
               columns={column}
               data={statement}
               paginatio={20}
@@ -409,7 +409,7 @@ const Statement = () => {
         <div>
           <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
             <CModalHeader onClose={() => setVisible(false)}>
-              <CModalTitle>Transection Details</CModalTitle>
+              <CModalTitle>Statement Details</CModalTitle>
             </CModalHeader>
             <CModalBody>
               <Description data={statementdetails} />

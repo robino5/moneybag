@@ -45,7 +45,7 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem> */}
           <CNavItem>
-            <CNavLink href="#">Users</CNavLink>
+            <CNavLink to="/users" component={NavLink}>Users</CNavLink>
           </CNavItem>
           {/* <CNavItem>
             <CNavLink href="#">Settings</CNavLink>

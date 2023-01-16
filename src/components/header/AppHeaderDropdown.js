@@ -246,7 +246,7 @@ const AppHeaderDropdown = () => {
                         return (
                           [/[A-Z]/,/[a-z]/, /[0-9]/, /[#?!@$%^&*-]/].every((pattern) =>
                             pattern.test(value)
-                          ) || "Password is weak!"
+                          ) || "Password is weak! Please Follow [A-Z],[a-z],[0-9],[#?!@$%^&*-]"
                         );
                       },
                     })}
