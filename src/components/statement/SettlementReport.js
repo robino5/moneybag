@@ -233,7 +233,7 @@ const SettlementReport = () => {
     e.map((element) => {
       sumOrderAmount += element.gttl_order_amount;
     });
-    return sumOrderAmount;
+    return parseFloat(sumOrderAmount).toFixed(2);
   };
 
   const getotalBankFee = (e) => {
@@ -241,7 +241,7 @@ const SettlementReport = () => {
     e.map((element) => {
       sumBankFee += element.gttl_bank_fee;
     });
-    return sumBankFee;
+    return parseFloat(sumBankFee).toFixed(2);
   };
 
   const getotalPgwFee = (e) => {
@@ -249,14 +249,30 @@ const SettlementReport = () => {
     e.map((element) => {
       sumBankFee += element.gttl_pgw_fee;
     });
-    return sumBankFee;
+    return parseFloat(sumBankFee).toFixed(2);
   };
   const getotal = (e) => {
     let sumBankFee = 0;
     e.map((element) => {
       sumBankFee += element.gttl_total_amount;
     });
-    return sumBankFee;
+    return parseFloat(sumBankFee).toFixed(2);
+  };
+
+  const getDateTime = (e) => {
+    let date = DateTime.fromISO(e, {
+      zone: "Asia/Dhaka",
+    }).toLocaleString(DateTime.DATETIME_MED);
+
+    return date;
+  };
+
+  const reportButtonStatus = () => {
+    if (!mercantID || !periodFrom || !periodTo) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const column = [
@@ -305,6 +321,7 @@ const SettlementReport = () => {
   ];
 
   const dawonloadReport = () => {
+    console.log(getDateTime(periodFrom));
     const doc = new jsPDF();
     doc.setFontSize(8);
     doc.text(
@@ -325,7 +342,14 @@ const SettlementReport = () => {
     doc.text(
       `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
       15,
-      12
+      13
+    );
+    doc.text(
+      `Period:${getDateTime(periodFrom).slice(0, 12)} - ${getDateTime(
+        periodTo
+      ).slice(0, 12)}`,
+      85,
+      18
     );
     var pageSize = doc.internal.pageSize;
     var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
@@ -375,14 +399,36 @@ const SettlementReport = () => {
         ]),
         [
           {
-            content: `Total-Amount =                                                                         ${getotalOrderAmount(
-              Settlements
-            )}                                    ${getotalBankFee(
-              Settlements
-            )}                      ${getotalPgwFee(
-              Settlements
-            )}                      ${getotal(Settlements)}`,
-            colSpan: 9,
+            content: `Total-Amount =`,
+            colSpan: 2,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          },
+          {
+            content: getotalOrderAmount(Settlements),
+            colSpan: 1,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          },
+          {
+            content: getotalBankFee(Settlements),
+            colSpan: 1,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          },
+          {
+            content: getotalPgwFee(Settlements),
+            colSpan: 1,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          },
+          {
+            content: getotal(Settlements),
+            colSpan: 3,
             styles: {
               fillColor: [239, 154, 154],
             },
@@ -397,7 +443,8 @@ const SettlementReport = () => {
       //   });
       // },
       showHead: "everyPage",
-      styles: { fontSize: 6,margin: {top: 50} },
+      styles: { fontSize: 6 },
+      margin: { top: 20 },
     });
     doc.save(`settlement${Date()}.pdf`);
   };
@@ -506,7 +553,7 @@ const SettlementReport = () => {
                 <CButton
                   className="btn btn-sm"
                   color="primary"
-                  disabled={!mercantID ? true : false}
+                  disabled={reportButtonStatus()}
                   onClick={dawonloadReport}
                 >
                   Print

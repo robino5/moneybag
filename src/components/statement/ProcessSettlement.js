@@ -89,8 +89,6 @@ const ProcessSettlement = () => {
       });
   };
 
-  console.log(currentDate.toISO().split("T")[0]);
-
   const getMerchantName = (e) => {
     let name;
     merchantList?.map((mercant) => {
@@ -293,7 +291,7 @@ const ProcessSettlement = () => {
     e.map((element) => {
       sumOrderAmount += element.merchant_order_amount;
     });
-    return sumOrderAmount;
+    return parseFloat(sumOrderAmount).toFixed(2);
   };
 
   const getotalBankFee = (e) => {
@@ -301,7 +299,7 @@ const ProcessSettlement = () => {
     e.map((element) => {
       sumBankFee += element.bank_charge;
     });
-    return sumBankFee;
+    return parseFloat(sumBankFee).toFixed(2);
   };
 
   const getotalPgwFee = (e) => {
@@ -309,14 +307,14 @@ const ProcessSettlement = () => {
     e.map((element) => {
       sumBankFee += element.pgw_charge;
     });
-    return sumBankFee;
+    return parseFloat(sumBankFee).toFixed(2);
   };
   const getotalrefundAMount = (e) => {
     let sumBankFee = 0;
     e.map((element) => {
       sumBankFee += element.refund_amount;
     });
-    return sumBankFee;
+    return parseFloat(sumBankFee).toFixed(2);
   };
   const getotal = (e) => {
     let sumBankFee = 0;
@@ -326,34 +324,48 @@ const ProcessSettlement = () => {
         element.pgw_charge -
         element.refund_amount;
     });
-    return sumBankFee;
+    return parseFloat(sumBankFee).toFixed(2);
   };
 
   const getTransactionStatus = (value) => {
     if (value.dispute_status == "N") {
       return value.gw_order_status;
-    } else if ((value.dispute_status == "P")) {
+    } else if (value.dispute_status == "P") {
       return "DISPUTED";
-    } else if ((value.dispute_status == "C")) {
+    } else if (value.dispute_status == "C") {
       return "CHARGEBACK";
-    } else if ((value.dispute_status == "D")) {
+    } else if (value.dispute_status == "D") {
       return "DECLINE";
-    } else if ((value.dispute_status == "R")) {
+    } else if (value.dispute_status == "R") {
       return "REVERSAL";
     }
   };
 
- const setTextColor=(e)=>{
-    if(e=="DISPUTED"){
-      return "text-primary"
+  const setTextColor = (e) => {
+    if (e == "DISPUTED") {
+      return "text-primary";
+    } else if (e == "DECLINE") {
+      return "text-danger";
+    } else {
+      return "text-dark";
     }
-    else if(e=="DECLINE"){
-      return "text-danger"
+  };
+
+  const getDateTime = (e) => {
+    let date = DateTime.fromISO(e, {
+      zone: "Asia/Dhaka",
+    }).toLocaleString(DateTime.DATETIME_MED);
+
+    return date;
+  };
+
+  const reportButtonStatus = () => {
+    if (!mercantID || !periodFrom) {
+      return true;
+    } else {
+      return false;
     }
-    else{
-      return "text-dark"
-    }
- }
+  };
 
   const column = [
     {
@@ -410,7 +422,11 @@ const ProcessSettlement = () => {
     },
     {
       name: "Transaction Status",
-      selector: (row) => <span className={setTextColor(getTransactionStatus(row))}>{getTransactionStatus(row)}</span>,
+      selector: (row) => (
+        <span className={setTextColor(getTransactionStatus(row))}>
+          {getTransactionStatus(row)}
+        </span>
+      ),
       sortable: true,
     },
   ];
@@ -436,7 +452,14 @@ const ProcessSettlement = () => {
     doc.text(
       `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
       15,
-      12
+      13
+    );
+    doc.text(
+      `Period:${getDateTime(settlementDate).slice(0, 12)} - ${getDateTime(
+        periodFrom
+      ).slice(0, 12)}`,
+      85,
+      18
     );
     var pageSize = doc.internal.pageSize;
     var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
@@ -486,16 +509,43 @@ const ProcessSettlement = () => {
         ]),
         [
           {
-            content: `Total-Amount =                                                                                                         ${getotalOrderAmount(
-              statement
-            )}                      ${getotalBankFee(
-              statement
-            )}            ${getotalPgwFee(
-              statement
-            )}              ${getotalrefundAMount(
-              statement
-            )}                     ${getotal(statement)}`,
-            colSpan: 9,
+            content: `Total-Amount =`,
+            colSpan: 3,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          },
+          {
+            content: getotalOrderAmount(statement),
+            colSpan: 1,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          },
+          {
+            content: getotalBankFee(statement),
+            colSpan: 1,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          },
+          {
+            content: getotalPgwFee(statement),
+            colSpan: 1,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          },
+          {
+            content: getotalrefundAMount(statement),
+            colSpan: 1,
+            styles: {
+              fillColor: [239, 154, 154],
+            },
+          },
+          {
+            content: getotal(statement),
+            colSpan: 2,
             styles: {
               fillColor: [239, 154, 154],
             },
@@ -511,6 +561,7 @@ const ProcessSettlement = () => {
       // },
       showHead: "everyPage",
       styles: { fontSize: 6 },
+      margin: { top: 20 },
     });
     doc.save(`process_settlement${Date()}.pdf`);
   };
@@ -640,7 +691,7 @@ const ProcessSettlement = () => {
                 <CButton
                   className="btn btn-sm"
                   color="primary"
-                  disabled={!mercantID ? true : false}
+                  disabled={reportButtonStatus()}
                   onClick={dawonloadReport}
                 >
                   Print

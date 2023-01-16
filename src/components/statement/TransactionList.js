@@ -222,31 +222,33 @@ const TransactionList = () => {
   };
 
   const getTransactionStatus = (value) => {
-    console.log(value.dispute_status)
+    console.log(value.dispute_status);
     if (value.dispute_status == "N") {
       return value.gw_order_status;
-    }  if ((value.dispute_status == "P")) {
+    }
+    if (value.dispute_status == "P") {
       return "DISPUTED";
-    }  if ((value.dispute_status == "C")) {
+    }
+    if (value.dispute_status == "C") {
       return "CHARGEBACK";
-    }  if ((value.dispute_status == "D")) {
+    }
+    if (value.dispute_status == "D") {
       return "DECLINE";
-    }  if ((value.dispute_status == "R")) {
+    }
+    if (value.dispute_status == "R") {
       return "REVERSAL";
     }
   };
 
-  const setTextColor=(e)=>{
-    if(e=="DISPUTED"){
-      return "text-primary"
+  const setTextColor = (e) => {
+    if (e == "DISPUTED") {
+      return "text-primary";
+    } else if (e == "DECLINE") {
+      return "text-danger";
+    } else {
+      return "text-dark";
     }
-    else if(e=="DECLINE"){
-      return "text-danger"
-    }
-    else{
-      return "text-dark"
-    }
- }
+  };
 
   const column = [
     {
@@ -302,7 +304,11 @@ const TransactionList = () => {
     },
     {
       name: "Transaction Status",
-      selector: (row) => <span className={setTextColor(getTransactionStatus(row))}>{getTransactionStatus(row)}</span>,
+      selector: (row) => (
+        <span className={setTextColor(getTransactionStatus(row))}>
+          {getTransactionStatus(row)}
+        </span>
+      ),
       sortable: true,
     },
     {
@@ -329,7 +335,7 @@ const TransactionList = () => {
     e.map((element) => {
       sumOrderAmount += element.merchant_order_amount;
     });
-    return sumOrderAmount;
+    return parseFloat(sumOrderAmount).toFixed(2);
   };
 
   const getotalBankFee = (e) => {
@@ -337,7 +343,7 @@ const TransactionList = () => {
     e.map((element) => {
       sumBankFee += element.bank_charge;
     });
-    return sumBankFee;
+    return parseFloat(sumBankFee).toFixed(2);
   };
 
   const getotalPgwFee = (e) => {
@@ -345,14 +351,14 @@ const TransactionList = () => {
     e.map((element) => {
       sumBankFee += element.pgw_charge;
     });
-    return sumBankFee;
+    return parseFloat(sumBankFee).toFixed(2);
   };
   const getotalrefundAMount = (e) => {
     let sumBankFee = 0;
     e.map((element) => {
       sumBankFee += element.refund_amount;
     });
-    return sumBankFee;
+    return parseFloat(sumBankFee).toFixed(2);
   };
   const getotal = (e) => {
     let sumBankFee = 0;
@@ -362,7 +368,23 @@ const TransactionList = () => {
         element.pgw_charge -
         element.refund_amount;
     });
-    return sumBankFee;
+    return parseFloat(sumBankFee).toFixed(2);
+  };
+
+  const getDateTime = (e) => {
+    let date = DateTime.fromISO(e, {
+      zone: "Asia/Dhaka",
+    }).toLocaleString(DateTime.DATETIME_MED);
+
+    return date;
+  };
+
+  const reportButtonStatus = () => {
+    if (!mercantID || !periodFrom || !periodTo) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const dawonloadReport = () => {
@@ -389,7 +411,9 @@ const TransactionList = () => {
       13
     );
     doc.text(
-      `Period:${DateTime.fromISO(periodFrom).toLocaleString()} - ${DateTime.fromISO(periodTo).toLocaleString()}`,
+      `Period:${getDateTime(periodFrom).slice(0, 12)} - ${getDateTime(
+        periodTo
+      ).slice(0, 12)}`,
       85,
       18
     );
@@ -482,7 +506,7 @@ const TransactionList = () => {
             styles: {
               fillColor: [239, 154, 154],
             },
-          }
+          },
         ],
       ],
       // didDrawPage: function (data) {
@@ -494,9 +518,8 @@ const TransactionList = () => {
       // },
       showHead: "everyPage",
       styles: { fontSize: 6 },
-      margin: { top: 20 }
-    },
-    );
+      margin: { top: 20 },
+    });
     doc.save(`transation${Date()}.pdf`);
   };
 
@@ -605,7 +628,7 @@ const TransactionList = () => {
                 <CButton
                   className="btn btn-sm"
                   color="primary"
-                  disabled={!mercantID&&!periodFrom&&!periodTo ? true : false}
+                  disabled={reportButtonStatus()}
                   onClick={dawonloadReport}
                 >
                   Print
