@@ -39,13 +39,13 @@ const Description = (props) => {
   const getTransactionStatus = (value) => {
     if (value.dispute_status == "N") {
       return value.gw_order_status;
-    } else if ((value.dispute_status = "P")) {
+    } else if (value.dispute_status == "P") {
       return "DISPUTED";
-    } else if ((value.dispute_status = "C")) {
+    } else if (value.dispute_status == "C") {
       return "CHARGEBACK";
-    } else if ((value.dispute_status = "D")) {
+    } else if (value.dispute_status == "D") {
       return "DECLINE";
-    } else if ((value.dispute_status = "R")) {
+    } else if (value.dispute_status == "R") {
       return "REVERSAL";
     }
   };
@@ -110,8 +110,10 @@ const Description = (props) => {
           <tr>
             <td>Total Amount</td>
             <td>:</td>
-            <td>{props.data.merchant_order_amount -
-                (props.data.refund_amount - props.data.pgw_charge)}</td>
+            <td>
+              {props.data.merchant_order_amount -
+                (props.data.refund_amount - props.data.pgw_charge)}
+            </td>
           </tr>
           <tr>
             <td>Pay Date</td>

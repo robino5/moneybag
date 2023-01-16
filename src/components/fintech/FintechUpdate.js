@@ -294,12 +294,12 @@ const FintechUpdate = () => {
       });
     return data;
   };
-
+  var numbers = /^[0-9]+$/;
   const addSercideRow = () => {
     if (fields.length > 0) {
       const currentSelected = [];
 
-      for (let i = 0; i < fields.length - 1; i++) {
+      for (let i = 0; i < fields.length; i++) {
         if (
           fields[i].service_type !== undefined &&
           fields[i].service_type.match(numbers)
@@ -307,9 +307,11 @@ const FintechUpdate = () => {
           currentSelected.push(Number(fields[i].service_type));
         }
       }
+      // console.log(currentSelected);
 
-      serviceList &&
-        serviceList.map((service) => {
+      getServices(serviceList) &&
+        getServices(serviceList).map((service) => {
+          console.log(service.service_type);
           currentSelected.push(Number(service.service_type));
         });
       console.log(currentSelected);
