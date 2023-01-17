@@ -84,7 +84,7 @@ const Statement = () => {
   //   let name;
   //   merchantList?.map((mercant) => {
   //     if (mercant.marchant_id == e) {
-  //       name = mercant.business_name;  
+  //       name = mercant.business_name;
   //     }
   //   });
   //   return name;
@@ -222,28 +222,30 @@ const Statement = () => {
   const getTransactionStatus = (value) => {
     if (value.dispute_status == "N") {
       return value.gw_order_status;
-    }  if ((value.dispute_status == "P")) {
+    }
+    if (value.dispute_status == "P") {
       return "DISPUTED";
-    }  if ((value.dispute_status == "C")) {
+    }
+    if (value.dispute_status == "C") {
       return "CHARGEBACK";
-    }  if ((value.dispute_status == "D")) {
+    }
+    if (value.dispute_status == "D") {
       return "DECLINE";
-    }  if ((value.dispute_status == "R")) {
+    }
+    if (value.dispute_status == "R") {
       return "REVERSAL";
     }
   };
 
-  const setTextColor=(e)=>{
-    if(e=="DISPUTED"){
-      return "text-primary"
+  const setTextColor = (e) => {
+    if (e == "DISPUTED") {
+      return "text-primary";
+    } else if (e == "DECLINE") {
+      return "text-danger";
+    } else {
+      return "text-dark";
     }
-    else if(e=="DECLINE"){
-      return "text-danger"
-    }
-    else{
-      return "text-dark"
-    }
- }
+  };
 
   const column = [
     {
@@ -280,15 +282,20 @@ const Statement = () => {
     },
     {
       name: "Refund Amount",
-      selector: (row) => row.refund_amount-row.pgw_charge,
+      selector: (row) => row.refund_amount - row.pgw_charge,
     },
     {
       name: "Final Amountt",
-      selector: (row) => row.merchant_order_amount - (row.refund_amount-row.pgw_charge),
+      selector: (row) =>
+        row.merchant_order_amount - (row.refund_amount - row.pgw_charge),
     },
     {
       name: "Order Status",
-      selector: (row) =><span className={setTextColor(getTransactionStatus(row))}>{getTransactionStatus(row)}</span>,
+      selector: (row) => (
+        <span className={setTextColor(getTransactionStatus(row))}>
+          {getTransactionStatus(row)}
+        </span>
+      ),
     },
     {
       name: "Description",
@@ -399,7 +406,7 @@ const Statement = () => {
           </CCol>
           <CCol md={9}>
             <DataTable
-              title="Statements"
+              title="Merchant Transaction"
               columns={column}
               data={statement}
               paginatio={20}
@@ -409,7 +416,7 @@ const Statement = () => {
         <div>
           <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
             <CModalHeader onClose={() => setVisible(false)}>
-              <CModalTitle>Statement Details</CModalTitle>
+              <CModalTitle>Merchant Transaction Detail</CModalTitle>
             </CModalHeader>
             <CModalBody>
               <Description data={statementdetails} />

@@ -64,8 +64,8 @@ class App extends Component {
             />
             <Route
               exact
-              path="/statement"
-              name="statement"
+              path="/merchant-transaction"
+              name="merchant-transaction"
               element={<Statement />}
             />
             <Route
@@ -82,8 +82,8 @@ class App extends Component {
             />
             <Route
               exact
-              path="/process-settlement"
-              name="process-settlement"
+              path="/settlement"
+              name="settlement"
               element={<ProcessSettlement />}
             />
             {/* <Route

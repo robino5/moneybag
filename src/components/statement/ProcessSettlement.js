@@ -683,7 +683,7 @@ const ProcessSettlement = () => {
           </CCol>
           <CCol md={9}>
             <DataTable
-              title="Process Settlement"
+              title="Settlement"
               columns={column}
               data={statement}
               pagination={20}

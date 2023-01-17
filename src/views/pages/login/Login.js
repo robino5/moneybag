@@ -12,11 +12,13 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CImage,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
 import axios from "axios";
 import swal from "sweetalert";
+import logo from "src/assets/images/logo.jpeg";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -76,7 +78,7 @@ const Login = () => {
               <CCard className="p-4">
                 <CCardBody>
                   <CForm>
-                    <h1>Login</h1>
+                    <h1>Sign In</h1>
                     <p className="text-medium-emphasis">
                       Sign In to your account
                     </p>
@@ -111,7 +113,7 @@ const Login = () => {
                           className="px-4"
                           onClick={submitUser}
                         >
-                          Login
+                          Sign In
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
@@ -129,8 +131,11 @@ const Login = () => {
               >
                 <CCardBody className="text-center">
                   <div>
+                    <div className="text-center">
+                      <CImage className="login-image-wrapper" src={logo} />
+                    </div>
                     <h2>Welcome To</h2>
-                    <h3>MoneyBag Admin Portal</h3>
+                    <h3>Moneybag Admin Portal</h3>
                     <h5>Secure Payment Anytime</h5>
                     <Link to="/register">
                       {/* <CButton
