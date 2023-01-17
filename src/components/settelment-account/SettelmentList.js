@@ -119,7 +119,7 @@ const SettelmentList = () => {
         fintech_name=fintech.name
       }
     })
-    return fintech_name;
+    return fintech_name
   }
 
   useEffect(() => {
@@ -131,12 +131,12 @@ const SettelmentList = () => {
 
   const columns = [
     {
-      name: "Account Name",
-      selector: (row) => row.account_name,
-    },
-    {
       name: "Fintech Name",
       selector: (row) => setFintechName(row.org_no),
+    },
+    {
+      name: "Account Name",
+      selector: (row) => row.account_name,
     },
     {
       name: "Bank",
