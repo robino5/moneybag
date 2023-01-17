@@ -39,6 +39,12 @@ const _nav = [
       },
       {
         component: CNavItem,
+        name: "Merchant Callback Url",
+        to: "/merchant-callbackUrl",
+      },
+
+      {
+        component: CNavItem,
         name: "Bank List",
         to: "/bank",
       },

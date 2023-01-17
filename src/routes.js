@@ -112,7 +112,17 @@ const MerchantUserAdd = React.lazy(() =>
   import("./components/merchnant users/MerchantUserAdd")
 );
 const MerchantUserUpdate = React.lazy(() =>
-  import("./components//merchnant users/MerchantUserUpdate")
+  import("./components/merchnant users/MerchantUserUpdate")
+);
+
+const MerchantCallbackUrlList = React.lazy(() =>
+  import("./components/merchnant url/MerchantCallbackUrlList")
+);
+const MerchantCallbackUrlAdd = React.lazy(() =>
+  import("./components/merchnant url/MerchantCallbackUrlAdd")
+);
+const MerchantCallbackUrlUpdate = React.lazy(() =>
+  import("./components/merchnant url/MerchantCallbackUrlUpdate")
 );
 
 const FintechList = React.lazy(() =>
@@ -387,6 +397,22 @@ const routes = [
     path: "/merchant-users/update-merchant-users",
     name: "update-merchant-users",
     element: MerchantUserUpdate,
+  },
+
+  {
+    path: "/merchant-callbackUrl",
+    name: "merchant-callbackUrl",
+    element: MerchantCallbackUrlList,
+  },
+  {
+    path: "/merchant-callbackurl/add-merchant-callbackUrl",
+    name: "add-merchant-callbackUrl",
+    element: MerchantCallbackUrlAdd,
+  },
+  {
+    path: "/merchant-callbackUrl/update-merchant-callbackUrl",
+    name: "update-merchant-callbackUrl",
+    element: MerchantCallbackUrlUpdate,
   },
 
   { path: "/fintech", name: "fintech", element: FintechList },

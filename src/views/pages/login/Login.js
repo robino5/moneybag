@@ -126,7 +126,7 @@ const Login = () => {
                 </CCardBody>
               </CCard>
               <CCard
-                className="text-white bg-primary py-5"
+                className="text-white bg-color  py-3"
                 style={{ width: "44%" }}
               >
                 <CCardBody className="text-center">
@@ -135,7 +135,7 @@ const Login = () => {
                       <CImage className="login-image-wrapper" src={logo} />
                     </div>
                     <h2>Welcome To</h2>
-                    <h3>Moneybag Admin Portal</h3>
+                    <h4>Moneybag Admin Portal</h4>
                     <h5>Secure Payment Anytime</h5>
                     <Link to="/register">
                       {/* <CButton
