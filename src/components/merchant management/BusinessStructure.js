@@ -88,7 +88,7 @@ const BusinessStructure = ({ clickNext }) => {
 
   const getFileLebel = (e) => {
     if (e == 2001001) {
-      return "School Registartion Certificate by Board:";
+      return "School Registration Certificate by Board:";
     } else if (e == 2001002 || e == 2001006) {
       return "Incorporation Certificate";
     } else {
@@ -309,7 +309,7 @@ const BusinessStructure = ({ clickNext }) => {
               {...register("b_phone", {
                 required: "Please provide Phone number",
                 minLength: {
-                  value: 11,
+                  value: 10,
                   message: "Invalid Phone Number",
                 },
                 maxLength: {
@@ -317,7 +317,7 @@ const BusinessStructure = ({ clickNext }) => {
                   message: "Invalid Phone Number",
                 },
                 pattern: {
-                  value: /^[0-9]*$/,
+                  value: /^[+0-9]*$/,
                   message: "Invalid Phone Number",
                 },
               })}

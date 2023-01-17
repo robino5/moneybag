@@ -133,7 +133,7 @@ const SettelmentList = () => {
     {
       name: "Fintech Name",
       selector: (row) => setFintechName(row.org_no),
-    },
+    },  
     {
       name: "Account Name",
       selector: (row) => row.account_name,
