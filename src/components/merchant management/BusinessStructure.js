@@ -317,7 +317,7 @@ const BusinessStructure = ({ clickNext }) => {
                   message: "Invalid Phone Number",
                 },
                 pattern: {
-                  value: /^[+0-9]*$/,
+                  value: /^[0-9]*$/,
                   message: "Invalid Phone Number",
                 },
               })}
