@@ -127,15 +127,15 @@ const FintechList = () => {
     return data;
   };
 
-  const setCountryOption = (e) => {
-    let country;
+  const setLookUpOption = (e) => {
+    let name;
     lookupList &&
       lookupList.map((lookup) => {
-        if (lookup.id === e.country_no) {
-          country = lookup.name;
+        if (lookup.id === e) {
+          name = lookup.name;
         }
       });
-    return country;
+    return name;
   };
 
   const comumn = [
@@ -143,17 +143,22 @@ const FintechList = () => {
       name: "Name",
       sortable: true,
       selector: (row) => row.name,
-      maxWidth: "250px",
+      maxWidth: "200px",
     },
     {
-      name: " Swift Code",
-      selector: (row) => row.swift_code,
+      name: "Short Name",
+      selector: (row) => row.short_name,
       maxWidth: "50px",
+    },
+    {
+      name: "Fintech Type",
+      selector: (row) => setLookUpOption(row.org_type),
+      maxWidth: "120px",
     },
     {
       name: "Country",
-      selector: (row) => setCountryOption(row),
-      maxWidth: "50px",
+      selector: (row) => setLookUpOption(row.country_no),
+      maxWidth: "80px",
     },
     {
       name: "Services",

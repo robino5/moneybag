@@ -9,7 +9,7 @@ const SettelmentList = () => {
   const navigate = useNavigate();
 
   const [settlementAccountList, setSettlementAccountList] = useState();
-  const [serviceList, setServiceList] = useState();
+  const [organizationList, setOrganizationList] = useState();
   const [bankbranchList, setBankBranchList] = useState();
   const [lookupList, setLooupList] = useState();
 
@@ -51,24 +51,25 @@ const SettelmentList = () => {
       });
   };
 
-  const getService = () => {
+  const getOrganization = () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .get(`${process.env.REACT_APP_API_URL}services/`, {
+      .get(`${process.env.REACT_APP_API_URL}financial-organizations/`, {
         headers,
       })
       .then((responce) => {
-        console.log(responce.data), setServiceList(responce.data);
+        console.log(responce.data), setOrganizationList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        if(error.response.status==401){
+        if (error.response.status == 401) {
           navigate("/login");
         }
       });
   };
+
 
   const getLookupList = () => {
     const headers = {
@@ -100,22 +101,6 @@ const SettelmentList = () => {
     return bankName;
   };
 
-  const setservice = (e) => {
-    let service = [];
-    serviceList &&
-      serviceList.map((services) => {
-        if (e.service_name.match(services.id)) {
-          lookupList &&
-            lookupList.map((element) => {
-              if (services.category_service_id === element.id) {
-                service.push(element.name);
-              }
-            });
-        }
-      });
-    return "(" + service + ",)";
-  };
-
   const setBranchName = (e) => {
     let bankName;
     bankbranchList &&
@@ -127,50 +112,20 @@ const SettelmentList = () => {
     return bankName;
   };
 
-  const deleteSettelment = (id) => {
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-    swal({
-      title: "Are you sure?",
-      text: "Do you want to delete the Organization?",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        axios
-          .delete(`${process.env.REACT_APP_API_URL}account-settlements/${id}`, {
-            headers,
-          })
-          .then((response) => {
-            console.log(response),
-              swal({
-                position: "top",
-                text: "Ofganization Deleted Successfull",
-                icon: "success",
-                button: false,
-                timer: 1500,
-              });
-            getSettlementAccountList();
-          })
-          .catch((error) => {
-            console.log(error),
-              swal({
-                text: error.response.data.detail,
-                icon: "error",
-                button: false,
-                timer: 1500,
-              });
-          });
+  const setFintechName=(e)=>{
+    let fintech_name
+    organizationList?.map((fintech)=>{
+      if(fintech.id==e){
+        fintech_name=fintech.name
       }
-    });
-  };
+    })
+    return fintech_name;
+  }
 
   useEffect(() => {
     getSettlementAccountList();
     getBankBranchList();
-    getService();
+    getOrganization()
     getLookupList();
   }, []);
 
@@ -179,10 +134,10 @@ const SettelmentList = () => {
       name: "Account Name",
       selector: (row) => row.account_name,
     },
-    // {
-    //   name: "Service Name",
-    //   selector: (row) => setservice(row),
-    // },
+    {
+      name: "Fintech Name",
+      selector: (row) => setFintechName(row.org_no),
+    },
     {
       name: "Bank",
       selector: (row) => setBankName(row),
