@@ -12,7 +12,7 @@ import CIcon from "@coreui/icons-react";
 
 import { AppSidebarNav } from "./AppSidebarNav";
 
-import logo from "src/assets/images/logo.jpeg";
+import logo from "src/assets/images/logo.png";
 import { sygnet } from "src/assets/brand/sygnet";
 
 import SimpleBar from "simplebar-react";

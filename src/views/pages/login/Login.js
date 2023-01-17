@@ -18,7 +18,7 @@ import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
 import axios from "axios";
 import swal from "sweetalert";
-import logo from "src/assets/images/logo.jpeg";
+import logo from "src/assets/images/logo.png";
 
 const Login = () => {
   const navigate = useNavigate();

@@ -25,9 +25,7 @@ import {
   CModalTitle,
   CModalHeader,
 } from "@coreui/react";
-import { render } from "@testing-library/react";
-import { element } from "prop-types";
-import { Button } from "@coreui/coreui";
+import logo from "../../assets/images/Logo";
 
 const TransactionList = () => {
   const navigate = useNavigate();
@@ -389,36 +387,39 @@ const TransactionList = () => {
 
   const dawonloadReport = () => {
     const doc = new jsPDF();
+
     doc.setFontSize(8);
+    doc.addImage(logo, "JPEG", 80, 3);
     doc.text(
       `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
       15,
-      8
+      25
     );
     doc.text(
       `Mercnat Name:${getMerchantDetail(merchantList).business_name}`,
       65,
-      8
+      25
     );
     doc.text(
       `Mercnat Short Name:${getMerchantDetail(merchantList).short_name}`,
       140,
-      8
+      25
     );
     doc.text(
       `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
       15,
-      13
+      32
     );
     doc.text(
       `Period:${getDateTime(periodFrom).slice(0, 12)} - ${getDateTime(
         periodTo
       ).slice(0, 12)}`,
       85,
-      18
+      37
     );
     var pageSize = doc.internal.pageSize;
     var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+
     doc.text(
       `Print Date & Time:${DateTime.fromISO(DateTime.now(), {
         zone: "Asia/Dhaka",
@@ -432,6 +433,9 @@ const TransactionList = () => {
       pageHeight - 10
     );
     doc.text(`Powered By Moneybag`, 165, pageHeight - 10);
+    let pageCount = doc.internal.getNumberOfPages();
+    let pageCurrent = doc.internal.getCurrentPageInfo().pageNumber;
+    doc.text("page: " + pageCurrent + " of " + pageCount, 175, pageHeight - 5);
     doc.autoTable({
       columns: [
         { header: "Order ID", dataKey: "merchant_tran_id" },
@@ -518,7 +522,7 @@ const TransactionList = () => {
       // },
       showHead: "everyPage",
       styles: { fontSize: 6 },
-      margin: { top: 20 },
+      margin: { top: 40 },
     });
     doc.save(`transation${Date()}.pdf`);
   };
