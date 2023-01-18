@@ -53,7 +53,7 @@ const UserUpdate = () => {
   const updateUser = (e) => {
     const userData = {
       merchant_no: location.state.merchant_no,
-      mer_callback_url: e.mer_callback_url,
+      callback_url: e.mer_callback_url,
     };
     if (e.password) {
       updateMrPassword(e.password);
@@ -106,7 +106,7 @@ const UserUpdate = () => {
     };
     axios
       .put(
-        `${process.env.REACT_APP_API_URL}users/update-pwd/${location.state.id}`,
+        `${process.env.REACT_APP_API_URL}api-users/update-pwd/${location.state.id}`,
         password,
         {
           headers,
