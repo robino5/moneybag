@@ -410,7 +410,8 @@ const ProcessSettlement = () => {
     },
     {
       name: "Refund Amount",
-      selector: (row) => parseFloat(row.refund_amount).toFixed(2),
+      selector: (row) =>
+        row.refund_amount ? parseFloat(row.refund_amount).toFixed(2) : 0,
       sortable: true,
     },
     {
