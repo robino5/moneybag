@@ -9,6 +9,7 @@ import { DateTime } from "luxon";
 import Select from "react-select";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import Description from "./Description";
 import {
   CCard,
   CCardBody,
@@ -31,6 +32,7 @@ const TransactionList = () => {
   const navigate = useNavigate();
   const [merchantList, setMerchantList] = useState();
   const [visible, setVisible] = useState(false);
+  const [visible2, setVisible2] = useState(false);
   const [orderAmount, setOrderAmount] = useState("");
   const [merchnatName, setMerchantName] = useState("");
   const [periodFrom, setPeriodFrom] = useState("");
@@ -40,6 +42,7 @@ const TransactionList = () => {
   const [amontFrom, setAmountFrom] = useState("");
   const [amontTo, setAmountTo] = useState("");
   const [orderby, setOrderBy] = useState("");
+  const [dispute, setDispute] = useState();
   const [statement, setStatement] = useState();
   const [statementdetails, setStatementDetails] = useState();
   const [mercantID, setMerchantID] = useState();
@@ -93,9 +96,14 @@ const TransactionList = () => {
     return name;
   };
 
+  const openDespute = async (e) => {
+    setDispute(e);
+    setVisible(!visible);
+  };
+
   const openDetails = async (e) => {
     setStatement(e);
-    setVisible(!visible);
+    setVisible2(!visible2);
   };
 
   const handleOrderNumber = (e) => {
@@ -220,7 +228,6 @@ const TransactionList = () => {
   };
 
   const getTransactionStatus = (value) => {
-    console.log(value.dispute_status);
     if (value.dispute_status == "N") {
       return value.gw_order_status;
     }
@@ -262,7 +269,7 @@ const TransactionList = () => {
     {
       name: "Merchant Short Name",
       sortable: true,
-      selector: (row) => getMerchantName(row.merchant_id),
+      selector: (row) => row.short_name,
     },
     {
       name: "Transaction Date",
@@ -289,7 +296,7 @@ const TransactionList = () => {
     },
     {
       name: "Refund Amount",
-      selector: (row) => row.refund_amount,
+      selector: (row) => (row.refund_amount ? row.refund_amount : 0),
       sortable: true,
     },
     {
@@ -318,6 +325,15 @@ const TransactionList = () => {
             CColor="info"
             disabled={row.gw_order_status == "APPROVED" ? false : true}
             onClick={() => {
+              openDespute(row);
+            }}
+          >
+            Despute
+          </CButton>
+          <CButton
+            className="btn btn-sm d-inline mx-1"
+            CColor="info"
+            onClick={() => {
               openDetails(row);
             }}
           >
@@ -325,6 +341,7 @@ const TransactionList = () => {
           </CButton>
         </div>
       ),
+      minWidth: "170px",
     },
   ];
 
@@ -647,7 +664,21 @@ const TransactionList = () => {
               <CModalTitle>Dispute</CModalTitle>
             </CModalHeader>
             <CModalBody>
-              <DisputeAdd data={statement} />
+              <DisputeAdd data={dispute} />
+            </CModalBody>
+          </CModal>
+        </div>
+        <div>
+          <CModal
+            visible={visible2}
+            onClose={() => setVisible2(false)}
+            size="lg"
+          >
+            <CModalHeader onClose={() => setVisible2(false)}>
+              <CModalTitle>Transaction Details</CModalTitle>
+            </CModalHeader>
+            <CModalBody>
+              <Description data={statement} />
             </CModalBody>
           </CModal>
         </div>

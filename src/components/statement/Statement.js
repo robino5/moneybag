@@ -262,10 +262,10 @@ const Statement = () => {
       selector: (row) => row.txn_id,
     },
     {
-      name: "Merchant Name",
+      name: "Merchant Short Name",
       sortable: true,
       grow: 2,
-      selector: (row) => row.merchant_name,
+      selector: (row) => row.short_name,
     },
 
     {
@@ -282,12 +282,15 @@ const Statement = () => {
     },
     {
       name: "Refund Amount",
-      selector: (row) => row.refund_amount - row.pgw_charge,
+      selector: (row) =>
+        row.refund_amount ? row.refund_amount - row.pgw_charge : 0,
     },
     {
       name: "Final Amountt",
       selector: (row) =>
-        row.merchant_order_amount - (row.refund_amount - row.pgw_charge),
+        row.refund_amount
+          ? row.merchant_order_amount - row.refund_amount
+          : row.merchant_order_amount,
     },
     {
       name: "Order Status",
