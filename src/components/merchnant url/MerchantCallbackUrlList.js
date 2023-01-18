@@ -65,7 +65,7 @@ const UserList = () => {
       selector: (row) => getMerchntName(row.merchant_no),
     },
     {
-      name: "User Id",
+      name: "Callback Url",
       selector: (row) => row.callback_url,
     },
     {

@@ -164,7 +164,7 @@ const UserAdd = () => {
                             message: "Invalid Website",
                           },
                         })}
-                        placeholder="User Name"
+                        placeholder="Merchant Callback Url"
                       />
                       <span className="text-danger">
                         {errors.mer_callback_url?.message}
