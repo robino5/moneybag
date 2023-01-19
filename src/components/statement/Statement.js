@@ -30,6 +30,7 @@ const Statement = () => {
   const [merchantList, setMerchantList] = useState();
   const [visible, setVisible] = useState(false);
   const [orderAmount, setOrderAmount] = useState("");
+  const [txn, setTxnId] = useState("");
   const [merchnatName, setMerchantName] = useState("");
   const [periodFrom, setPeriodFrom] = useState("");
   const [periodTo, setPeriodTo] = useState("");
@@ -103,6 +104,9 @@ const Statement = () => {
   const handleOrderNumber = (e) => {
     setOrderAmount(e.target.value);
   };
+  const handleTxnId = (e) => {
+    setTxnId(e.target.value);
+  };
   const handleMerchantID = (e) => {
     console.log(e);
     setMerchantID(e.value);
@@ -140,6 +144,7 @@ const Statement = () => {
 
     const data = {
       order_id: orderAmount,
+      txn_id: txn,
       merchant_id: mercantID,
       period_from: `${periodFrom}T00:00:00`,
       period_to: `${periodTo}T23:59:59`,
@@ -152,6 +157,9 @@ const Statement = () => {
     if (!orderAmount) {
       delete data.order_id;
     }
+    if (!txn) {
+      delete data.txn_id;
+    }
     if (!mercantID) {
       delete data.merchant_id;
     }
@@ -161,7 +169,7 @@ const Statement = () => {
     if (!periodTo) {
       delete data.period_to;
     }
-    if (!staus) {
+    if (!staus|| staus=="ALL") {
       delete data.status;
     }
     if (!currency || currency == "ALL") {
@@ -210,7 +218,7 @@ const Statement = () => {
   };
 
   const getmerchantoptions = (merchantList) => {
-    let data = [];
+    let data = [{ value:"", label: "ALL" }];
     merchantList?.map((merchant) => {
       if (merchant.is_active == 1) {
         data.push({ value: merchant.id, label: merchant.business_name });
@@ -251,21 +259,23 @@ const Statement = () => {
     {
       name: "SL",
       selector: (row, index) => index + 1,
-      maxWidth: "15px",
+      width: "55px"
     },
     {
       name: "Order ID",
       selector: (row) => row.merchant_tran_id,
+      minWidth: "135px;",
     },
     {
       name: "Transection ID",
       selector: (row) => row.txn_id,
+      minWidth: "200px;",
     },
     {
       name: "Merchant Short Name",
       sortable: true,
-      grow: 2,
       selector: (row) => row.short_name,
+      minWidth: "70px;",
     },
 
     {
@@ -275,6 +285,7 @@ const Statement = () => {
         DateTime.fromISO(row.created_at, { zone: "Asia/Dhaka" }).toLocaleString(
           DateTime.DATETIME_MED
         ),
+      minWidth: "70px;",
     },
     {
       name: "Amount",
@@ -337,11 +348,17 @@ const Statement = () => {
             <CCard>
               <CCardBody>
                 <CForm>
-                  <CFormLabel>Order Number</CFormLabel>
+                  <CFormLabel>Order ID</CFormLabel>
                   <CFormInput
                     size="sm"
                     type="text"
                     onChange={handleOrderNumber}
+                  />
+                  <CFormLabel>Transaction ID</CFormLabel>
+                  <CFormInput
+                    size="sm"
+                    type="text"
+                    onChange={handleTxnId}
                   />
                   <CFormLabel>Merchant Name</CFormLabel>
                   <Select
@@ -366,6 +383,7 @@ const Statement = () => {
                   <CFormInput size="sm" type="date" onChange={handlePeriodTo} />
                   <CFormLabel className="mt-2">Status</CFormLabel>
                   <CFormSelect size="sm" onChange={handleStatus}>
+                    <option>ALL</option>
                     <option>APPROVED</option>
                     <option>PENDING</option>
                     <option>REJECTED</option>
@@ -412,7 +430,7 @@ const Statement = () => {
               title="Merchant Transaction"
               columns={column}
               data={statement}
-              paginatio={20}
+              paginatio={50}
             />
           </CCol>
         </CRow>

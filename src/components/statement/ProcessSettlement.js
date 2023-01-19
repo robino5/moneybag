@@ -268,7 +268,7 @@ const ProcessSettlement = () => {
   };
 
   const getmerchantoptions = (merchantList) => {
-    let data = [];
+    let data = [{ value:"", label: "ALL" }];
     merchantList?.map((merchant) => {
       if (merchant.is_active == 1) {
         data.push({ value: merchant.id, label: merchant.business_name });
@@ -373,16 +373,19 @@ const ProcessSettlement = () => {
       name: "Order ID",
       selector: (row) => row.merchant_tran_id,
       sortable: true,
+      minWidth: "135px;",
     },
     {
       name: "Trn ID",
       selector: (row) => row.txn_id,
       sortable: true,
+      minWidth: "200px;",
     },
     {
       name: "Merchant Short Name",
       sortable: true,
       selector: (row) => getMerchantName(row.merchant_id),
+      minWidth: "70px;",
     },
 
     {
@@ -392,6 +395,7 @@ const ProcessSettlement = () => {
           DateTime.DATETIME_MED
         ),
       sortable: true,
+      minWidth: "70px;",
     },
     {
       name: "Order Amount",
@@ -693,7 +697,7 @@ const ProcessSettlement = () => {
               title="Settlement"
               columns={column}
               data={statement}
-              pagination={20}
+              pagination={50}
               actions={
                 <CButton
                   className="btn btn-sm"

@@ -34,6 +34,7 @@ const TransactionList = () => {
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
   const [orderAmount, setOrderAmount] = useState("");
+  const [txn, setTxnId] = useState("");
   const [merchnatName, setMerchantName] = useState("");
   const [periodFrom, setPeriodFrom] = useState("");
   const [periodTo, setPeriodTo] = useState("");
@@ -109,6 +110,9 @@ const TransactionList = () => {
   const handleOrderNumber = (e) => {
     setOrderAmount(e.target.value);
   };
+  const handleTxnId = (e) => {
+    setTxnId(e.target.value);
+  };
   const handleMerchantID = (e) => {
     console.log(e);
     setMerchantID(e.value);
@@ -146,6 +150,7 @@ const TransactionList = () => {
 
     const data = {
       order_id: orderAmount,
+      txn_id: txn,
       merchant_id: mercantID,
       period_from: `${periodFrom}T00:00:00`,
       period_to: `${periodTo}T23:59:59`,
@@ -155,6 +160,9 @@ const TransactionList = () => {
     };
     if (!orderAmount) {
       delete data.order_id;
+    }
+    if (!txn) {
+      delete data.txn_id;
     }
     if (!mercantID) {
       delete data.merchant_id;
@@ -208,7 +216,7 @@ const TransactionList = () => {
   };
 
   const getmerchantoptions = (merchantList) => {
-    let data = [];
+    let data = [{ value:"", label: "ALL" }];
     merchantList?.map((merchant) => {
       if (merchant.is_active == 1) {
         data.push({ value: merchant.id, label: merchant.business_name });
@@ -260,16 +268,19 @@ const TransactionList = () => {
       name: "Order ID",
       selector: (row) => row.merchant_tran_id,
       sortable: true,
+      minWidth: "135px;",
     },
     {
       name: "Transaction ID",
       selector: (row) => row.txn_id,
       sortable: true,
+      minWidth: "200px;",
     },
     {
       name: "Merchant Short Name",
       sortable: true,
       selector: (row) => row.short_name,
+      minWidth: "70px;",
     },
     {
       name: "Transaction Date",
@@ -278,6 +289,7 @@ const TransactionList = () => {
           DateTime.DATETIME_MED
         ),
       sortable: true,
+      minWidth: "70px;",
     },
     {
       name: "Order Amount",
@@ -565,6 +577,12 @@ const TransactionList = () => {
                     type="text"
                     onChange={handleOrderNumber}
                   />
+                   <CFormLabel>Transaction ID</CFormLabel>
+                  <CFormInput
+                    size="sm"
+                    type="text"
+                    onChange={handleTxnId}
+                  />
                   <CFormLabel>Merchant Name</CFormLabel>
                   <Select
                     className="basic-single"
@@ -644,7 +662,7 @@ const TransactionList = () => {
               title="Transaction List"
               data={statementdetails}
               columns={column}
-              paginatio={20}
+              paginatio={50}
               actions={
                 <CButton
                   className="btn btn-sm"
