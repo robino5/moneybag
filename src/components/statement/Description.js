@@ -88,6 +88,11 @@ const Description = (props) => {
                   <td>{props.data.txn_id}</td>
                 </tr>
                 <tr>
+                  <td>Order ID</td>
+                  <td>:</td>
+                  <td>{props.data.merchant_tran_id}</td>
+                </tr>
+                <tr>
                   <td>Session ID</td>
                   <td>:</td>
                   <td>{props.data.gw_session_id}</td>
