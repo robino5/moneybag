@@ -268,7 +268,7 @@ const ProcessSettlement = () => {
   };
 
   const getmerchantoptions = (merchantList) => {
-    let data = [{ value:"", label: "ALL" }];
+    let data = [{ value: "", label: "ALL" }];
     merchantList?.map((merchant) => {
       if (merchant.is_active == 1) {
         data.push({ value: merchant.id, label: merchant.business_name });
@@ -345,7 +345,7 @@ const ProcessSettlement = () => {
   const setTextColor = (e) => {
     if (e == "DISPUTED") {
       return "text-primary";
-    } else if (e == "DECLINE") {
+    } else if (e == "DECLINED") {
       return "text-danger";
     } else {
       return "text-dark";
@@ -429,8 +429,8 @@ const ProcessSettlement = () => {
     {
       name: "Transaction Status",
       selector: (row) => (
-        <span className={setTextColor(getTransactionStatus(row))}>
-          {getTransactionStatus(row)}
+        <span className={setTextColor(row.gw_order_status)}>
+          {row.gw_order_status}
         </span>
       ),
       sortable: true,
@@ -516,7 +516,7 @@ const ProcessSettlement = () => {
           element.merchant_order_amount +
             element.pgw_charge -
             element.refund_amount,
-          getTransactionStatus(element),
+          element.gw_order_status,
         ]),
         [
           {

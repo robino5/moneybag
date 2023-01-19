@@ -117,9 +117,8 @@ const BringDispute = (props) => {
       });
     } else {
       if (
-        disputeamount &&
-        parseFloat(disputeamount).toFixed(2) >
-          parseFloat(props.data.merchant_order_amount).toFixed(2)
+        +parseFloat(disputeamount).toFixed(2) >
+        +parseFloat(props.data.merchant_order_amount).toFixed(2)
       ) {
         swal({
           position: "top-end",
@@ -221,6 +220,7 @@ const BringDispute = (props) => {
           <div hidden={disputeList?.dispute_type == "P" ? true : false}>
             <CFormCheck
               label="Apply for dispute"
+              disabled={disputeApplyDate ? true : false}
               onChange={(e) => {
                 setDisputeApplyCheck(e.target.checked);
               }}
@@ -277,7 +277,7 @@ const BringDispute = (props) => {
               type="radio"
               name="dipute_status"
               id="decline"
-              value="DECLINE"
+              value="DECLINED"
               label="Decline"
               onChange={(e) => {
                 setDisputeType(e.target.value);

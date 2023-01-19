@@ -216,7 +216,7 @@ const TransactionList = () => {
   };
 
   const getmerchantoptions = (merchantList) => {
-    let data = [{ value:"", label: "ALL" }];
+    let data = [{ value: "", label: "ALL" }];
     merchantList?.map((merchant) => {
       if (merchant.is_active == 1) {
         data.push({ value: merchant.id, label: merchant.business_name });
@@ -235,28 +235,10 @@ const TransactionList = () => {
     return data;
   };
 
-  const getTransactionStatus = (value) => {
-    if (value.dispute_status == "N") {
-      return value.gw_order_status;
-    }
-    if (value.dispute_status == "P") {
-      return "DISPUTED";
-    }
-    if (value.dispute_status == "C") {
-      return "CHARGEBACK";
-    }
-    if (value.dispute_status == "D") {
-      return "DECLINE";
-    }
-    if (value.dispute_status == "R") {
-      return "REVERSAL";
-    }
-  };
-
   const setTextColor = (e) => {
     if (e == "DISPUTED") {
       return "text-primary";
-    } else if (e == "DECLINE") {
+    } else if (e == "DECLINED") {
       return "text-danger";
     } else {
       return "text-dark";
@@ -322,8 +304,8 @@ const TransactionList = () => {
     {
       name: "Transaction Status",
       selector: (row) => (
-        <span className={setTextColor(getTransactionStatus(row))}>
-          {getTransactionStatus(row)}
+        <span className={setTextColor(row.gw_order_status)}>
+          {row.gw_order_status}
         </span>
       ),
       sortable: true,
@@ -335,12 +317,12 @@ const TransactionList = () => {
           <CButton
             className="btn btn-sm d-inline mx-1"
             CColor="info"
-            disabled={row.gw_order_status == "APPROVED" ? false : true}
+            disabled={row.gw_order_status == "CANCELLED" ? true : false}
             onClick={() => {
               openDespute(row);
             }}
           >
-            Despute
+            Dispute
           </CButton>
           <CButton
             className="btn btn-sm d-inline mx-1"
@@ -495,7 +477,7 @@ const TransactionList = () => {
           element.merchant_order_amount +
             element.pgw_charge -
             element.refund_amount,
-          getTransactionStatus(element),
+          element.gw_order_status,
         ]),
         [
           {
@@ -577,12 +559,8 @@ const TransactionList = () => {
                     type="text"
                     onChange={handleOrderNumber}
                   />
-                   <CFormLabel>Transaction ID</CFormLabel>
-                  <CFormInput
-                    size="sm"
-                    type="text"
-                    onChange={handleTxnId}
-                  />
+                  <CFormLabel>Transaction ID</CFormLabel>
+                  <CFormInput size="sm" type="text" onChange={handleTxnId} />
                   <CFormLabel>Merchant Name</CFormLabel>
                   <Select
                     className="basic-single"
@@ -616,9 +594,12 @@ const TransactionList = () => {
                   <CFormSelect size="sm" onChange={handleStatus}>
                     <option value={""}>Select One</option>
                     <option>APPROVED</option>
-                    <option>PENDING</option>
-                    <option>REJECTED</option>
-                    <option>CANCELED</option>
+                    <option>DISPUTED</option>
+                    <option>REVERSED</option>
+                    <option>REFUNDED</option>
+                    <option>CHARGEBACK</option>
+                    <option>DECLINED</option>
+                    <option>CANCELLED</option>
                   </CFormSelect>
                   {/* <CFormLabel className="mt-2">Currency</CFormLabel>
                 <CFormSelect size="sm" onChange={handleCurrency}>
@@ -677,8 +658,18 @@ const TransactionList = () => {
           </CCol>
         </CRow>
         <div>
-          <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
-            <CModalHeader onClose={() => setVisible(false)}>
+          <CModal
+            visible={visible}
+            onClose={() => {
+              setVisible(false), getStatementList();
+            }}
+            size="lg"
+          >
+            <CModalHeader
+              onClose={() => {
+                setVisible(false), getStatementList();
+              }}
+            >
               <CModalTitle>Dispute</CModalTitle>
             </CModalHeader>
             <CModalBody>

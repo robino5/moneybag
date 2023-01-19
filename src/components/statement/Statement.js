@@ -169,7 +169,7 @@ const Statement = () => {
     if (!periodTo) {
       delete data.period_to;
     }
-    if (!staus|| staus=="ALL") {
+    if (!staus || staus == "ALL") {
       delete data.status;
     }
     if (!currency || currency == "ALL") {
@@ -218,7 +218,7 @@ const Statement = () => {
   };
 
   const getmerchantoptions = (merchantList) => {
-    let data = [{ value:"", label: "ALL" }];
+    let data = [{ value: "", label: "ALL" }];
     merchantList?.map((merchant) => {
       if (merchant.is_active == 1) {
         data.push({ value: merchant.id, label: merchant.business_name });
@@ -248,7 +248,7 @@ const Statement = () => {
   const setTextColor = (e) => {
     if (e == "DISPUTED") {
       return "text-primary";
-    } else if (e == "DECLINE") {
+    } else if (e == "DECLINED") {
       return "text-danger";
     } else {
       return "text-dark";
@@ -259,7 +259,7 @@ const Statement = () => {
     {
       name: "SL",
       selector: (row, index) => index + 1,
-      width: "55px"
+      width: "55px",
     },
     {
       name: "Order ID",
@@ -300,14 +300,14 @@ const Statement = () => {
       name: "Final Amountt",
       selector: (row) =>
         row.refund_amount
-          ? row.merchant_order_amount - row.refund_amount
+          ? row.merchant_order_amount - (row.refund_amount - row.pgw_charge)
           : row.merchant_order_amount,
     },
     {
       name: "Order Status",
       selector: (row) => (
-        <span className={setTextColor(getTransactionStatus(row))}>
-          {getTransactionStatus(row)}
+        <span className={setTextColor(row.gw_order_status)}>
+          {row.gw_order_status}
         </span>
       ),
     },
@@ -355,11 +355,7 @@ const Statement = () => {
                     onChange={handleOrderNumber}
                   />
                   <CFormLabel>Transaction ID</CFormLabel>
-                  <CFormInput
-                    size="sm"
-                    type="text"
-                    onChange={handleTxnId}
-                  />
+                  <CFormInput size="sm" type="text" onChange={handleTxnId} />
                   <CFormLabel>Merchant Name</CFormLabel>
                   <Select
                     className="basic-single"
@@ -385,9 +381,12 @@ const Statement = () => {
                   <CFormSelect size="sm" onChange={handleStatus}>
                     <option>ALL</option>
                     <option>APPROVED</option>
-                    <option>PENDING</option>
-                    <option>REJECTED</option>
-                    <option>CANCELED</option>
+                    <option>DISPUTED</option>
+                    <option>REVERSED</option>
+                    <option>REFUNDED</option>
+                    <option>CHARGEBACK</option>
+                    <option>DECLINED</option>
+                    <option>CANCELLED</option>
                   </CFormSelect>
                   <CFormLabel className="mt-2">Currency</CFormLabel>
                   <CFormSelect size="sm" onChange={handleCurrency}>
