@@ -267,9 +267,7 @@ const BusinessStructure = ({ clickNext, data }) => {
         </CRow>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-4 col-form-label text-right">
-            {localStorage.getItem("business_type") == 2001001
-              ? "EIIN No."
-              : "BIN No."}
+            {data.business_type == 2001001 ? "EIIN No." : "BIN No."}
           </CFormLabel>
           <CCol sm={8}>
             <CFormInput
