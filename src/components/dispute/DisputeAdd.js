@@ -263,7 +263,7 @@ const BringDispute = (props) => {
                 setDisputeType(e.target.value);
               }}
             />
-            <CFormCheck
+            {/* <CFormCheck
               type="radio"
               name="dipute_status"
               id="chargeback"
@@ -272,7 +272,7 @@ const BringDispute = (props) => {
               onChange={(e) => {
                 setDisputeType(e.target.value);
               }}
-            />
+            /> */}
             <CFormCheck
               type="radio"
               name="dipute_status"

@@ -237,9 +237,17 @@ const TransactionList = () => {
 
   const setTextColor = (e) => {
     if (e == "DISPUTED") {
-      return "text-primary";
+      return "text-warning";
     } else if (e == "DECLINED") {
       return "text-danger";
+    } else if (e == "APPROVED") {
+      return "text-success";
+    } else if (e == "REVERSED") {
+      return "text-primary";
+    } else if (e == "REFUNDED") {
+      return "text-info";
+    } else if (e == "CANCELLED") {
+      return "text-muted";
     } else {
       return "text-dark";
     }
@@ -294,7 +302,7 @@ const TransactionList = () => {
       sortable: true,
     },
     {
-      name: "Total Amount",
+      name: "Payable Amount",
       selector: (row) =>
         parseFloat(
           row.merchant_order_amount + row.pgw_charge - row.refund_amount
@@ -304,9 +312,9 @@ const TransactionList = () => {
     {
       name: "Transaction Status",
       selector: (row) => (
-        <span className={setTextColor(row.gw_order_status)}>
+        <strong className={setTextColor(row.gw_order_status)}>
           {row.gw_order_status}
-        </span>
+        </strong>
       ),
       sortable: true,
     },
@@ -459,7 +467,7 @@ const TransactionList = () => {
         { header: "Bank Fee", dataKey: "bank_charge" },
         { header: "PGW Fee", dataKey: "pgw_charge" },
         { header: "Refund Amount", dataKey: "refund_amount" },
-        { header: "Total Amount", dataKey: "merchant_charge_amount" },
+        { header: "Payable Amount", dataKey: "merchant_charge_amount" },
         { header: "Transaction Status", dataKey: "gw_order_status" },
       ],
 
@@ -597,7 +605,6 @@ const TransactionList = () => {
                     <option>DISPUTED</option>
                     <option>REVERSED</option>
                     <option>REFUNDED</option>
-                    <option>CHARGEBACK</option>
                     <option>DECLINED</option>
                     <option>CANCELLED</option>
                   </CFormSelect>

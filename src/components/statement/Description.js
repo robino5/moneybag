@@ -9,10 +9,28 @@ const Description = (props) => {
   const [object, setObject] = useState([]);
   console.log(fintechStatus);
 
+  const setTextColor = (e) => {
+    if (e == "DISPUTED") {
+      return "text-warning";
+    } else if (e == "DECLINED") {
+      return "text-danger";
+    } else if (e == "APPROVED") {
+      return "text-success";
+    } else if (e == "REVERSED") {
+      return "text-primary";
+    } else if (e == "REFUNDED") {
+      return "text-info";
+    } else if (e == "CANCELLED") {
+      return "text-muted";
+    } else {
+      return "text-dark";
+    }
+  };
+
   useEffect(() => {
     let status;
     if (
-      props.data.gw_order_status != null &&
+      props.data.gw_order_status != "IN_PROGRESS" &&
       props.data.gw_order_status != "DECLINED"
     ) {
       if (props.data.gw_json_log.Message) {
@@ -89,7 +107,11 @@ const Description = (props) => {
                 <tr>
                   <td>Status</td>
                   <td>:</td>
-                  <td>{props.data.gw_order_status}</td>
+                  <td>
+                    <span className={setTextColor(props.data.gw_order_status)}>
+                      {props.data.gw_order_status}
+                    </span>
+                  </td>
                 </tr>
                 <tr>
                   <td>Creation date</td>
@@ -124,7 +146,7 @@ const Description = (props) => {
                   </td>
                 </tr>
                 <tr>
-                  <td>Total Amount</td>
+                  <td>Payable Amount</td>
                   <td>:</td>
                   <td>
                     {props.data.merchant_order_amount -

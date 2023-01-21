@@ -47,7 +47,7 @@ const ProcessSettlement = () => {
   const [approvedAmount, setApprovedAmount] = useState(0);
   const [mercantID, setMerchantID] = useState();
   const [settlementDate, setSettlementDate] = useState();
-  const currentDate = DateTime.now().minus({ days: 1 });
+  const currentDate = DateTime.now().minus({ days: 2 });
 
   const getMerchantList = async () => {
     const headers = {
@@ -227,17 +227,18 @@ const ProcessSettlement = () => {
 
   const saveApprovedTransection = () => {
     let data = [];
+    console.log("te", statement);
     statement &&
       statement.map((element) => {
         data.push(element);
       });
 
-    console.log(data);
+    console.log("data", data);
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .post(`${process.env.REACT_APP_API_URL}settlements/`, data, {
+      .post(`${process.env.REACT_APP_API_URL}settlements`, data, {
         headers,
       })
       .then((response) => {
@@ -344,9 +345,17 @@ const ProcessSettlement = () => {
 
   const setTextColor = (e) => {
     if (e == "DISPUTED") {
-      return "text-primary";
+      return "text-warning";
     } else if (e == "DECLINED") {
       return "text-danger";
+    } else if (e == "APPROVED") {
+      return "text-success";
+    } else if (e == "REVERSED") {
+      return "text-primary";
+    } else if (e == "REFUNDED") {
+      return "text-info";
+    } else if (e == "CANCELLED") {
+      return "text-muted";
     } else {
       return "text-dark";
     }
@@ -419,7 +428,7 @@ const ProcessSettlement = () => {
       sortable: true,
     },
     {
-      name: "Total Amount",
+      name: "Payable Amount",
       selector: (row) =>
         parseFloat(
           row.merchant_order_amount + row.pgw_charge - row.refund_amount
@@ -429,9 +438,9 @@ const ProcessSettlement = () => {
     {
       name: "Transaction Status",
       selector: (row) => (
-        <span className={setTextColor(row.gw_order_status)}>
+        <strong className={setTextColor(row.gw_order_status)}>
           {row.gw_order_status}
-        </span>
+        </strong>
       ),
       sortable: true,
     },
@@ -499,7 +508,7 @@ const ProcessSettlement = () => {
         { header: "Bank Fee", dataKey: "bank_charge" },
         { header: "PGW Fee", dataKey: "pgw_charge" },
         { header: "Refund Amount", dataKey: "refund_amount" },
-        { header: "Total Amount", dataKey: "merchant_charge_amount" },
+        { header: "Payable Amount", dataKey: "merchant_charge_amount" },
         { header: "Transaction Status", dataKey: "gw_order_status" },
       ],
       body: [

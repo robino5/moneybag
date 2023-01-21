@@ -247,9 +247,17 @@ const Statement = () => {
 
   const setTextColor = (e) => {
     if (e == "DISPUTED") {
-      return "text-primary";
+      return "text-warning";
     } else if (e == "DECLINED") {
       return "text-danger";
+    } else if (e == "APPROVED") {
+      return "text-success";
+    } else if (e == "REVERSED") {
+      return "text-primary";
+    } else if (e == "REFUNDED") {
+      return "text-info";
+    } else if (e == "CANCELLED") {
+      return "text-muted";
     } else {
       return "text-dark";
     }
@@ -297,7 +305,7 @@ const Statement = () => {
         row.refund_amount ? row.refund_amount - row.pgw_charge : 0,
     },
     {
-      name: "Final Amountt",
+      name: "Payable Amount",
       selector: (row) =>
         row.refund_amount
           ? row.merchant_order_amount - (row.refund_amount - row.pgw_charge)
@@ -306,9 +314,9 @@ const Statement = () => {
     {
       name: "Order Status",
       selector: (row) => (
-        <span className={setTextColor(row.gw_order_status)}>
+        <strong className={setTextColor(row.gw_order_status)}>
           {row.gw_order_status}
-        </span>
+        </strong>
       ),
     },
     {
@@ -384,7 +392,6 @@ const Statement = () => {
                     <option>DISPUTED</option>
                     <option>REVERSED</option>
                     <option>REFUNDED</option>
-                    <option>CHARGEBACK</option>
                     <option>DECLINED</option>
                     <option>CANCELLED</option>
                   </CFormSelect>
