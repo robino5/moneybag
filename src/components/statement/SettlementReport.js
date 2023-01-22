@@ -373,10 +373,8 @@ const SettlementReport = () => {
       32
     );
     doc.text(
-      `Period:${getDateTime(periodFrom).slice(0, 12)} - ${getDateTime(
-        periodTo
-      ).slice(0, 12)}`,
-      85,
+      `Period:${getDateTime(periodFrom)} - ${getDateTime(periodTo)}`,
+      68,
       37
     );
     var pageSize = doc.internal.pageSize;

@@ -446,6 +446,29 @@ const TransactionList = () => {
     }
   };
 
+  const getTrnCount = (e, status) => {
+    let count = 0;
+    e?.map((element) => {
+      if (element.gw_order_status == status) {
+        count += 1;
+      }
+    });
+    return count;
+  };
+
+  const gettrnAmount = (e, status) => {
+    let sum = 0;
+    e?.map((element) => {
+      if (element.gw_order_status == status) {
+        sum +=
+          element.merchant_order_amount +
+          element.pgw_charge -
+          element.refund_amount;
+      }
+    });
+    return parseFloat(sum).toFixed(2);
+  };
+
   const dawonloadReport = () => {
     const doc = new jsPDF();
 
@@ -472,10 +495,8 @@ const TransactionList = () => {
       32
     );
     doc.text(
-      `Period:${getDateTime(periodFrom).slice(0, 12)} - ${getDateTime(
-        periodTo
-      ).slice(0, 12)}`,
-      85,
+      `Period:${getDateTime(periodFrom)} - ${getDateTime(periodTo)}`,
+      68,
       37
     );
     var pageSize = doc.internal.pageSize;
@@ -534,42 +555,190 @@ const TransactionList = () => {
             content: `Total-Amount =`,
             colSpan: 3,
             styles: {
-              fillColor: [239, 154, 154],
+              fillColor: [245, 203, 176],
             },
           },
           {
             content: getotalOrderAmount(statementdetails),
             colSpan: 1,
             styles: {
-              fillColor: [239, 154, 154],
+              fillColor: [245, 203, 176],
             },
           },
           {
             content: getotalBankFee(statementdetails),
             colSpan: 1,
             styles: {
-              fillColor: [239, 154, 154],
+              fillColor: [245, 203, 176],
             },
           },
           {
             content: getotalPgwFee(statementdetails),
             colSpan: 1,
             styles: {
-              fillColor: [239, 154, 154],
+              fillColor: [245, 203, 176],
             },
           },
           {
             content: getotalrefundAMount(statementdetails),
             colSpan: 1,
             styles: {
-              fillColor: [239, 154, 154],
+              fillColor: [245, 203, 176],
             },
           },
           {
             content: getotal(statementdetails),
             colSpan: 2,
             styles: {
-              fillColor: [239, 154, 154],
+              fillColor: [245, 203, 176],
+            },
+          },
+        ],
+        [
+          {
+            content: `Approved Transaction = ${getTrnCount(
+              statementdetails,
+              "APPROVED"
+            )}`,
+            colSpan: 2,
+            styles: {
+              fillColor: [187, 237, 192],
+            },
+          },
+          {
+            content: `Approved Amount = ${gettrnAmount(
+              statementdetails,
+              "APPROVED"
+            )}`,
+            colSpan: 2,
+            styles: {
+              fillColor: [187, 237, 192],
+            },
+          },
+          {
+            content: `Disputed Transaction = ${gettrnAmount(
+              statementdetails,
+              "DISPUTED"
+            )}`,
+            colSpan: 3,
+            styles: {
+              fillColor: [246, 252, 192],
+            },
+          },
+          {
+            content: `Disputed Amount = ${gettrnAmount(
+              statementdetails,
+              "DISPUTED"
+            )}`,
+            colSpan: 3,
+            styles: {
+              fillColor: [246, 252, 192],
+            },
+          },
+        ],
+        [
+          {
+            content: `Cancelled Transaction = ${getTrnCount(
+              statementdetails,
+              "CANCELLED"
+            )}`,
+            colSpan: 2,
+            styles: {
+              fillColor: [250, 195, 195],
+            },
+          },
+          {
+            content: `Cancelled Amount = ${gettrnAmount(
+              statementdetails,
+              "CANCELLED"
+            )}`,
+            colSpan: 2,
+            styles: {
+              fillColor: [250, 195, 195],
+            },
+          },
+          {
+            content: `Declined Transaction = ${gettrnAmount(
+              statementdetails,
+              "DECLINED"
+            )}`,
+            colSpan: 3,
+            styles: {
+              fillColor: [250, 195, 195],
+            },
+          },
+          {
+            content: `Declined Amount = ${gettrnAmount(
+              statementdetails,
+              "DECLINED"
+            )}`,
+            colSpan: 3,
+            styles: {
+              fillColor: [250, 195, 195],
+            },
+          },
+        ],
+        [
+          {
+            content: `Reversed Transaction = ${getTrnCount(
+              statementdetails,
+              "REVERSED"
+            )}`,
+            colSpan: 2,
+            styles: {
+              fillColor: [199, 220, 242],
+            },
+          },
+          {
+            content: `Reversed Amount = ${gettrnAmount(
+              statementdetails,
+              "REVERSED"
+            )}`,
+            colSpan: 2,
+            styles: {
+              fillColor: [199, 220, 242],
+            },
+          },
+          {
+            content: `Refunded Transaction = ${gettrnAmount(
+              statementdetails,
+              "REFUNDED"
+            )}`,
+            colSpan: 3,
+            styles: {
+              fillColor: [210, 247, 246],
+            },
+          },
+          {
+            content: `Refunded Amount = ${gettrnAmount(
+              statementdetails,
+              "REFUNDED"
+            )}`,
+            colSpan: 3,
+            styles: {
+              fillColor: [210, 247, 246],
+            },
+          },
+        ],
+        [
+          {
+            content: `Incomplete Transaction = ${getTrnCount(
+              statementdetails,
+              "INCOMPLETE"
+            )}`,
+            colSpan: 2,
+            styles: {
+              fillColor: [243, 220, 245],
+            },
+          },
+          {
+            content: `Incomplete Amount = ${gettrnAmount(
+              statementdetails,
+              "INCOMPLETE"
+            )}`,
+            colSpan: 2,
+            styles: {
+              fillColor: [243, 220, 245],
             },
           },
         ],

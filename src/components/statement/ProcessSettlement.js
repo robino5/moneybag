@@ -503,9 +503,9 @@ const ProcessSettlement = () => {
     );
     doc.text(
       `Period:${
-        settlementDate ? getDateTime(settlementDate).slice(0, 12) : ""
-      } - ${getDateTime(periodFrom).slice(0, 12)}`,
-      85,
+        settlementDate ? getDateTime(settlementDate) : ""
+      } - ${getDateTime(periodFrom)}`,
+      68,
       37
     );
     var pageSize = doc.internal.pageSize;
