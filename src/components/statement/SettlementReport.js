@@ -9,6 +9,9 @@ import { DateTime } from "luxon";
 import Select from "react-select";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { CSVLink } from "react-csv";
+import CIcon from "@coreui/icons-react";
+import { cilDescription, cilPrint } from "@coreui/icons";
 import {
   CCard,
   CCardBody,
@@ -45,7 +48,7 @@ const SettlementReport = () => {
   const [statementdetails, setStatementDetails] = useState();
   const [userList, setUserList] = useState();
 
-  console.log("id", mercantID);
+  console.log("id", Settlements);
 
   const getMerchantList = async () => {
     const headers = {
@@ -266,6 +269,29 @@ const SettlementReport = () => {
     }).toLocaleString(DateTime.DATETIME_MED);
 
     return date;
+  };
+
+  const setDateForEcecl = (e) => {
+    let data = [];
+    e?.map((element) => {
+      data.push({
+        Settlement_From: DateTime.fromISO(element.settlement_from, {
+          zone: "Asia/Dhaka",
+        }).toLocaleString(DateTime.DATETIME_MED),
+        Settlement_to: DateTime.fromISO(element.settlement_to, {
+          zone: "Asia/Dhaka",
+        }).toLocaleString(DateTime.DATETIME_MED),
+        Collection_Amount: element.gttl_order_amount,
+        Bank_Fee: element.gttl_bank_fee,
+        PGW_Fee: element.gttl_pgw_fee,
+        Settlement_Amount: element.gttl_total_amount,
+        Settlement_Date: DateTime.fromISO(element.settlement_date, {
+          zone: "Asia/Dhaka",
+        }).toLocaleString(DateTime.DATETIME_MED),
+        Employee_ID: getUserId(element.created_by),
+      });
+    });
+    return data;
   };
 
   const reportButtonStatus = () => {
@@ -556,14 +582,23 @@ const SettlementReport = () => {
               data={Settlements}
               paginatio={50}
               actions={
-                <CButton
-                  className="btn btn-sm"
-                  color="primary"
-                  disabled={reportButtonStatus()}
-                  onClick={dawonloadReport}
-                >
-                  Print
-                </CButton>
+                <div>
+                  <CButton
+                    className="btn btn-sm"
+                    color="primary"
+                    disabled={reportButtonStatus()}
+                    onClick={dawonloadReport}
+                  >
+                    <CIcon icon={cilPrint} />
+                  </CButton>
+                  <CSVLink
+                    data={setDateForEcecl(Settlements)}
+                    className="btn btn-sm btn-success"
+                    filename={`settlementRepoer${Date()}`}
+                  >
+                    <CIcon icon={cilDescription} />
+                  </CSVLink>
+                </div>
               }
             />
           </CCol>

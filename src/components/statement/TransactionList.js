@@ -10,6 +10,9 @@ import Select from "react-select";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import Description from "./Description";
+import { CSVLink } from "react-csv";
+import CIcon from "@coreui/icons-react";
+import { cilDescription, cilPrint } from "@coreui/icons";
 import {
   CCard,
   CCardBody,
@@ -95,6 +98,35 @@ const TransactionList = () => {
       }
     });
     return name;
+  };
+
+  const setDateForEcecl = (e) => {
+    let data = [];
+    e?.map((element) => {
+      delete element.gw_json_log;
+      data.push({
+        Order_ID: element.merchant_tran_id,
+        Transaction_ID: element.txn_id,
+        Merchant_id: element.merchant_id,
+        Merchant_Name: element.merchant_name,
+        mercant_short_name: element.short_name,
+        Transaction_date: DateTime.fromISO(element.created_at, {
+          zone: "Asia/Dhaka",
+        }).toLocaleString(DateTime.DATETIME_MED),
+        Order_Amount: parseFloat(element.merchant_order_amount).toFixed(2),
+        Bank_fee: element.bank_charge,
+        Pgw_fee: element.pgw_charge,
+        Refund_Amount: element.refund_amount ? element.refund_amount : 0,
+        Payable_Amount: parseFloat(
+          element.merchant_order_amount +
+            element.pgw_charge -
+            element.refund_amount
+        ).toFixed(2),
+        Transaction_Status: element.gw_order_status,
+      });
+    });
+    console.log("data", data);
+    return data;
   };
 
   const openDespute = async (e) => {
@@ -652,14 +684,24 @@ const TransactionList = () => {
               columns={column}
               paginatio={50}
               actions={
-                <CButton
-                  className="btn btn-sm"
-                  color="primary"
-                  disabled={reportButtonStatus()}
-                  onClick={dawonloadReport}
-                >
-                  Print
-                </CButton>
+                <div>
+                  <CButton
+                    className="btn btn-secondary mx-2"
+                    color="primary"
+                    disabled={reportButtonStatus()}
+                    onClick={dawonloadReport}
+                  >
+                    <CIcon icon={cilPrint} />
+                  </CButton>
+
+                  <CSVLink
+                    data={setDateForEcecl(statementdetails)}
+                    className="btn btn-secondary"
+                    filename={`transation${Date()}`}
+                  >
+                    <CIcon icon={cilDescription} />
+                  </CSVLink>
+                </div>
               }
             />
           </CCol>
