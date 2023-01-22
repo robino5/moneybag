@@ -30,7 +30,7 @@ const Description = (props) => {
   useEffect(() => {
     let status;
     if (
-      props.data.gw_order_status != "IN_PROGRESS" &&
+      props.data.gw_order_status != "INCOMPLETE" &&
       props.data.gw_order_status != "DECLINED"
     ) {
       if (props.data.gw_json_log.Message) {
