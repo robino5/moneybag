@@ -375,7 +375,6 @@ const ProcessSettlement = () => {
   const setDateForEcecl = (e) => {
     let data = [];
     e?.map((element) => {
-      delete element.gw_json_log;
       data.push({
         Order_ID: element.merchant_tran_id,
         Transaction_ID: element.txn_id,

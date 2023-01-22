@@ -49,7 +49,10 @@ const TransactionList = () => {
   const [dispute, setDispute] = useState();
   const [statement, setStatement] = useState();
   const [statementdetails, setStatementDetails] = useState();
+  const [statementExcel, setStatementExcel] = useState();
   const [mercantID, setMerchantID] = useState();
+
+  console.log("statement:", statementdetails);
 
   const getMerchantList = async () => {
     const headers = {
@@ -79,7 +82,9 @@ const TransactionList = () => {
         headers,
       })
       .then((responce) => {
-        console.log(responce.data), setStatementDetails(responce.data);
+        console.log(responce.data),
+          setStatementDetails(responce.data),
+          setStatementExcel(responce.date);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -103,7 +108,6 @@ const TransactionList = () => {
   const setDateForEcecl = (e) => {
     let data = [];
     e?.map((element) => {
-      delete element.gw_json_log;
       data.push({
         Order_ID: element.merchant_tran_id,
         Transaction_ID: element.txn_id,
@@ -235,6 +239,7 @@ const TransactionList = () => {
       .then((response) => {
         console.log(response);
         setStatementDetails(response.data);
+        setStatementExcel(response.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -357,7 +362,12 @@ const TransactionList = () => {
           <CButton
             className="btn btn-sm d-inline mx-1"
             CColor="info"
-            disabled={row.gw_order_status == "CANCELLED" ? true : false}
+            disabled={
+              row.gw_order_status == "CANCELLED" ||
+              row.gw_order_status == "INCOMPLETE"
+                ? true
+                : false
+            }
             onClick={() => {
               openDespute(row);
             }}

@@ -7,7 +7,6 @@ const Description = (props) => {
   const [active, setActivation] = useState(1);
   const [fintechStatus, setFintechStatus] = useState();
   const [object, setObject] = useState([]);
-  console.log(fintechStatus);
 
   const setTextColor = (e) => {
     if (e == "DISPUTED") {
@@ -29,10 +28,7 @@ const Description = (props) => {
 
   useEffect(() => {
     let status;
-    if (
-      props.data.gw_order_status != "INCOMPLETE" &&
-      props.data.gw_order_status != "DECLINED"
-    ) {
+    if (props.data.gw_json_log) {
       if (props.data.gw_json_log.Message) {
         delete props.data.gw_json_log.Message.ThreeDSVars;
         status = props.data.gw_json_log.Message;
