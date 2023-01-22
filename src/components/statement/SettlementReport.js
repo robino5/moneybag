@@ -584,7 +584,7 @@ const SettlementReport = () => {
               actions={
                 <div>
                   <CButton
-                    className="btn btn-sm"
+                    className="btn btn-secondary mx-1"
                     color="primary"
                     disabled={reportButtonStatus()}
                     onClick={dawonloadReport}
@@ -593,7 +593,7 @@ const SettlementReport = () => {
                   </CButton>
                   <CSVLink
                     data={setDateForEcecl(Settlements)}
-                    className="btn btn-sm btn-success"
+                    className="btn btn-secondary"
                     filename={`settlementRepoer${Date()}`}
                   >
                     <CIcon icon={cilDescription} />

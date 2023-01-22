@@ -686,7 +686,7 @@ const TransactionList = () => {
               actions={
                 <div>
                   <CButton
-                    className="btn btn-secondary"
+                    className="btn btn-secondary mx-1"
                     color="primary"
                     disabled={reportButtonStatus()}
                     onClick={dawonloadReport}

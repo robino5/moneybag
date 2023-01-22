@@ -742,8 +742,7 @@ const ProcessSettlement = () => {
               actions={
                 <div>
                   <CButton
-                    className="btn btn-sm"
-                    color="primary"
+                    className="btn mx-1 btn-secondary"
                     disabled={reportButtonStatus()}
                     onClick={dawonloadReport}
                   >
@@ -751,7 +750,7 @@ const ProcessSettlement = () => {
                   </CButton>
                   <CSVLink
                     data={setDateForEcecl(statement)}
-                    className="btn btn-sm btn-success"
+                    className="btn btn-secondary"
                     filename={`process_settlement${Date()}`}
                   >
                     <CIcon icon={cilDescription} />
