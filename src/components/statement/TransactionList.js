@@ -475,8 +475,6 @@ const TransactionList = () => {
     var pageCount = doc.internal.getNumberOfPages();
     var pageCurrent = doc.internal.getCurrentPageInfo().pageNumber;
     console.log(doc.internal.getNumberOfPages());
-    for (var i = 0; i < pageCount; i++) {
-      doc.setPage(i);
       doc.addImage(logo, "JPEG", 80, 3);
       doc.text(
         `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
@@ -524,7 +522,6 @@ const TransactionList = () => {
         175,
         pageHeight - 5
       );
-    }
     doc.autoTable({
       columns: [
         { header: "Order ID", dataKey: "merchant_tran_id" },
@@ -623,7 +620,7 @@ const TransactionList = () => {
             },
           },
           {
-            content: `Disputed Transaction = ${gettrnAmount(
+            content: `Disputed Transaction = ${getTrnCount(
               statementdetails,
               "DISPUTED"
             )}`,
@@ -665,7 +662,7 @@ const TransactionList = () => {
             },
           },
           {
-            content: `Declined Transaction = ${gettrnAmount(
+            content: `Declined Transaction = ${getTrnCount(
               statementdetails,
               "DECLINED"
             )}`,
@@ -707,7 +704,7 @@ const TransactionList = () => {
             },
           },
           {
-            content: `Refunded Transaction = ${gettrnAmount(
+            content: `Refunded Transaction = ${getTrnCount(
               statementdetails,
               "REFUNDED"
             )}`,
@@ -750,18 +747,62 @@ const TransactionList = () => {
           },
         ],
       ],
-      // didDrawPage: function (data) {
-      //   let rows = data.table.body;
-      //   rows.push({
-      //     content: "Total = " + 67890,
-      //     colSpan: 2,
-      //   });
-      // },
       showHead: "everyPage",
       styles: { fontSize: 6 },
       margin: { top: 40 },
     });
+    for (var i = 0; i < pageCount; i++) {
+      doc.setPage(i);
+      doc.addImage(logo, "JPEG", 80, 3);
+      doc.text(
+        `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
+        15,
+        25
+      );
+      doc.text(
+        `Mercnat Name:${getMerchantDetail(merchantList).business_name}`,
+        65,
+        25
+      );
+      doc.text(
+        `Mercnat Short Name:${getMerchantDetail(merchantList).short_name}`,
+        140,
+        25
+      );
+      doc.text(
+        `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
+        15,
+        32
+      );
+      doc.text(
+        `Period:${getDateTime(periodFrom)} - ${getDateTime(periodTo)}`,
+        68,
+        37
+      );
+      var pageSize = doc.internal.pageSize;
+      var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+
+      doc.text(
+        `Print Date & Time:${DateTime.fromISO(DateTime.now(), {
+          zone: "Asia/Dhaka",
+        }).toLocaleString(DateTime.DATETIME_MED)}`,
+        15,
+        pageHeight - 10
+      );
+      doc.text(
+        `Print by:${localStorage.getItem("username")}`,
+        100,
+        pageHeight - 10
+      );
+      doc.text(`Powered By Moneybag`, 165, pageHeight - 10);
+      doc.text(
+        "page: " + pageCurrent + " of " + pageCount,
+        175,
+        pageHeight - 5
+      );
+    }
     console.log(pageCount);
+
     doc.save(`transation${Date()}.pdf`);
   };
 
