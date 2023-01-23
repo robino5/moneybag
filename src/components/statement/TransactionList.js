@@ -363,8 +363,7 @@ const TransactionList = () => {
             className="btn btn-sm d-inline mx-1"
             CColor="info"
             disabled={
-              row.gw_order_status == "CANCELLED" ||
-              row.gw_order_status == "INCOMPLETE"
+              row.gw_order_status == "CANCELLED" 
                 ? true
                 : false
             }
