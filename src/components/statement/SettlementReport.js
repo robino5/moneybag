@@ -47,6 +47,8 @@ const SettlementReport = () => {
   const [Settlements, setSettlements] = useState();
   const [statementdetails, setStatementDetails] = useState();
   const [userList, setUserList] = useState();
+  const [mercantDetails, setMarchentDetailsList] = useState();
+  const [bankbranchList, setBankBranchList] = useState();
 
   console.log("id", Settlements);
 
@@ -77,6 +79,44 @@ const SettlementReport = () => {
       .get(`${process.env.REACT_APP_API_URL}users/list-users`, { headers })
       .then((responce) => {
         console.log(responce.data), setUserList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        if (error.response.status == 401) {
+          navigate("/login");
+        }
+      });
+  };
+
+  const getMertchantSettlementAccountList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}marchant-details/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setMarchentDetailsList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        if (error.response.status == 401) {
+          navigate("/login");
+        }
+      });
+  };
+
+  const getBankBranchList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}banks/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setBankBranchList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -191,7 +231,7 @@ const SettlementReport = () => {
       .get(
         `${
           process.env.REACT_APP_API_URL
-        }settlements/${merchnatName}?${encodeDataToURL(data)}`,
+        }settlements/${mercantID}?${encodeDataToURL(data)}`,
         { headers }
       )
       .then((response) => {
@@ -302,6 +342,26 @@ const SettlementReport = () => {
     }
   };
 
+  const getMerchantSettlementDetail = (merhcntdetail) => {
+    let data;
+    merhcntdetail?.map((e) => {
+      if (e.merchant_no == mercantID) {
+        data = e;
+      }
+    });
+    return data;
+  };
+
+  const getBankBranchName = (bankBranck) => {
+    let name;
+    bankbranchList?.map((element) => {
+      if (element.id == bankBranck) {
+        name = element.branch_name;
+      }
+    });
+    return name;
+  };
+
   const column = [
     {
       name: "Settlement From",
@@ -351,6 +411,9 @@ const SettlementReport = () => {
     console.log(getDateTime(periodFrom));
     const doc = new jsPDF();
     doc.setFontSize(8);
+    var pageCount = doc.internal.getNumberOfPages();
+    var pageCurrent = doc.internal.getCurrentPageInfo().pageNumber;
+    console.log(doc.internal.getNumberOfPages());
     doc.addImage(logo, "JPEG", 80, 3);
     doc.text(
       `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
@@ -368,14 +431,35 @@ const SettlementReport = () => {
       25
     );
     doc.text(
+      `Settlement Bank:${getBankBranchName(
+        getMerchantSettlementDetail(mercantDetails).bank_no
+      )}`,
+      15,
+      30
+    );
+    doc.text(
+      `Settlement Branch:${getBankBranchName(
+        getMerchantSettlementDetail(mercantDetails).branch_no
+      )}`,
+      75,
+      30
+    );
+    doc.text(
+      `Settlement Account:${
+        getMerchantSettlementDetail(mercantDetails).account_no
+      }`,
+      140,
+      30
+    );
+    doc.text(
       `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
       15,
-      32
+      35
     );
     doc.text(
       `Period:${getDateTime(periodFrom)} - ${getDateTime(periodTo)}`,
       68,
-      37
+      40
     );
     var pageSize = doc.internal.pageSize;
     var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
@@ -393,8 +477,6 @@ const SettlementReport = () => {
       pageHeight - 10
     );
     doc.text(`Powered By Moneybag`, 165, pageHeight - 10);
-    let pageCount = doc.internal.getNumberOfPages();
-    let pageCurrent = doc.internal.getCurrentPageInfo().pageNumber;
     doc.text("page: " + pageCurrent + " of " + pageCount, 175, pageHeight - 5);
     doc.autoTable({
       columns: [
@@ -474,14 +556,91 @@ const SettlementReport = () => {
       // },
       showHead: "everyPage",
       styles: { fontSize: 6 },
-      margin: { top: 40 },
+      margin: { top: 43 },
     });
+    for (var i = 0; i < pageCount; i++) {
+      doc.setPage(i);
+      doc.addImage(logo, "JPEG", 80, 3);
+      doc.text(
+        `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
+        15,
+        25
+      );
+      doc.text(
+        `Mercnat Name:${getMerchantDetail(merchantList).business_name}`,
+        65,
+        25
+      );
+      doc.text(
+        `Mercnat Short Name:${getMerchantDetail(merchantList).short_name}`,
+        140,
+        25
+      );
+      doc.text(
+        `Settlement Bank:${getBankBranchName(
+          getMerchantSettlementDetail(mercantDetails).bank_no
+        )}`,
+        15,
+        30
+      );
+      doc.text(
+        `Settlement Branch:${getBankBranchName(
+          getMerchantSettlementDetail(mercantDetails).branch_no
+        )}`,
+        75,
+        30
+      );
+      doc.text(
+        `Settlement Account:${
+          getMerchantSettlementDetail(mercantDetails).account_no
+        }`,
+        140,
+        30
+      );
+      doc.text(
+        `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
+        15,
+        35
+      );
+      doc.text(
+        `Period:${getDateTime(periodFrom)} - ${getDateTime(periodTo)}`,
+        68,
+        40
+      );
+      var pageSize = doc.internal.pageSize;
+      var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+
+      doc.text(
+        `Print Date & Time:${DateTime.fromISO(DateTime.now(), {
+          zone: "Asia/Dhaka",
+        }).toLocaleString(DateTime.DATETIME_MED)}`,
+        15,
+        pageHeight - 10
+      );
+      doc.text(
+        `Print by:${localStorage.getItem("username")}`,
+        100,
+        pageHeight - 10
+      );
+      doc.text(`Powered By Moneybag`, 165, pageHeight - 10);
+      doc.text(
+        "page: " + pageCurrent + " of " + pageCount,
+        175,
+        pageHeight - 5
+      );
+    }
+    console.log(pageCount);
     doc.save(`settlement${Date()}.pdf`);
   };
 
   useEffect(() => {
-    getMerchantList();
-    getUser();
+    const getAllData = async () => {
+      await getMerchantList();
+      await getUser();
+      await getMertchantSettlementAccountList();
+      await getBankBranchList();
+    };
+    getAllData();
   }, []);
 
   return (

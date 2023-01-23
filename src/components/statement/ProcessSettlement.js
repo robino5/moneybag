@@ -50,6 +50,8 @@ const ProcessSettlement = () => {
   const [approvedAmount, setApprovedAmount] = useState(0);
   const [mercantID, setMerchantID] = useState();
   const [settlementDate, setSettlementDate] = useState();
+  const [mercantDetails, setMarchentDetailsList] = useState();
+  const [bankbranchList, setBankBranchList] = useState();
   const currentDate = DateTime.now().minus({ days: 2 });
 
   const getMerchantList = async () => {
@@ -84,6 +86,44 @@ const ProcessSettlement = () => {
       })
       .then((responce) => {
         console.log(responce.data), setStatement(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        if (error.response.status == 401) {
+          navigate("/login");
+        }
+      });
+  };
+
+  const getMertchantSettlementAccountList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}marchant-details/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setMarchentDetailsList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        if (error.response.status == 401) {
+          navigate("/login");
+        }
+      });
+  };
+
+  const getBankBranchList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}banks/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setBankBranchList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -223,7 +263,10 @@ const ProcessSettlement = () => {
     let sum = 0;
     e &&
       e.map((element) => {
-        sum += element.merchant_order_amount;
+        sum +=
+          element.merchant_order_amount +
+          element.pgw_charge -
+          element.refund_amount;
       });
     setApprovedAmount(sum);
   };
@@ -372,6 +415,26 @@ const ProcessSettlement = () => {
     return date;
   };
 
+  const getMerchantSettlementDetail = (merhcntdetail) => {
+    let data;
+    merhcntdetail?.map((e) => {
+      if (e.merchant_no == mercantID) {
+        data = e;
+      }
+    });
+    return data;
+  };
+
+  const getBankBranchName = (bankBranck) => {
+    let name;
+    bankbranchList?.map((element) => {
+      if (element.id == bankBranck) {
+        name = element.branch_name;
+      }
+    });
+    return name;
+  };
+
   const setDateForEcecl = (e) => {
     let data = [];
     e?.map((element) => {
@@ -480,6 +543,9 @@ const ProcessSettlement = () => {
   const dawonloadReport = () => {
     const doc = new jsPDF();
     doc.setFontSize(8);
+    var pageCount = doc.internal.getNumberOfPages();
+    var pageCurrent = doc.internal.getCurrentPageInfo().pageNumber;
+    console.log(doc.internal.getNumberOfPages());
     doc.addImage(logo, "JPEG", 80, 3);
     doc.text(
       `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
@@ -497,16 +563,35 @@ const ProcessSettlement = () => {
       25
     );
     doc.text(
-      `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
+      `Settlement Bank:${getBankBranchName(
+        getMerchantSettlementDetail(mercantDetails).bank_no
+      )}`,
       15,
-      32
+      30
     );
     doc.text(
-      `Period:${
-        settlementDate ? getDateTime(settlementDate) : ""
-      } - ${getDateTime(periodFrom)}`,
+      `Settlement Branch:${getBankBranchName(
+        getMerchantSettlementDetail(mercantDetails).branch_no
+      )}`,
+      75,
+      30
+    );
+    doc.text(
+      `Settlement Account:${
+        getMerchantSettlementDetail(mercantDetails).account_no
+      }`,
+      140,
+      30
+    );
+    doc.text(
+      `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
+      15,
+      35
+    );
+    doc.text(
+      `Period:${getDateTime(periodFrom)} - ${getDateTime(periodTo)}`,
       68,
-      37
+      40
     );
     var pageSize = doc.internal.pageSize;
     var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
@@ -524,8 +609,6 @@ const ProcessSettlement = () => {
       pageHeight - 10
     );
     doc.text(`Powered By Moneybag`, 165, pageHeight - 10);
-    let pageCount = doc.internal.getNumberOfPages();
-    let pageCurrent = doc.internal.getCurrentPageInfo().pageNumber;
     doc.text("page: " + pageCurrent + " of " + pageCount, 175, pageHeight - 5);
     doc.autoTable({
       columns: [
@@ -612,14 +695,92 @@ const ProcessSettlement = () => {
       // },
       showHead: "everyPage",
       styles: { fontSize: 6 },
-      margin: { top: 40 },
+      margin: { top: 43 },
     });
+
+    for (var i = 0; i < pageCount; i++) {
+      doc.setPage(i);
+      doc.addImage(logo, "JPEG", 80, 3);
+      doc.text(
+        `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
+        15,
+        25
+      );
+      doc.text(
+        `Mercnat Name:${getMerchantDetail(merchantList).business_name}`,
+        65,
+        25
+      );
+      doc.text(
+        `Mercnat Short Name:${getMerchantDetail(merchantList).short_name}`,
+        140,
+        25
+      );
+      doc.text(
+        `Settlement Bank:${getBankBranchName(
+          getMerchantSettlementDetail(mercantDetails).bank_no
+        )}`,
+        15,
+        30
+      );
+      doc.text(
+        `Settlement Branch:${getBankBranchName(
+          getMerchantSettlementDetail(mercantDetails).branch_no
+        )}`,
+        75,
+        30
+      );
+      doc.text(
+        `Settlement Account:${
+          getMerchantSettlementDetail(mercantDetails).account_no
+        }`,
+        140,
+        30
+      );
+      doc.text(
+        `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
+        15,
+        35
+      );
+      doc.text(
+        `Period:${getDateTime(periodFrom)} - ${getDateTime(periodTo)}`,
+        68,
+        40
+      );
+      var pageSize = doc.internal.pageSize;
+      var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+
+      doc.text(
+        `Print Date & Time:${DateTime.fromISO(DateTime.now(), {
+          zone: "Asia/Dhaka",
+        }).toLocaleString(DateTime.DATETIME_MED)}`,
+        15,
+        pageHeight - 10
+      );
+      doc.text(
+        `Print by:${localStorage.getItem("username")}`,
+        100,
+        pageHeight - 10
+      );
+      doc.text(`Powered By Moneybag`, 165, pageHeight - 10);
+      doc.text(
+        "page: " + pageCurrent + " of " + pageCount,
+        175,
+        pageHeight - 5
+      );
+    }
+    console.log(pageCount);
     doc.save(`process_settlement${Date()}.pdf`);
   };
 
   useEffect(() => {
-    getMerchantList();
-    getStatementList();
+    const getAllData = async () => {
+      await getMerchantList();
+      await getStatementList();
+      await getMertchantSettlementAccountList();
+      await getBankBranchList();
+    };
+    getAllData();
   }, []);
 
   return (

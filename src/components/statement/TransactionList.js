@@ -51,6 +51,8 @@ const TransactionList = () => {
   const [statementdetails, setStatementDetails] = useState();
   const [statementExcel, setStatementExcel] = useState();
   const [mercantID, setMerchantID] = useState();
+  const [mercantDetails, setMarchentDetailsList] = useState();
+  const [bankbranchList, setBankBranchList] = useState();
 
   console.log("statement:", statementdetails);
 
@@ -85,6 +87,44 @@ const TransactionList = () => {
         console.log(responce.data),
           setStatementDetails(responce.data),
           setStatementExcel(responce.date);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        if (error.response.status == 401) {
+          navigate("/login");
+        }
+      });
+  };
+
+  const getMertchantSettlementAccountList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}marchant-details/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setMarchentDetailsList(responce.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        if (error.response.status == 401) {
+          navigate("/login");
+        }
+      });
+  };
+
+  const getBankBranchList = async () => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}banks/`, {
+        headers,
+      })
+      .then((responce) => {
+        console.log(responce.data), setBankBranchList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -182,8 +222,6 @@ const TransactionList = () => {
   //   console.log(periodTo);
 
   const searchStatemet = (e) => {
-    e.preventDefault();
-
     const data = {
       order_id: orderAmount,
       txn_id: txn,
@@ -272,9 +310,19 @@ const TransactionList = () => {
     return data;
   };
 
+  const getMerchantSettlementDetail = (merhcntdetail) => {
+    let data;
+    merhcntdetail?.map((e) => {
+      if (e.merchant_no == mercantID) {
+        data = e;
+      }
+    });
+    return data;
+  };
+
   const setTextColor = (e) => {
-    if (e == "DISPUTED") {
-      return "text-warning";
+    if (e == "INCOMPLETE") {
+      return "text-dark";
     } else if (e == "DECLINED") {
       return "text-danger";
     } else if (e == "APPROVED") {
@@ -286,7 +334,22 @@ const TransactionList = () => {
     } else if (e == "CANCELLED") {
       return "text-muted";
     } else {
-      return "text-dark";
+      return "text-warning";
+    }
+  };
+
+  const setDisputeDisableStatus = (e) => {
+    if (e.gw_order_status == "CANCELLED") {
+      return true;
+    } else if (
+      (e.gw_order_status == "REFUNDED" ||
+        e.gw_order_status == "REVERSED" ||
+        e.gw_order_status == "DECLINED") &&
+      e.dispute_status == "A"
+    ) {
+      return true;
+    } else {
+      return false;
     }
   };
 
@@ -349,8 +412,14 @@ const TransactionList = () => {
     {
       name: "Transaction Status",
       selector: (row) => (
-        <strong className={setTextColor(row.gw_order_status)}>
-          {row.gw_order_status}
+        <strong
+          className={
+            row.dispute_status == "P"
+              ? "text-warning"
+              : setTextColor(row.gw_order_status)
+          }
+        >
+          {row.dispute_status == "P" ? "DISPUTED" : row.gw_order_status}
         </strong>
       ),
       sortable: true,
@@ -362,11 +431,7 @@ const TransactionList = () => {
           <CButton
             className="btn btn-sm d-inline mx-1"
             CColor="info"
-            disabled={
-              row.gw_order_status == "CANCELLED" 
-                ? true
-                : false
-            }
+            disabled={setDisputeDisableStatus(row)}
             onClick={() => {
               openDespute(row);
             }}
@@ -468,59 +533,86 @@ const TransactionList = () => {
     return parseFloat(sum).toFixed(2);
   };
 
+  const getBankBranchName = (bankBranck) => {
+    let name;
+    bankbranchList?.map((element) => {
+      if (element.id == bankBranck) {
+        name = element.branch_name;
+      }
+    });
+    return name;
+  };
+
   const dawonloadReport = () => {
     const doc = new jsPDF();
     doc.setFontSize(8);
     var pageCount = doc.internal.getNumberOfPages();
     var pageCurrent = doc.internal.getCurrentPageInfo().pageNumber;
     console.log(doc.internal.getNumberOfPages());
-      doc.addImage(logo, "JPEG", 80, 3);
-      doc.text(
-        `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
-        15,
-        25
-      );
-      doc.text(
-        `Mercnat Name:${getMerchantDetail(merchantList).business_name}`,
-        65,
-        25
-      );
-      doc.text(
-        `Mercnat Short Name:${getMerchantDetail(merchantList).short_name}`,
-        140,
-        25
-      );
-      doc.text(
-        `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
-        15,
-        32
-      );
-      doc.text(
-        `Period:${getDateTime(periodFrom)} - ${getDateTime(periodTo)}`,
-        68,
-        37
-      );
-      var pageSize = doc.internal.pageSize;
-      var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+    doc.addImage(logo, "JPEG", 80, 3);
+    doc.text(
+      `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
+      15,
+      25
+    );
+    doc.text(
+      `Mercnat Name:${getMerchantDetail(merchantList).business_name}`,
+      65,
+      25
+    );
+    doc.text(
+      `Mercnat Short Name:${getMerchantDetail(merchantList).short_name}`,
+      140,
+      25
+    );
+    doc.text(
+      `Settlement Bank:${getBankBranchName(
+        getMerchantSettlementDetail(mercantDetails).bank_no
+      )}`,
+      15,
+      30
+    );
+    doc.text(
+      `Settlement Branch:${getBankBranchName(
+        getMerchantSettlementDetail(mercantDetails).branch_no
+      )}`,
+      65,
+      30
+    );
+    doc.text(
+      `Settlement Account:${
+        getMerchantSettlementDetail(mercantDetails).account_no
+      }`,
+      140,
+      30
+    );
+    doc.text(
+      `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
+      15,
+      35
+    );
+    doc.text(
+      `Period:${getDateTime(periodFrom)} - ${getDateTime(periodTo)}`,
+      68,
+      40
+    );
+    var pageSize = doc.internal.pageSize;
+    var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
 
-      doc.text(
-        `Print Date & Time:${DateTime.fromISO(DateTime.now(), {
-          zone: "Asia/Dhaka",
-        }).toLocaleString(DateTime.DATETIME_MED)}`,
-        15,
-        pageHeight - 10
-      );
-      doc.text(
-        `Print by:${localStorage.getItem("username")}`,
-        100,
-        pageHeight - 10
-      );
-      doc.text(`Powered By Moneybag`, 165, pageHeight - 10);
-      doc.text(
-        "page: " + pageCurrent + " of " + pageCount,
-        175,
-        pageHeight - 5
-      );
+    doc.text(
+      `Print Date & Time:${DateTime.fromISO(DateTime.now(), {
+        zone: "Asia/Dhaka",
+      }).toLocaleString(DateTime.DATETIME_MED)}`,
+      15,
+      pageHeight - 10
+    );
+    doc.text(
+      `Print by:${localStorage.getItem("username")}`,
+      100,
+      pageHeight - 10
+    );
+    doc.text(`Powered By Moneybag`, 165, pageHeight - 10);
+    doc.text("page: " + pageCurrent + " of " + pageCount, 175, pageHeight - 5);
     doc.autoTable({
       columns: [
         { header: "Order ID", dataKey: "merchant_tran_id" },
@@ -748,7 +840,7 @@ const TransactionList = () => {
       ],
       showHead: "everyPage",
       styles: { fontSize: 6 },
-      margin: { top: 40 },
+      margin: { top: 43 },
     });
     for (var i = 0; i < pageCount; i++) {
       doc.setPage(i);
@@ -769,14 +861,35 @@ const TransactionList = () => {
         25
       );
       doc.text(
+        `Settlement Bank:${getBankBranchName(
+          getMerchantSettlementDetail(mercantDetails).bank_no
+        )}`,
+        15,
+        30
+      );
+      doc.text(
+        `Settlement Branch:${getBankBranchName(
+          getMerchantSettlementDetail(mercantDetails).branch_no
+        )}`,
+        75,
+        30
+      );
+      doc.text(
+        `Settlement Account:${
+          getMerchantSettlementDetail(mercantDetails).account_no
+        }`,
+        140,
+        30
+      );
+      doc.text(
         `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
         15,
-        32
+        35
       );
       doc.text(
         `Period:${getDateTime(periodFrom)} - ${getDateTime(periodTo)}`,
         68,
-        37
+        40
       );
       var pageSize = doc.internal.pageSize;
       var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
@@ -806,8 +919,13 @@ const TransactionList = () => {
   };
 
   useEffect(() => {
-    getMerchantList();
-    getStatementList();
+    const getAllData = async () => {
+      await getMerchantList();
+      await getStatementList();
+      await getMertchantSettlementAccountList();
+      await getBankBranchList();
+    };
+    getAllData();
   }, []);
 
   return (
@@ -937,13 +1055,13 @@ const TransactionList = () => {
           <CModal
             visible={visible}
             onClose={() => {
-              setVisible(false), getStatementList();
+              setVisible(false), searchStatemet();
             }}
             size="lg"
           >
             <CModalHeader
               onClose={() => {
-                setVisible(false), getStatementList();
+                setVisible(false), searchStatemet();
               }}
             >
               <CModalTitle>Dispute</CModalTitle>
