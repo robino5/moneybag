@@ -65,10 +65,6 @@ const UserList = () => {
       selector: (row) => getMerchntName(row.merchant_no),
     },
     {
-      name: "Callback Url",
-      selector: (row) => row.callback_url,
-    },
-    {
       name: "Action",
       cell: (row) => (
         <div className="d-flex justify-content-center">

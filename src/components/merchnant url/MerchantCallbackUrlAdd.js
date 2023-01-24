@@ -51,7 +51,7 @@ const UserAdd = () => {
   const saveUser = (e) => {
     const userData = {
       merchant_no: parseInt(e.merchant_name),
-      callback_url: e.mer_callback_url,
+      // callback_url: e.mer_callback_url,
       password: e.password,
     };
     console.log(userData);
@@ -149,7 +149,7 @@ const UserAdd = () => {
                       </span>
                     </CCol>
                   </CRow>
-                  <CRow className="mb-3">
+                  {/* <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Merchant Callback Url
                     </CFormLabel>
@@ -170,7 +170,7 @@ const UserAdd = () => {
                         {errors.mer_callback_url?.message}
                       </span>
                     </CCol>
-                  </CRow>
+                  </CRow> */}
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Password

@@ -53,7 +53,7 @@ const UserUpdate = () => {
   const updateUser = (e) => {
     const userData = {
       merchant_no: location.state.merchant_no,
-      callback_url: e.mer_callback_url,
+      // callback_url: e.mer_callback_url,
     };
     if (e.password) {
       updateMrPassword(e.password);
@@ -187,7 +187,7 @@ const UserUpdate = () => {
                       </CFormSelect>
                     </CCol>
                   </CRow>
-                  <CRow className="mb-3">
+                  {/* <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Merchant Callback Url
                     </CFormLabel>
@@ -208,7 +208,7 @@ const UserUpdate = () => {
                         {errors.mer_callback_url?.message}
                       </span>
                     </CCol>
-                  </CRow>
+                  </CRow> */}
                   <CRow className="mb-3">
                     <CFormLabel className="col-sm-3 col-form-label">
                       Password
