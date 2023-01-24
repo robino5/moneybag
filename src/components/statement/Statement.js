@@ -246,8 +246,8 @@ const Statement = () => {
   };
 
   const setTextColor = (e) => {
-    if (e == "DISPUTED") {
-      return "text-warning";
+    if (e == "INCOMPLETE") {
+      return "text-dark";
     } else if (e == "DECLINED") {
       return "text-danger";
     } else if (e == "APPROVED") {
@@ -259,7 +259,7 @@ const Statement = () => {
     } else if (e == "CANCELLED") {
       return "text-muted";
     } else {
-      return "text-dark";
+      return "text-warning";
     }
   };
 
@@ -290,9 +290,9 @@ const Statement = () => {
       name: "Creation date",
       grow: 2,
       selector: (row) =>
-        DateTime.fromISO(row.created_at, { zone: "Asia/Dhaka" }).toLocaleString(
-          DateTime.DATETIME_MED
-        ),
+        DateTime.fromISO(row.gw_txn_timestamp, {
+          zone: "Asia/Dhaka",
+        }).toLocaleString(DateTime.DATETIME_MED),
       minWidth: "70px;",
     },
     {
@@ -308,14 +308,20 @@ const Statement = () => {
       name: "Payable Amount",
       selector: (row) =>
         row.refund_amount
-          ? row.merchant_order_amount - (row.refund_amount - row.pgw_charge)
+          ? row.merchant_order_amount - row.refund_amount
           : row.merchant_order_amount,
     },
     {
       name: "Order Status",
       selector: (row) => (
-        <strong className={setTextColor(row.gw_order_status)}>
-          {row.gw_order_status}
+        <strong
+          className={
+            row.dispute_status == "P"
+              ? "text-warning"
+              : setTextColor(row.gw_order_status)
+          }
+        >
+          {row.dispute_status == "P" ? "DISPUTED" : row.gw_order_status}
         </strong>
       ),
     },

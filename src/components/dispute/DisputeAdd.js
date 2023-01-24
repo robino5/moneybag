@@ -310,6 +310,7 @@ const BringDispute = (props) => {
                   Dispute Resolve Date
                 </CTableHeaderCell>
                 <CTableHeaderCell scope="col">Dispute Status</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Description</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Employee ID</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
@@ -322,8 +323,11 @@ const BringDispute = (props) => {
                   {getIsoDateTime(disputeList?.dispute_resolve_on)}
                 </CTableDataCell>
                 <CTableDataCell>
-                  {disputeList?.dispute_type == "A" ? "Approved" : "Pending"}
+                  {disputeList?.resolve_type
+                    ? disputeList?.resolve_type
+                    : "DISPUTED"}
                 </CTableDataCell>
+                <CTableDataCell>{disputeList?.remarks}</CTableDataCell>
                 <CTableDataCell>
                   {getUserName(disputeList?.created_by)}
                 </CTableDataCell>

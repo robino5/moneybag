@@ -263,10 +263,7 @@ const ProcessSettlement = () => {
     let sum = 0;
     e &&
       e.map((element) => {
-        sum +=
-          element.merchant_order_amount +
-          element.pgw_charge -
-          element.refund_amount;
+        sum += element.merchant_order_amount - element.refund_amount;
       });
     setApprovedAmount(sum);
   };
@@ -367,10 +364,7 @@ const ProcessSettlement = () => {
   const getotal = (e) => {
     let sumBankFee = 0;
     e.map((element) => {
-      sumBankFee +=
-        element.merchant_order_amount +
-        element.pgw_charge -
-        element.refund_amount;
+      sumBankFee += element.merchant_order_amount - element.refund_amount;
     });
     return parseFloat(sumBankFee).toFixed(2);
   };
@@ -452,9 +446,7 @@ const ProcessSettlement = () => {
         Pgw_fee: element.pgw_charge,
         Refund_Amount: element.refund_amount ? element.refund_amount : 0,
         Payable_Amount: parseFloat(
-          element.merchant_order_amount +
-            element.pgw_charge -
-            element.refund_amount
+          element.merchant_order_amount - element.refund_amount
         ).toFixed(2),
         Transaction_Status: element.gw_order_status,
       });
@@ -494,9 +486,9 @@ const ProcessSettlement = () => {
     {
       name: "Transaction Date",
       selector: (row) =>
-        DateTime.fromISO(row.created_at, { zone: "Asia/Dhaka" }).toLocaleString(
-          DateTime.DATETIME_MED
-        ),
+        DateTime.fromISO(row.gw_txn_timestamp, {
+          zone: "Asia/Dhaka",
+        }).toLocaleString(DateTime.DATETIME_MED),
       sortable: true,
       minWidth: "70px;",
     },
@@ -524,9 +516,7 @@ const ProcessSettlement = () => {
     {
       name: "Payable Amount",
       selector: (row) =>
-        parseFloat(
-          row.merchant_order_amount + row.pgw_charge - row.refund_amount
-        ).toFixed(2),
+        parseFloat(row.merchant_order_amount - row.refund_amount).toFixed(2),
       sortable: true,
     },
     {
@@ -548,17 +538,17 @@ const ProcessSettlement = () => {
     console.log(doc.internal.getNumberOfPages());
     doc.addImage(logo, "JPEG", 80, 3);
     doc.text(
-      `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
+      `Merchant Id:${getMerchantDetail(merchantList).merchant_id}`,
       15,
       25
     );
     doc.text(
-      `Mercnat Name:${getMerchantDetail(merchantList).business_name}`,
+      `Merchant Name:${getMerchantDetail(merchantList).business_name}`,
       65,
       25
     );
     doc.text(
-      `Mercnat Short Name:${getMerchantDetail(merchantList).short_name}`,
+      `Merchant Short Name:${getMerchantDetail(merchantList).short_name}`,
       140,
       25
     );
@@ -584,12 +574,14 @@ const ProcessSettlement = () => {
       30
     );
     doc.text(
-      `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
+      `Merchant Address:${getMerchantDetail(merchantList).business_address1}`,
       15,
       35
     );
     doc.text(
-      `Period:${getDateTime(periodFrom)} - ${getDateTime(periodTo)}`,
+      `Period:${getDateTime(
+        settlementDate ? settlementDate : ""
+      )} - ${getDateTime(periodFrom)}`,
       68,
       40
     );
@@ -636,9 +628,7 @@ const ProcessSettlement = () => {
           element.bank_charge,
           element.pgw_charge,
           element.refund_amount,
-          element.merchant_order_amount +
-            element.pgw_charge -
-            element.refund_amount,
+          element.merchant_order_amount - element.refund_amount,
           element.gw_order_status,
         ]),
         [
@@ -702,17 +692,17 @@ const ProcessSettlement = () => {
       doc.setPage(i);
       doc.addImage(logo, "JPEG", 80, 3);
       doc.text(
-        `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
+        `Merchant Id:${getMerchantDetail(merchantList).merchant_id}`,
         15,
         25
       );
       doc.text(
-        `Mercnat Name:${getMerchantDetail(merchantList).business_name}`,
+        `Merchant Name:${getMerchantDetail(merchantList).business_name}`,
         65,
         25
       );
       doc.text(
-        `Mercnat Short Name:${getMerchantDetail(merchantList).short_name}`,
+        `Merchant Short Name:${getMerchantDetail(merchantList).short_name}`,
         140,
         25
       );
@@ -738,12 +728,14 @@ const ProcessSettlement = () => {
         30
       );
       doc.text(
-        `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
+        `Merchant Address:${getMerchantDetail(merchantList).business_address1}`,
         15,
         35
       );
       doc.text(
-        `Period:${getDateTime(periodFrom)} - ${getDateTime(periodTo)}`,
+        `Period:${getDateTime(
+          settlementDate ? settlementDate : ""
+        )} - ${getDateTime(periodFrom)}`,
         68,
         40
       );
@@ -877,7 +869,7 @@ const ProcessSettlement = () => {
                   <CButton
                     className="mt-2"
                     color="info"
-                    disabled={approvedAmount <= 0 ? true : false}
+                    disabled={approvedAmount == 0 ? true : false}
                     onClick={saveApprovedTransection}
                   >
                     Process

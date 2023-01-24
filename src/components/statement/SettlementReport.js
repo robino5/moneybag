@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
-import Description from "./Description";
+import SettledTran from "./SettledTran";
 import Nav from "../Nav";
 import { StatementSidebar, AppFooter, StatementHeader } from "../index.js";
 import { DateTime } from "luxon";
@@ -49,6 +49,7 @@ const SettlementReport = () => {
   const [userList, setUserList] = useState();
   const [mercantDetails, setMarchentDetailsList] = useState();
   const [bankbranchList, setBankBranchList] = useState();
+  const [statement, setStatement] = useState();
 
   console.log("id", Settlements);
 
@@ -166,11 +167,6 @@ const SettlementReport = () => {
     return name;
   };
 
-  const openDetails = async (e) => {
-    setStatementDetails(e);
-    setVisible(!visible);
-  };
-
   const handleMerchantID = (e) => {
     console.log(e);
     setMerchantID(e.value);
@@ -250,6 +246,11 @@ const SettlementReport = () => {
 
   const onCancel = () => {
     navigate("/deshbord");
+  };
+
+  const openDetails = async (e) => {
+    setStatement(e.settlement_details);
+    setVisible(!visible);
   };
 
   const getmerchantoptions = (merchantList) => {
@@ -405,6 +406,22 @@ const SettlementReport = () => {
       name: "Employee ID",
       selector: (row) => getUserId(row.created_by),
     },
+    {
+      name: "Action",
+      selector: (row) => (
+        <div className="d-flex justify-content-center">
+          <CButton
+            className="btn btn-sm d-inline mx-1"
+            CColor="info"
+            onClick={() => {
+              openDetails(row);
+            }}
+          >
+            Detail
+          </CButton>
+        </div>
+      ),
+    },
   ];
 
   const dawonloadReport = () => {
@@ -416,17 +433,17 @@ const SettlementReport = () => {
     console.log(doc.internal.getNumberOfPages());
     doc.addImage(logo, "JPEG", 80, 3);
     doc.text(
-      `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
+      `Merchant Id:${getMerchantDetail(merchantList).merchant_id}`,
       15,
       25
     );
     doc.text(
-      `Mercnat Name:${getMerchantDetail(merchantList).business_name}`,
+      `Merchant Name:${getMerchantDetail(merchantList).business_name}`,
       65,
       25
     );
     doc.text(
-      `Mercnat Short Name:${getMerchantDetail(merchantList).short_name}`,
+      `Merchant Short Name:${getMerchantDetail(merchantList).short_name}`,
       140,
       25
     );
@@ -452,7 +469,7 @@ const SettlementReport = () => {
       30
     );
     doc.text(
-      `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
+      `Merchant Address:${getMerchantDetail(merchantList).business_address1}`,
       15,
       35
     );
@@ -562,17 +579,17 @@ const SettlementReport = () => {
       doc.setPage(i);
       doc.addImage(logo, "JPEG", 80, 3);
       doc.text(
-        `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
+        `Merchant Id:${getMerchantDetail(merchantList).merchant_id}`,
         15,
         25
       );
       doc.text(
-        `Mercnat Name:${getMerchantDetail(merchantList).business_name}`,
+        `Merchant Name:${getMerchantDetail(merchantList).business_name}`,
         65,
         25
       );
       doc.text(
-        `Mercnat Short Name:${getMerchantDetail(merchantList).short_name}`,
+        `Merchant Short Name:${getMerchantDetail(merchantList).short_name}`,
         140,
         25
       );
@@ -598,7 +615,7 @@ const SettlementReport = () => {
         30
       );
       doc.text(
-        `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
+        `Merchant Address:${getMerchantDetail(merchantList).business_address1}`,
         15,
         35
       );
@@ -672,7 +689,9 @@ const SettlementReport = () => {
                   type="text"
                   onChange={handleMerchnatName}
                 /> */}
-                  <p>Settelement Date</p>
+                  <br></br>
+                  <span>Settelement Date</span>
+                  <br></br>
                   <CFormLabel className="mt-2">Period from</CFormLabel>
                   <CFormInput
                     size="sm"
@@ -761,12 +780,12 @@ const SettlementReport = () => {
           </CCol>
         </CRow>
         <div>
-          <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
+          <CModal visible={visible} onClose={() => setVisible(false)} size="xl">
             <CModalHeader onClose={() => setVisible(false)}>
-              <CModalTitle>Transection Details</CModalTitle>
+              <CModalTitle>Settled Transaction Details</CModalTitle>
             </CModalHeader>
             <CModalBody>
-              <Description data={statementdetails} />
+              <SettledTran data={statement} />
             </CModalBody>
           </CModal>
         </div>

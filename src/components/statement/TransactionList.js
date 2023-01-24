@@ -162,9 +162,7 @@ const TransactionList = () => {
         Pgw_fee: element.pgw_charge,
         Refund_Amount: element.refund_amount ? element.refund_amount : 0,
         Payable_Amount: parseFloat(
-          element.merchant_order_amount +
-            element.pgw_charge -
-            element.refund_amount
+          element.merchant_order_amount - element.refund_amount
         ).toFixed(2),
         Transaction_Status: element.gw_order_status,
       });
@@ -339,7 +337,7 @@ const TransactionList = () => {
   };
 
   const setDisputeDisableStatus = (e) => {
-    if (e.gw_order_status == "CANCELLED") {
+    if (e.gw_order_status == "CANCELLED" || e.gw_order_status == "INCOMPLETE") {
       return true;
     } else if (
       (e.gw_order_status == "REFUNDED" ||
@@ -375,9 +373,9 @@ const TransactionList = () => {
     {
       name: "Transaction Date",
       selector: (row) =>
-        DateTime.fromISO(row.created_at, { zone: "Asia/Dhaka" }).toLocaleString(
-          DateTime.DATETIME_MED
-        ),
+        DateTime.fromISO(row.gw_txn_timestamp, {
+          zone: "Asia/Dhaka",
+        }).toLocaleString(DateTime.DATETIME_MED),
       sortable: true,
       minWidth: "70px;",
     },
@@ -388,25 +386,24 @@ const TransactionList = () => {
     },
     {
       name: "Bank Fee",
-      selector: (row) => row.bank_charge,
+      selector: (row) => parseFloat(row.bank_charge).toFixed(2),
       sortable: true,
     },
     {
       name: "PGW Fee",
-      selector: (row) => row.pgw_charge,
+      selector: (row) => parseFloat(row.pgw_charge).toFixed(2),
       sortable: true,
     },
     {
       name: "Refund Amount",
-      selector: (row) => (row.refund_amount ? row.refund_amount : 0),
+      selector: (row) =>
+        parseFloat(row.refund_amount ? row.refund_amount : 0).toFixed(2),
       sortable: true,
     },
     {
       name: "Payable Amount",
       selector: (row) =>
-        parseFloat(
-          row.merchant_order_amount + row.pgw_charge - row.refund_amount
-        ).toFixed(2),
+        parseFloat(row.merchant_order_amount - row.refund_amount).toFixed(2),
       sortable: true,
     },
     {
@@ -486,10 +483,7 @@ const TransactionList = () => {
   const getotal = (e) => {
     let sumBankFee = 0;
     e.map((element) => {
-      sumBankFee +=
-        element.merchant_order_amount +
-        element.pgw_charge -
-        element.refund_amount;
+      sumBankFee += element.merchant_order_amount - element.refund_amount;
     });
     return parseFloat(sumBankFee).toFixed(2);
   };
@@ -524,10 +518,7 @@ const TransactionList = () => {
     let sum = 0;
     e?.map((element) => {
       if (element.gw_order_status == status) {
-        sum +=
-          element.merchant_order_amount +
-          element.pgw_charge -
-          element.refund_amount;
+        sum += element.merchant_order_amount - element.refund_amount;
       }
     });
     return parseFloat(sum).toFixed(2);
@@ -543,6 +534,26 @@ const TransactionList = () => {
     return name;
   };
 
+  const getDisputeCount = (e) => {
+    let count = 0;
+    e?.map((element) => {
+      if (element.dispute_status == "P") {
+        count += 1;
+      }
+    });
+    return count;
+  };
+
+  const getDisputeAmount = (e) => {
+    let sum = 0;
+    e?.map((element) => {
+      if (element.dispute_status == "P") {
+        sum += element.merchant_order_amount - element.refund_amount;
+      }
+    });
+    return parseFloat(sum).toFixed(2);
+  };
+
   const dawonloadReport = () => {
     const doc = new jsPDF();
     doc.setFontSize(8);
@@ -551,17 +562,17 @@ const TransactionList = () => {
     console.log(doc.internal.getNumberOfPages());
     doc.addImage(logo, "JPEG", 80, 3);
     doc.text(
-      `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
+      `Merchant Id:${getMerchantDetail(merchantList).merchant_id}`,
       15,
       25
     );
     doc.text(
-      `Mercnat Name:${getMerchantDetail(merchantList).business_name}`,
+      `Merchant Name:${getMerchantDetail(merchantList).business_name}`,
       65,
       25
     );
     doc.text(
-      `Mercnat Short Name:${getMerchantDetail(merchantList).short_name}`,
+      `Merchant Short Name:${getMerchantDetail(merchantList).short_name}`,
       140,
       25
     );
@@ -576,7 +587,7 @@ const TransactionList = () => {
       `Settlement Branch:${getBankBranchName(
         getMerchantSettlementDetail(mercantDetails).branch_no
       )}`,
-      65,
+      75,
       30
     );
     doc.text(
@@ -587,7 +598,7 @@ const TransactionList = () => {
       30
     );
     doc.text(
-      `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
+      `Merchant Address:${getMerchantDetail(merchantList).business_address1}`,
       15,
       35
     );
@@ -636,13 +647,13 @@ const TransactionList = () => {
           DateTime.fromISO(element.created_at, {
             zone: "Asia/Dhaka",
           }).toLocaleString(DateTime.DATETIME_MED),
-          element.merchant_order_amount,
-          element.bank_charge,
-          element.pgw_charge,
-          element.refund_amount,
-          element.merchant_order_amount +
-            element.pgw_charge -
-            element.refund_amount,
+          parseFloat(element.merchant_order_amount).toFixed(2),
+          parseFloat(element.bank_charge).toFixed(2),
+          parseFloat(element.pgw_charge).toFixed(2),
+          parseFloat(element.refund_amount).toFixed(2),
+          parseFloat(
+            element.merchant_order_amount - element.refund_amount
+          ).toFixed(2),
           element.gw_order_status,
         ]),
         [
@@ -711,9 +722,8 @@ const TransactionList = () => {
             },
           },
           {
-            content: `Disputed Transaction = ${getTrnCount(
-              statementdetails,
-              "DISPUTED"
+            content: `Disputed Transaction = ${getDisputeCount(
+              statementdetails
             )}`,
             colSpan: 3,
             styles: {
@@ -721,10 +731,7 @@ const TransactionList = () => {
             },
           },
           {
-            content: `Disputed Amount = ${gettrnAmount(
-              statementdetails,
-              "DISPUTED"
-            )}`,
+            content: `Disputed Amount = ${getDisputeAmount(statementdetails)}`,
             colSpan: 3,
             styles: {
               fillColor: [246, 252, 192],
@@ -846,17 +853,17 @@ const TransactionList = () => {
       doc.setPage(i);
       doc.addImage(logo, "JPEG", 80, 3);
       doc.text(
-        `Mercnat Id:${getMerchantDetail(merchantList).merchant_id}`,
+        `Merchant Id:${getMerchantDetail(merchantList).merchant_id}`,
         15,
         25
       );
       doc.text(
-        `Mercnat Name:${getMerchantDetail(merchantList).business_name}`,
+        `Merchant Name:${getMerchantDetail(merchantList).business_name}`,
         65,
         25
       );
       doc.text(
-        `Mercnat Short Name:${getMerchantDetail(merchantList).short_name}`,
+        `Merchant Short Name:${getMerchantDetail(merchantList).short_name}`,
         140,
         25
       );
@@ -882,7 +889,7 @@ const TransactionList = () => {
         30
       );
       doc.text(
-        `Mercnat Address:${getMerchantDetail(merchantList).business_address1}`,
+        `Merchant Address:${getMerchantDetail(merchantList).business_address1}`,
         15,
         35
       );

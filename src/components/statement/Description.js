@@ -9,8 +9,8 @@ const Description = (props) => {
   const [object, setObject] = useState([]);
 
   const setTextColor = (e) => {
-    if (e == "DISPUTED") {
-      return "text-warning";
+    if (e == "INCOMPLETE") {
+      return "text-dark";
     } else if (e == "DECLINED") {
       return "text-danger";
     } else if (e == "APPROVED") {
@@ -22,7 +22,7 @@ const Description = (props) => {
     } else if (e == "CANCELLED") {
       return "text-muted";
     } else {
-      return "text-dark";
+      return "text-warning";
     }
   };
 
@@ -104,25 +104,24 @@ const Description = (props) => {
                   <td>Status</td>
                   <td>:</td>
                   <td>
-                    <span className={setTextColor(props.data.gw_order_status)}>
-                      {props.data.gw_order_status}
-                    </span>
+                    <strong
+                      className={
+                        props.data.dispute_status == "P"
+                          ? "text-warning"
+                          : setTextColor(props.data.gw_order_status)
+                      }
+                    >
+                      {props.data.dispute_status == "P"
+                        ? "DISPUTED"
+                        : props.data.gw_order_status}
+                    </strong>
                   </td>
                 </tr>
                 <tr>
-                  <td>Creation date</td>
+                  <td>Transaction date</td>
                   <td>:</td>
                   <td>
-                    {DateTime.fromISO(props.data.created_at, {
-                      zone: "Asia/Dhaka",
-                    }).toLocaleString(DateTime.DATETIME_MED)}
-                  </td>
-                </tr>
-                <tr>
-                  <td>Last update date</td>
-                  <td>:</td>
-                  <td>
-                    {DateTime.fromISO(props.data.updated_at, {
+                    {DateTime.fromISO(props.data.gw_txn_timestamp, {
                       zone: "Asia/Dhaka",
                     }).toLocaleString(DateTime.DATETIME_MED)}
                   </td>
@@ -142,17 +141,29 @@ const Description = (props) => {
                   </td>
                 </tr>
                 <tr>
+                  <td>Settelement Status</td>
+                  <td>:</td>
+                  <td>
+                    {props.data.settlement_flag == 1 ? "Settled" : "Unsettled"}
+                  </td>
+                </tr>
+                <tr>
                   <td>Payable Amount</td>
                   <td>:</td>
                   <td>
                     {props.data.merchant_order_amount -
-                      (props.data.refund_amount - props.data.pgw_charge)}
+                      props.data.refund_amount}
                   </td>
                 </tr>
-                <tr>
+                <tr hidden={props.data.settlement_flag != 1 ? true : false}>
                   <td>Pay Date</td>
                   <td>:</td>
-                  <td>{props.data.gw_txn_timestamp}</td>
+                  <td>
+                    {" "}
+                    {DateTime.fromISO(props.data.settlement_date, {
+                      zone: "Asia/Dhaka",
+                    }).toLocaleString(DateTime.DATETIME_MED)}
+                  </td>
                 </tr>
                 <tr>
                   <td>Description</td>
