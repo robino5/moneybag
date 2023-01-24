@@ -621,7 +621,7 @@ const ProcessSettlement = () => {
         ...statement.map((element) => [
           element.merchant_tran_id,
           element.txn_id,
-          DateTime.fromISO(element.created_at, {
+          DateTime.fromISO(element.gw_txn_timestamp, {
             zone: "Asia/Dhaka",
           }).toLocaleString(DateTime.DATETIME_MED),
           element.merchant_order_amount,
