@@ -310,7 +310,6 @@ const BringDispute = (props) => {
                   Dispute Resolve Date
                 </CTableHeaderCell>
                 <CTableHeaderCell scope="col">Dispute Status</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Description</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Employee ID</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
@@ -327,13 +326,13 @@ const BringDispute = (props) => {
                     ? disputeList?.resolve_type
                     : "DISPUTED"}
                 </CTableDataCell>
-                <CTableDataCell>{disputeList?.remarks}</CTableDataCell>
                 <CTableDataCell>
                   {getUserName(disputeList?.created_by)}
                 </CTableDataCell>
               </CTableRow>
             </CTableBody>
           </CTable>
+          <p><span>Description: </span><span>{disputeList?.remarks}</span></p>
         </div>
       </CCardBody>
     </CCard>
