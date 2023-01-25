@@ -19,11 +19,6 @@ const SettledTran = (props) => {
       minWidth: "200px;",
     },
     {
-      name: "Order Amount",
-      selector: (row) => parseFloat(row.merchant_order_amount).toFixed(2),
-      sortable: true,
-    },
-    {
       name: "Transaction Date",
       selector: (row) =>
         DateTime.fromISO(row.gw_txn_timestamp, {
@@ -31,6 +26,11 @@ const SettledTran = (props) => {
         }).toLocaleString(DateTime.DATETIME_MED),
       sortable: true,
       minWidth: "70px;",
+    },
+    {
+      name: "Order Amount",
+      selector: (row) => parseFloat(row.merchant_order_amount).toFixed(2),
+      sortable: true,
     },
     {
       name: "Bank Fee",
@@ -52,7 +52,7 @@ const SettledTran = (props) => {
       name: "Payable Amount",
       selector: (row) =>
         parseFloat(
-          row.merchant_order_amount + row.pgw_fee - row.refund_amount
+          row.merchant_order_amount  - row.refund_amount
         ).toFixed(2),
       sortable: true,
     },
