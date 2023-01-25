@@ -332,7 +332,7 @@ const BringDispute = (props) => {
               </CTableRow>
             </CTableBody>
           </CTable>
-          <p><span>Description: </span><span>{disputeList?.remarks}</span></p>
+          <p hidden={!disputeList?.remarks?true:false}><span>Description: </span><span>{disputeList?.remarks}</span></p>
         </div>
       </CCardBody>
     </CCard>
