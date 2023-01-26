@@ -75,7 +75,7 @@ const SummeryUpdate = ({ data }) => {
         : data.business_name,
       short_name: localStorage.getItem("business_short_name")
         ? localStorage.getItem("business_short_name")
-        : short_name,
+        : data.short_name,
       bin: localStorage.getItem("bin") ? localStorage.getItem("bin") : data.bin,
       business_address1: localStorage.getItem("business_address1")
         ? localStorage.getItem("business_address1")
