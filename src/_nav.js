@@ -96,7 +96,7 @@ const _nav = [
 
   {
     component: CNavGroup,
-    name: "Merchant Management",
+    name: "Merchant Service",
     to: "/merchant_management",
     items: [
       // {

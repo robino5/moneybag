@@ -223,6 +223,13 @@ const UserUpdate = () => {
                             value: 6,
                             message: "Password will be Minimum 6 Characters",
                           },
+                          validate: (value) => {
+                            return (
+                              [/[A-Z]/,/[a-z]/, /[0-9]/, /[#?!@$%^&*-]/].every((pattern) =>
+                                pattern.test(value)
+                              ) || "Password is weak! Please Follow [A-Z],[a-z],[0-9],[#?!@$%^&*-]"
+                            );
+                          },
                         })}
                         placeholder="Password"
                         onChange={(e) => {
