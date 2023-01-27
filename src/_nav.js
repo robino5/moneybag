@@ -39,7 +39,7 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: "Merchant Callback Url",
+        name: "Merchant API Password",
         to: "/merchant-callbackUrl",
       },
 

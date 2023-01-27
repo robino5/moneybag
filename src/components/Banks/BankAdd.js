@@ -61,7 +61,7 @@ const BankAdd = () => {
       note: e.note,
       is_active: e.status ? 1 : 0,
       bank_flag: 1,
-      root_bank:0
+      root_bank: 0,
     };
     console.log(bankBranchstoreDate);
     const headers = {
@@ -233,9 +233,18 @@ const BankAdd = () => {
                     <CCol sm={9}>
                       <CFormInput
                         type="text"
-                        {...register("email")}
+                        {...register("email", {
+                          pattern: {
+                            value:
+                              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                            message: "Invalid email address",
+                          },
+                        })}
                         placeholder="E-mail"
                       />
+                      <span className="text-danger">
+                        {errors.email?.message}
+                      </span>
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
