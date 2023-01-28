@@ -228,7 +228,7 @@ const BringDispute = (props) => {
           </div>
 
           <div hidden={hiddenDisputeDicission()}>
-            <h5>Dicission Of Dispute</h5>
+            <h5>Decision Of Dispute</h5>
             <CRow>
               <CCol md={2}>
                 <CFormCheck
@@ -283,7 +283,11 @@ const BringDispute = (props) => {
                 setDisputeType(e.target.value);
               }}
             />
-            <CButton color="primary" onClick={saveDispute}>
+            <CButton
+              color="primary"
+              disabled={!disputeType ? true : false}
+              onClick={saveDispute}
+            >
               Resolve
             </CButton>
             <CRow>
@@ -332,7 +336,10 @@ const BringDispute = (props) => {
               </CTableRow>
             </CTableBody>
           </CTable>
-          <p hidden={!disputeList?.remarks?true:false}><span>Description: </span><span>{disputeList?.remarks}</span></p>
+          <p hidden={!disputeList?.remarks ? true : false}>
+            <span>Description: </span>
+            <span>{disputeList?.remarks}</span>
+          </p>
         </div>
       </CCardBody>
     </CCard>
