@@ -13,17 +13,23 @@ import {
   CInputGroupText,
   CRow,
   CImage,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
 import axios from "axios";
 import swal from "sweetalert";
 import logo from "src/assets/images/logo.png";
+import ForgetPassword from "./ForgetPassword";
 
 const Login = () => {
   const navigate = useNavigate();
   const [username, setuername] = useState("");
   const [password, setpassword] = useState("");
+  const [visible, setVisible] = useState();
 
   const handleUser = (e) => {
     const username = e.target.value;
@@ -117,9 +123,15 @@ const Login = () => {
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
-                        {/* <CButton color="link" className="px-0">
+                        <CButton
+                          color="link"
+                          onClick={() => {
+                            setVisible(true);
+                          }}
+                          className="px-0"
+                        >
                           Forgot password?
-                        </CButton> */}
+                        </CButton>
                       </CCol>
                     </CRow>
                   </CForm>
@@ -154,6 +166,21 @@ const Login = () => {
           </CCol>
         </CRow>
       </CContainer>
+      <div>
+        <CModal
+          visible={visible}
+          onClose={() => {
+            setVisible(false);
+          }}
+        >
+          <CModalHeader onClose={() => setVisible(false)}>
+            <CModalTitle>Forget Password</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <ForgetPassword />
+          </CModalBody>
+        </CModal>
+      </div>
     </div>
   );
 };

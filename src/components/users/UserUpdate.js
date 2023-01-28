@@ -34,6 +34,7 @@ const UserUpdate = () => {
     const userData = {
       id: location.state.id,
       user_id: e.userid,
+      email: e.email,
       user_name: e.username,
       is_active: e.status ? 1 : 0,
       user_pwd: e.password,
@@ -137,6 +138,30 @@ const UserUpdate = () => {
                       />
                       <span className="text-danger">
                         {errors.userid?.message}
+                      </span>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CFormLabel className="col-sm-3 col-form-label">
+                      E-mail
+                    </CFormLabel>
+                    <CCol sm={9}>
+                      <CFormInput
+                        type="text"
+                        name="email"
+                        defaultValue={location.state.email}
+                        {...register("email", {
+                          required: "Please provide E-mail",
+                          pattern: {
+                            value:
+                              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                            message: "Invalid email address",
+                          },
+                        })}
+                        placeholder="E-mail"
+                      />
+                      <span className="text-danger">
+                        {errors.email?.message}
                       </span>
                     </CCol>
                   </CRow>

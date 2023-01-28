@@ -269,6 +269,10 @@ const FintechAddAlternative = React.lazy(() =>
 //   import("./components/statement/TransactionList")
 // );
 
+const LoginRedirect = React.lazy(() =>
+  import("./views/pages/login/LoginRedirect")
+);
+
 const routes = [
   // { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", element: Dashboard },
@@ -627,7 +631,11 @@ const routes = [
     name: "add-fintechalternative",
     element: FintechAddAlternative,
   },
-
+  {
+    path: "/login-redirect",
+    name: "login-redirect",
+    element: LoginRedirect,
+  },
   // {
   //   path: "/transaction",
   //   name: "transaction",
