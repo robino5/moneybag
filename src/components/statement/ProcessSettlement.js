@@ -281,9 +281,13 @@ const ProcessSettlement = () => {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     axios
-      .post(`${process.env.REACT_APP_API_URL}settlements`, data, {
-        headers,
-      })
+      .post(
+        `${process.env.REACT_APP_API_URL}settlements/?settlementDate=${periodFrom}`,
+        data,
+        {
+          headers,
+        }
+      )
       .then((response) => {
         console.log(response);
         setApprovedAmount(0);
@@ -407,6 +411,20 @@ const ProcessSettlement = () => {
     }).toLocaleString(DateTime.DATETIME_MED);
 
     return date;
+  };
+
+  const getDateTimeObj = (e) => {
+    console.log(e);
+    let month;
+    let date = new Date(e);
+    console.log(typeof date.getMonth());
+    if (date.getMonth() < 9) {
+      month = "0" + (date.getMonth() + 1);
+    } else {
+      month = date.getMonth() + 1;
+    }
+    console.log(`${date.getFullYear()}-${month}-${date.getDate() + 1}`);
+    return `${date.getFullYear()}-${month}-${date.getDate() + 1}`;
   };
 
   const getMerchantSettlementDetail = (merhcntdetail) => {
@@ -817,7 +835,7 @@ const ProcessSettlement = () => {
                   <CFormInput
                     size="sm"
                     type="date"
-                    min={settlementDate}
+                    min={mercantID ? getDateTimeObj(settlementDate) : ""}
                     max={currentDate.toISO().split("T")[0]}
                     onChange={handlePeriodFrom}
                   />

@@ -148,7 +148,8 @@ const Statement = () => {
       merchant_id: mercantID,
       period_from: `${periodFrom}T00:00:00`,
       period_to: `${periodTo}T23:59:59`,
-      status: staus,
+      status: staus == "DISPUTED" ? "" : staus,
+      disputed: staus == "DISPUTED" ? true : false,
       currency: currency,
       amount_from: amontFrom,
       amount_to: amontTo,
@@ -169,8 +170,11 @@ const Statement = () => {
     if (!periodTo) {
       delete data.period_to;
     }
-    if (!staus || staus == "ALL") {
+    if (!staus || staus == "ALL" || staus == "DISPUTED") {
       delete data.status;
+    }
+    if (staus != "DISPUTED") {
+      delete data.disputed;
     }
     if (!currency || currency == "ALL") {
       delete data.currency;

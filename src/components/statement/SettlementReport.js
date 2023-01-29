@@ -369,14 +369,18 @@ const SettlementReport = () => {
       selector: (row) =>
         DateTime.fromISO(row.settlement_from, {
           zone: "Asia/Dhaka",
-        }).toLocaleString(DateTime.DATETIME_MED),
+        })
+          .toLocaleString(DateTime.DATETIME_MED)
+          .slice(0, 12),
     },
     {
       name: "Settlement to",
       selector: (row) =>
-        DateTime.fromISO(row.settlement_to, {
+        DateTime.fromISO(row.settlement_date, {
           zone: "Asia/Dhaka",
-        }).toLocaleString(DateTime.DATETIME_MED),
+        })
+          .toLocaleString(DateTime.DATETIME_MED)
+          .slice(0, 12),
     },
     {
       name: "Collection Amount",
@@ -398,7 +402,7 @@ const SettlementReport = () => {
       name: "Settlement Date",
       grow: 2,
       selector: (row) =>
-        DateTime.fromISO(row.settlement_date, {
+        DateTime.fromISO(row.created_at, {
           zone: "Asia/Dhaka",
         }).toLocaleString(DateTime.DATETIME_MED),
     },
