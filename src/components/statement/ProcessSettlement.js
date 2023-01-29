@@ -53,6 +53,7 @@ const ProcessSettlement = () => {
   const [mercantDetails, setMarchentDetailsList] = useState();
   const [bankbranchList, setBankBranchList] = useState();
   const currentDate = DateTime.now().minus({ days: 2 });
+  const ddd = DateTime.fromISO(settlementDate).plus({ days: 1 });
 
   const getMerchantList = async () => {
     const headers = {
@@ -413,18 +414,23 @@ const ProcessSettlement = () => {
     return date;
   };
 
+  // const getDateTimeObj = (e) => {
+  //   console.log(e);
+  //   let month;
+  //   let date = new Date(e);
+  //   console.log(typeof date.getMonth());
+  //   if (date.getMonth() < 9) {
+  //     month = "0" + (date.getMonth() + 1);
+  //   } else {
+  //     month = date.getMonth() + 1;
+  //   }
+  //   console.log(`${date.getFullYear()}-${month}-${date.getDate() + 1}`);
+  //   return `${date.getFullYear()}-${month}-${date.getDate() + 1}`;
+  // };
+
   const getDateTimeObj = (e) => {
-    console.log(e);
-    let month;
-    let date = new Date(e);
-    console.log(typeof date.getMonth());
-    if (date.getMonth() < 9) {
-      month = "0" + (date.getMonth() + 1);
-    } else {
-      month = date.getMonth() + 1;
-    }
-    console.log(`${date.getFullYear()}-${month}-${date.getDate() + 1}`);
-    return `${date.getFullYear()}-${month}-${date.getDate() + 1}`;
+    let date = DateTime.fromISO(e).plus({ days: 1 });
+    return date;
   };
 
   const getMerchantSettlementDetail = (merhcntdetail) => {
@@ -835,7 +841,11 @@ const ProcessSettlement = () => {
                   <CFormInput
                     size="sm"
                     type="date"
-                    min={mercantID ? getDateTimeObj(settlementDate) : ""}
+                    min={
+                      settlementDate
+                        ? getDateTimeObj(settlementDate).toISO().slice(0, 10)
+                        : ""
+                    }
                     max={currentDate.toISO().split("T")[0]}
                     onChange={handlePeriodFrom}
                   />
