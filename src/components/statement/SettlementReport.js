@@ -517,15 +517,15 @@ const SettlementReport = () => {
         ...Settlements.map((element) => [
           DateTime.fromISO(element.settlement_from, {
             zone: "Asia/Dhaka",
-          }).toLocaleString(DateTime.DATETIME_MED),
-          DateTime.fromISO(element.settlement_to, {
+          }).toLocaleString(DateTime.DATETIME_MED).slice(0, 12),
+          DateTime.fromISO(element.settlement_date, {
             zone: "Asia/Dhaka",
-          }).toLocaleString(DateTime.DATETIME_MED),
+          }).toLocaleString(DateTime.DATETIME_MED).slice(0, 12),
           element.gttl_order_amount,
           element.gttl_bank_fee,
           element.gttl_pgw_fee,
           element.gttl_total_amount,
-          DateTime.fromISO(element.settlement_date, {
+          DateTime.fromISO(element.created_at, {
             zone: "Asia/Dhaka",
           }).toLocaleString(DateTime.DATETIME_MED),
           getUserId(element.created_by),
