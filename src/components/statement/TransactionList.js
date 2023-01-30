@@ -341,7 +341,7 @@ const TransactionList = () => {
   };
 
   const setDisputeDisableStatus = (e) => {
-    if (e.gw_order_status == "CANCELLED" || e.gw_order_status == "INCOMPLETE") {
+    if (e.gw_order_status == "CANCELLED" || e.gw_order_status == "INCOMPLETE" || e.gw_order_status == "ERROR") {
       return true;
     } else if (
       (e.gw_order_status == "REFUNDED" ||
