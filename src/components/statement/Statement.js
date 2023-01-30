@@ -306,7 +306,7 @@ const Statement = () => {
     {
       name: "Refund Amount",
       selector: (row) =>
-        row.refund_amount ? row.refund_amount - row.pgw_charge : 0,
+        row.refund_amount ? row.refund_amount : 0,
     },
     {
       name: "Payable Amount",
