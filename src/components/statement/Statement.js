@@ -305,8 +305,7 @@ const Statement = () => {
     },
     {
       name: "Refund Amount",
-      selector: (row) =>
-        row.refund_amount ? row.refund_amount : 0,
+      selector: (row) => (row.refund_amount ? row.refund_amount : 0),
     },
     {
       name: "Payable Amount",
@@ -404,6 +403,7 @@ const Statement = () => {
                     <option>REFUNDED</option>
                     <option>DECLINED</option>
                     <option>CANCELLED</option>
+                    <option>INITIATED</option>
                     <option>INCOMPLETE</option>
                   </CFormSelect>
                   <CFormLabel className="mt-2">Currency</CFormLabel>

@@ -35,6 +35,12 @@ const Description = (props) => {
         Object.keys(status).forEach((e) =>
           object.push({ key: e, value: status[e] })
         );
+      } else if (props.data.gw_json_log.XMLOut.Message) {
+        delete props.data.gw_json_log.XMLOut.Message.ThreeDSVars;
+        status = props.data.gw_json_log.XMLOut.Message;
+        Object.keys(status).forEach((e) =>
+          object.push({ key: e, value: status[e] })
+        );
       } else if (props.data.gw_json_log) {
         status = props.data.gw_json_log;
         Object.keys(status).forEach((e) =>
@@ -43,6 +49,8 @@ const Description = (props) => {
       }
     }
   }, []);
+
+  console.log("object", props.data.gw_json_log);
 
   return (
     <div className="">
@@ -181,7 +189,7 @@ const Description = (props) => {
                     <tr>
                       <td>{e.key}</td>
                       <td>:</td>
-                      <td>{e.value.slice(0, 55)}</td>
+                      <td>{e.value}</td>
                     </tr>
                   );
                 })}

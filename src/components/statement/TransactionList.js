@@ -341,7 +341,11 @@ const TransactionList = () => {
   };
 
   const setDisputeDisableStatus = (e) => {
-    if (e.gw_order_status == "CANCELLED" || e.gw_order_status == "INCOMPLETE" || e.gw_order_status == "ERROR") {
+    if (
+      e.gw_order_status == "CANCELLED" ||
+      e.gw_order_status == "INCOMPLETE" ||
+      e.gw_order_status == "ERROR"
+    ) {
       return true;
     } else if (
       (e.gw_order_status == "REFUNDED" ||
@@ -996,6 +1000,7 @@ const TransactionList = () => {
                     <option>DECLINED</option>
                     <option>CANCELLED</option>
                     <option>INCOMPLETE</option>
+                    <option>INITIATED</option>
                   </CFormSelect>
                   {/* <CFormLabel className="mt-2">Currency</CFormLabel>
                 <CFormSelect size="sm" onChange={handleCurrency}>
