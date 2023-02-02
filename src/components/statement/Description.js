@@ -26,31 +26,46 @@ const Description = (props) => {
     }
   };
 
-  useEffect(() => {
-    let status;
-    if (props.data.gw_json_log) {
-      if (props.data.gw_json_log.Message) {
-        delete props.data.gw_json_log.Message.ThreeDSVars;
-        status = props.data.gw_json_log.Message;
-        Object.keys(status).forEach((e) =>
-          object.push({ key: e, value: status[e] })
-        );
-      } else if (props.data.gw_json_log.XMLOut.Message) {
-        delete props.data.gw_json_log.XMLOut.Message.ThreeDSVars;
-        status = props.data.gw_json_log.XMLOut.Message;
-        Object.keys(status).forEach((e) =>
-          object.push({ key: e, value: status[e] })
-        );
-      } else if (props.data.gw_json_log) {
-        status = props.data.gw_json_log;
-        Object.keys(status).forEach((e) =>
-          object.push({ key: e, value: status[e] })
-        );
+  const printProperties = (obj, level) => {
+    for (let property in obj) {
+      if (typeof obj[property] === 'object') {
+        console.log(`${" ".repeat(level * 4)}${property}:`);
+        object.push({ key: property, value: obj[property] })
+        printProperties(obj[property], level + 1);
+        
+      } else {
+        object.push({ key: property, value: obj[property] })
+        console.log(`${" ".repeat(level * 4)}${property}: ${obj[property]}`);
       }
     }
+  }
+
+  useEffect(() => {
+    let status;
+    printProperties(props.data.gw_json_log, 0);
+    // if (props.data.gw_json_log) {
+    //   if (props.data.gw_json_log.Message) {
+    //     delete props.data.gw_json_log.Message.ThreeDSVars;
+    //     status = props.data.gw_json_log.Message;
+    //     Object.keys(status).forEach((e) =>
+    //       object.push({ key: e, value: status[e] })
+    //     );
+    //   } else if (props.data.gw_json_log.XMLOut.Message) {
+    //     delete props.data.gw_json_log.XMLOut.Message.ThreeDSVars;
+    //     status = props.data.gw_json_log.XMLOut.Message;
+    //     Object.keys(status).forEach((e) =>
+    //       object.push({ key: e, value: status[e] })
+    //     );
+    //   } else if (props.data.gw_json_log) {
+    //     status = props.data.gw_json_log;
+    //     Object.keys(status).forEach((e) =>
+    //       object.push({ key: e, value: status[e] })
+    //     );
+    //   }
+    // }
   }, []);
 
-  console.log("object", props.data.gw_json_log);
+  console.log("object", object);
 
   return (
     <div className="">
@@ -185,13 +200,15 @@ const Description = (props) => {
             <CTable className="table-borderless">
               <tbody>
                 {object?.map((e) => {
-                  return (
-                    <tr>
-                      <td>{e.key}</td>
-                      <td>:</td>
-                      <td>{e.value}</td>
-                    </tr>
-                  );
+                  if(typeof e.value!=='object'){
+                    return (
+                      <tr>
+                        <td>{e.key}</td>
+                        <td>:</td>
+                        <td>{e.value.slice(0,50)}</td>
+                      </tr>
+                    );
+                  }
                 })}
               </tbody>
             </CTable>

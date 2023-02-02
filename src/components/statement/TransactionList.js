@@ -53,9 +53,6 @@ const TransactionList = () => {
   const [mercantID, setMerchantID] = useState();
   const [mercantDetails, setMarchentDetailsList] = useState();
   const [bankbranchList, setBankBranchList] = useState();
-
-  console.log("statement:", statementdetails);
-
   const getMerchantList = async () => {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -64,8 +61,7 @@ const TransactionList = () => {
       .get(`${process.env.REACT_APP_API_URL}marchants/`, {
         headers,
       })
-      .then((responce) => {
-        console.log(responce.data), setMerchantList(responce.data);
+      .then((responce) => { setMerchantList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -84,7 +80,6 @@ const TransactionList = () => {
         headers,
       })
       .then((responce) => {
-        console.log(responce.data),
           setStatementDetails(responce.data),
           setStatementExcel(responce.date);
       })
@@ -104,8 +99,7 @@ const TransactionList = () => {
       .get(`${process.env.REACT_APP_API_URL}marchant-details/`, {
         headers,
       })
-      .then((responce) => {
-        console.log(responce.data), setMarchentDetailsList(responce.data);
+      .then((responce) => { setMarchentDetailsList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -123,8 +117,7 @@ const TransactionList = () => {
       .get(`${process.env.REACT_APP_API_URL}banks/`, {
         headers,
       })
-      .then((responce) => {
-        console.log(responce.data), setBankBranchList(responce.data);
+      .then((responce) => { setBankBranchList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -167,7 +160,6 @@ const TransactionList = () => {
         Transaction_Status: element.gw_order_status,
       });
     });
-    console.log("data", data);
     return data;
   };
 
@@ -188,7 +180,6 @@ const TransactionList = () => {
     setTxnId(e.target.value);
   };
   const handleMerchantID = (e) => {
-    console.log(e);
     setMerchantID(e.value);
   };
   const handleMerchnatName = (e) => {
@@ -216,8 +207,6 @@ const TransactionList = () => {
     setOrderBy(e.target.value);
   };
 
-  //   console.log(orderAmount);
-  //   console.log(periodTo);
 
   const searchStatemet = (e) => {
     const data = {
@@ -264,7 +253,6 @@ const TransactionList = () => {
         .map((value) => `${value}=${encodeURIComponent(data[value])}`)
         .join("&");
     };
-    console.log(encodeDataToURL(data));
 
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -277,7 +265,6 @@ const TransactionList = () => {
         { headers }
       )
       .then((response) => {
-        console.log(response);
         setStatementDetails(response.data);
         setStatementExcel(response.data);
       })
@@ -285,7 +272,6 @@ const TransactionList = () => {
         console.error("There was an error!", error);
       });
 
-    // console.log(data);
   };
 
   const onCancel = () => {
@@ -567,7 +553,6 @@ const TransactionList = () => {
     doc.setFontSize(8);
     var pageCount = doc.internal.getNumberOfPages();
     var pageCurrent = doc.internal.getCurrentPageInfo().pageNumber;
-    console.log(doc.internal.getNumberOfPages());
     doc.addImage(logo, "JPEG", 80, 3);
     doc.text(
       `Merchant Id:${getMerchantDetail(merchantList).merchant_id}`,
@@ -928,7 +913,6 @@ const TransactionList = () => {
         pageHeight - 5
       );
     }
-    console.log(pageCount);
 
     doc.save(`transation${Date()}.pdf`);
   };
