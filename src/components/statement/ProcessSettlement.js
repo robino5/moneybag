@@ -317,7 +317,7 @@ const ProcessSettlement = () => {
   };
 
   const getmerchantoptions = (merchantList) => {
-    let data = [{ value: "", label: "ALL" }];
+    let data = [];
     merchantList?.map((merchant) => {
       if (merchant.is_active == 1) {
         data.push({ value: merchant.id, label: merchant.business_name });
@@ -841,6 +841,7 @@ const ProcessSettlement = () => {
                   <CFormInput
                     size="sm"
                     type="date"
+                    disabled={!mercantID ? true : false}
                     min={
                       settlementDate
                         ? getDateTimeObj(settlementDate).toISO().slice(0, 10)
@@ -852,6 +853,7 @@ const ProcessSettlement = () => {
                   <CButton
                     className="mt-2 mx-2"
                     color="primary"
+                    disabled={!mercantID || !periodFrom ? true : false}
                     onClick={searchStatemet}
                   >
                     Search
