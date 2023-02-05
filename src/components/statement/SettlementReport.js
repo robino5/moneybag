@@ -276,7 +276,7 @@ const SettlementReport = () => {
   const getotalOrderAmount = (e) => {
     let sumOrderAmount = 0;
     e.map((element) => {
-      sumOrderAmount += element.gttl_order_amount;
+      sumOrderAmount += element.gttl_total_amount;
     });
     return parseFloat(sumOrderAmount).toFixed(2);
   };
@@ -299,7 +299,7 @@ const SettlementReport = () => {
   const getotal = (e) => {
     let sumBankFee = 0;
     e.map((element) => {
-      sumBankFee += element.gttl_total_amount;
+      sumBankFee += element.gttl_order_amount;
     });
     return parseFloat(sumBankFee).toFixed(2);
   };
@@ -322,10 +322,14 @@ const SettlementReport = () => {
         Settlement_to: DateTime.fromISO(element.settlement_to, {
           zone: "Asia/Dhaka",
         }).toLocaleString(DateTime.DATETIME_MED),
-        Collection_Amount: element.gttl_order_amount,
+        Collection_Amount: element.gttl_refund_amount
+          ? element.gttl_total_amount - element.gttl_refund_amount
+          : element.gttl_total_amount,
         Bank_Fee: element.gttl_bank_fee,
         PGW_Fee: element.gttl_pgw_fee,
-        Settlement_Amount: element.gttl_total_amount,
+        Settlement_Amount: element.gttl_refund_amount
+          ? element.gttl_order_amount - element.gttl_refund_amount
+          : element.gttl_order_amount,
         Settlement_Date: DateTime.fromISO(element.settlement_date, {
           zone: "Asia/Dhaka",
         }).toLocaleString(DateTime.DATETIME_MED),
@@ -384,7 +388,10 @@ const SettlementReport = () => {
     },
     {
       name: "Collection Amount",
-      selector: (row) => row.gttl_order_amount,
+      selector: (row) =>
+        row.gttl_refund_amount
+          ? row.gttl_total_amount - row.gttl_refund_amount
+          : row.gttl_total_amount,
     },
     {
       name: "Bank Fee",
@@ -396,7 +403,10 @@ const SettlementReport = () => {
     },
     {
       name: "Settlement Amount",
-      selector: (row) => row.gttl_total_amount,
+      selector: (row) =>
+        row.gttl_refund_amount
+          ? row.gttl_order_amount - row.gttl_refund_amount
+          : row.gttl_order_amount,
     },
     {
       name: "Settlement Date",
@@ -517,14 +527,22 @@ const SettlementReport = () => {
         ...Settlements.map((element) => [
           DateTime.fromISO(element.settlement_from, {
             zone: "Asia/Dhaka",
-          }).toLocaleString(DateTime.DATETIME_MED).slice(0, 12),
+          })
+            .toLocaleString(DateTime.DATETIME_MED)
+            .slice(0, 12),
           DateTime.fromISO(element.settlement_date, {
             zone: "Asia/Dhaka",
-          }).toLocaleString(DateTime.DATETIME_MED).slice(0, 12),
-          element.gttl_order_amount,
+          })
+            .toLocaleString(DateTime.DATETIME_MED)
+            .slice(0, 12),
+          element.gttl_refund_amount
+            ? element.gttl_total_amount - element.gttl_refund_amount
+            : element.gttl_total_amount,
           element.gttl_bank_fee,
           element.gttl_pgw_fee,
-          element.gttl_total_amount,
+          element.gttl_refund_amount
+            ? element.gttl_order_amount - element.gttl_refund_amount
+            : element.gttl_order_amount,
           DateTime.fromISO(element.created_at, {
             zone: "Asia/Dhaka",
           }).toLocaleString(DateTime.DATETIME_MED),
