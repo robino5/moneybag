@@ -778,7 +778,7 @@ const SettlementReport = () => {
               title="Settlement Report"
               columns={column}
               data={Settlements}
-              paginatio={50}
+              pagination
               actions={
                 <div>
                   <CButton

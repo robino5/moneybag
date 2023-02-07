@@ -61,7 +61,8 @@ const TransactionList = () => {
       .get(`${process.env.REACT_APP_API_URL}marchants/`, {
         headers,
       })
-      .then((responce) => { setMerchantList(responce.data);
+      .then((responce) => {
+        setMerchantList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -80,8 +81,7 @@ const TransactionList = () => {
         headers,
       })
       .then((responce) => {
-          setStatementDetails(responce.data),
-          setStatementExcel(responce.date);
+        setStatementDetails(responce.data), setStatementExcel(responce.date);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -99,7 +99,8 @@ const TransactionList = () => {
       .get(`${process.env.REACT_APP_API_URL}marchant-details/`, {
         headers,
       })
-      .then((responce) => { setMarchentDetailsList(responce.data);
+      .then((responce) => {
+        setMarchentDetailsList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -117,7 +118,8 @@ const TransactionList = () => {
       .get(`${process.env.REACT_APP_API_URL}banks/`, {
         headers,
       })
-      .then((responce) => { setBankBranchList(responce.data);
+      .then((responce) => {
+        setBankBranchList(responce.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -207,7 +209,6 @@ const TransactionList = () => {
     setOrderBy(e.target.value);
   };
 
-
   const searchStatemet = (e) => {
     const data = {
       order_id: orderAmount,
@@ -271,7 +272,6 @@ const TransactionList = () => {
       .catch((error) => {
         console.error("There was an error!", error);
       });
-
   };
 
   const onCancel = () => {
@@ -1028,7 +1028,7 @@ const TransactionList = () => {
               title="Transaction List"
               data={statementdetails}
               columns={column}
-              paginatio={50}
+              pagination
               actions={
                 <div>
                   <CButton

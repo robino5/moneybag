@@ -447,7 +447,7 @@ const Statement = () => {
               title="Merchant Transaction"
               columns={column}
               data={statement}
-              paginatio={50}
+              pagination
             />
           </CCol>
         </CRow>

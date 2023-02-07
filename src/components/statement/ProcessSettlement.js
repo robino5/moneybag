@@ -920,7 +920,7 @@ const ProcessSettlement = () => {
               title="Settlement"
               columns={column}
               data={statement}
-              pagination={50}
+              pagination
               actions={
                 <div>
                   <CButton
