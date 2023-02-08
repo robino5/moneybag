@@ -260,7 +260,7 @@ const TransactionList = () => {
     };
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}txn-statements?${encodeDataToURL(
+        `${process.env.REACT_APP_API_URL}txn-statements/?${encodeDataToURL(
           data
         )}`,
         { headers }
