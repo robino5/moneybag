@@ -208,7 +208,19 @@ const Statement = () => {
       )
       .then((response) => {
         console.log(response);
-        setStatement(response.data);
+
+        if (data.status == "APPROVED") {
+          console.log("dfa");
+          let trn = [];
+          response.data?.map((e) => {
+            if (e.dispute_status != "P") {
+              trn.push(e);
+            }
+          });
+          setStatement(trn);
+        } else {
+          setStatement(response.data);
+        }
       })
       .catch((error) => {
         console.error("There was an error!", error);

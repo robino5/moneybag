@@ -254,7 +254,7 @@ const TransactionList = () => {
         .map((value) => `${value}=${encodeURIComponent(data[value])}`)
         .join("&");
     };
-
+    console.log(encodeDataToURL(data));
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
@@ -266,8 +266,20 @@ const TransactionList = () => {
         { headers }
       )
       .then((response) => {
-        setStatementDetails(response.data);
-        setStatementExcel(response.data);
+        if (data.status == "APPROVED") {
+          console.log("dfa");
+          let trn = [];
+          response.data?.map((e) => {
+            if (e.dispute_status != "P") {
+              trn.push(e);
+            }
+          });
+          setStatementDetails(trn);
+          setStatementExcel(trn);
+        } else {
+          setStatementDetails(response.data);
+          setStatementExcel(response.data);
+        }
       })
       .catch((error) => {
         console.error("There was an error!", error);
