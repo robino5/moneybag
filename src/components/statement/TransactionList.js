@@ -993,6 +993,7 @@ const TransactionList = () => {
                     <option>DISPUTED</option>
                     <option>REVERSED</option>
                     <option>REFUNDED</option>
+                    <option>CHARGEBACK</option>
                     <option>DECLINED</option>
                     <option>CANCELLED</option>
                     <option>INCOMPLETE</option>
